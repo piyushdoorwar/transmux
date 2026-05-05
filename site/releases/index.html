@@ -50,51 +50,61 @@
         </div>
       </div>
 
-      <!-- Installation guide -->
-      <div class="installation-guide">
-        <h2>Installation</h2>
-        
-        <div class="install-method">
-          <h3>Linux (Ubuntu/Debian) – Debian Repository</h3>
-          <p>Add Transmux to your package sources for automatic updates:</p>
-          <pre><code>echo "deb https://piyushdoorwar.github.io/lumyn-transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
-            sudo apt update
-            sudo apt install transmux
-          </code></pre>
+      <!-- Main tabs: Versions vs Installation -->
+      <div class="releases-tabs">
+        <div class="tab-buttons">
+          <button class="tab-button active" data-tab="versions">Versions</button>
+          <button class="tab-button" data-tab="installation">Installation</button>
         </div>
 
-        <div class="install-method">
-          <h3>Linux (Ubuntu/Debian) – Direct .deb</h3>
-          <pre><code>sudo apt install ./transmux_*.deb</code></pre>
+        <!-- Versions tab -->
+        <div class="tab-content active" data-tab="versions">
+          <div id="releases-loading" class="releases-state">
+            <span class="spinner" aria-hidden="true"></span>
+            <span>Fetching releases…</span>
+          </div>
+          <div id="releases-error" class="releases-state hidden">
+            Could not load releases. <a href="https://github.com/piyushdoorwar/transmux/releases" rel="noreferrer">View on GitHub →</a>
+          </div>
+          <div id="releases-empty" class="releases-state hidden">
+            No releases found for this platform yet.
+          </div>
+          <div id="releases-items"></div>
+
+          <!-- Pagination -->
+          <nav class="pagination" id="pagination" aria-label="Releases pagination" hidden>
+            <button id="page-prev" class="page-btn" aria-label="Previous page" disabled>← Prev</button>
+            <span id="page-label" class="page-label"></span>
+            <button id="page-next" class="page-btn" aria-label="Next page">Next →</button>
+          </nav>
         </div>
 
-        <div class="install-method">
-          <h3>Windows</h3>
-          <p>Download and run the <code>.exe</code> installer below.</p>
+        <!-- Installation tab -->
+        <div class="tab-content" data-tab="installation">
+          <div class="installation-guide">
+            <div class="install-method">
+              <h3>Linux (Ubuntu/Debian) – Debian Repository</h3>
+              <p>Add Transmux to your package sources for automatic updates:</p>
+              <pre><code>echo "deb https://piyushdoorwar.github.io/lumyn-transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
+sudo apt update
+sudo apt install transmux</code></pre>
+            </div>
+
+            <div class="install-method">
+              <h3>Linux (Ubuntu/Debian) – Direct .deb Install</h3>
+              <p>Download the <code>.deb</code> file from the Versions tab, then install directly:</p>
+              <pre><code>sudo apt install ~/Downloads/transmux_*.deb</code></pre>
+            </br>
+              <p class="install-note">Requires <code>ffmpeg</code> installed via <code>sudo apt install ffmpeg</code></p>
+            </div>
+
+            <div class="install-method">
+              <h3>Windows – .exe Installer</h3>
+              <p>Download the <code>.exe</code> installer from the Versions tab and run it. FFmpeg is bundled, no additional setup needed.</p>
+            </div>
+          </div>
         </div>
       </div>
-
-      <!-- Release list -->
-      <div id="release-list" class="release-list">
-        <div id="releases-loading" class="releases-state">
-          <span class="spinner" aria-hidden="true"></span>
-          <span>Fetching releases…</span>
-        </div>
-        <div id="releases-error" class="releases-state hidden">
-          Could not load releases. <a href="https://github.com/piyushdoorwar/transmux/releases" rel="noreferrer">View on GitHub →</a>
-        </div>
-        <div id="releases-empty" class="releases-state hidden">
-          No releases found for this platform yet.
-        </div>
-        <div id="releases-items"></div>
-      </div>
-
-      <!-- Pagination -->
-      <nav class="pagination" id="pagination" aria-label="Releases pagination" hidden>
-        <button id="page-prev" class="page-btn" aria-label="Previous page" disabled>← Prev</button>
-        <span id="page-label" class="page-label"></span>
-        <button id="page-next" class="page-btn" aria-label="Next page">Next →</button>
-      </nav>
     </main>
 
     <footer>

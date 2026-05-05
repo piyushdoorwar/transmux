@@ -795,6 +795,13 @@ footer a:hover,
   font-size: 15px;
 }
 
+.releases-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
 .os-tabs {
   display: flex;
   gap: 6px;
