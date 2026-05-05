@@ -148,7 +148,7 @@ jobs:
       - name: Add .deb to repository
         run: |
           cd debian
-          for deb in ../../deb-artifacts/*.deb; do
+          for deb in ../deb-artifacts/*.deb; do
             reprepro includedeb stable "$deb"
           done
 
