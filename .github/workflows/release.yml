@@ -115,9 +115,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Checkout main branch
-        run: git checkout main
+        run: git checkout -B main origin/main
 
       - name: Download .deb artifact
         uses: actions/download-artifact@v4
