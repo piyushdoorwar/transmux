@@ -12,7 +12,7 @@ This document explains how the Debian repository is set up and maintained for Tr
 
 2. **User Installation**: Users can add the repository:
    ```bash
-   echo "deb https://piyushdoorwar.github.io/lumyn-transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
+   echo "deb https://piyushdoorwar.github.io/transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
    sudo apt update
    sudo apt install transmux
    ```
@@ -94,5 +94,5 @@ Requires:
 
 ## URLs
 
-- **Repository URL**: `https://piyushdoorwar.github.io/lumyn-transmux/debian`
-- **Releases Page**: `https://piyushdoorwar.github.io/lumyn-transmux/releases`
+- **Repository URL**: `https://piyushdoorwar.github.io/transmux/debian`
+- **Releases Page**: `https://piyushdoorwar.github.io/transmux/releases`

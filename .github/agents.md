@@ -63,7 +63,7 @@ Design philosophy: a single-purpose, no-frills conversion tool. Pick a file, pic
 ## 3. Solution Structure
 
 ```
-lumyn-transmux/
+transmux/
 ├── Transmux.sln                     # Visual Studio solution (2 projects)
 ├── Directory.Build.props            # Global build config (net10.0, nullable, etc.)
 ├── Directory.Packages.props         # Central NuGet version management

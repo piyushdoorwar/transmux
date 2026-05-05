@@ -8,8 +8,8 @@ namespace Transmux.App.Views;
 
 public partial class AboutDialog : Window
 {
-    private const string GitHubUrl = "https://github.com/piyushdoorwar/lumyn-transmux";
-    private const string ReleasesUrl = "https://github.com/piyushdoorwar/lumyn-transmux/releases";
+    private const string GitHubUrl = "https://github.com/piyushdoorwar/transmux";
+    private const string ReleasesUrl = "https://github.com/piyushdoorwar/transmux/releases";
 
     public AboutDialog()
     {
