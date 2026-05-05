@@ -72,3 +72,52 @@ hydrateDownloadLinks();
   );
   document.querySelectorAll("[data-reveal]").forEach((el) => obs.observe(el));
 })();
+
+// ── Installation tabs ──────────────────────────────────────────────────────
+(function () {
+  const tabButtons = document.querySelectorAll(".tab-button");
+  const tabContents = document.querySelectorAll(".tab-content");
+
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const tabName = button.dataset.tab;
+
+      // Deactivate all tabs and contents
+      tabButtons.forEach((btn) => btn.classList.remove("active"));
+      tabContents.forEach((content) => content.classList.remove("active"));
+
+      // Activate selected tab
+      button.classList.add("active");
+      document.querySelector(`[data-tab="${tabName}"].tab-content`)?.classList.add("active");
+    });
+  });
+})();
+
+// ── Copy to clipboard ──────────────────────────────────────────────────────
+(function () {
+  const copyButtons = document.querySelectorAll(".copy-button");
+
+  copyButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const codeBlock = button.closest(".install-code-wrapper").querySelector(".install-code");
+      const text = codeBlock.textContent;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        
+        // Show feedback
+        button.classList.add("copied");
+        const originalLabel = button.getAttribute("aria-label");
+        button.setAttribute("aria-label", "Copied!");
+        
+        // Reset after 2 seconds
+        setTimeout(() => {
+          button.classList.remove("copied");
+          button.setAttribute("aria-label", originalLabel);
+        }, 2000);
+      } catch (err) {
+        console.error("Failed to copy:", err);
+      }
+    });
+  });
+})();

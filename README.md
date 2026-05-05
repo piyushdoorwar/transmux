@@ -34,13 +34,29 @@ sudo apt install ffmpeg
 
 On Windows and macOS, FFmpeg is included in the installer — no separate install needed.
 
-## Download
+## Installation
 
-Download the latest release from:
+### Linux (Ubuntu/Debian)
 
-https://github.com/piyushdoorwar/lumyn-transmux/releases/latest
+**Via Debian Repository** (recommended):
+```bash
+echo "deb https://piyushdoorwar.github.io/lumyn-transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
+sudo apt update
+sudo apt install transmux
+```
 
-Ubuntu users can install the `.deb` package. Windows users can run the `.exe` installer. macOS users can open the `.dmg` and drag Transmux to their Applications folder.
+**Direct `.deb` file**:
+```bash
+sudo apt install https://github.com/piyushdoorwar/lumyn-transmux/releases/download/v1.1.0/transmux_1.1.0_amd64.deb
+```
+
+### Windows
+
+Download and run the `.exe` installer from [releases](https://github.com/piyushdoorwar/lumyn-transmux/releases/latest).
+
+### macOS
+
+Download the `.dmg` from [releases](https://github.com/piyushdoorwar/lumyn-transmux/releases/latest), open it, and drag Transmux to your Applications folder.
 
 ## Run Locally
 

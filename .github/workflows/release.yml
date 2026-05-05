@@ -102,3 +102,58 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: "Transmux ${{ needs.prepare.outputs.version }}"
           files: release-artifacts/**/*
+
+  # ── Publish to Debian Repository ────────────────────────────────────────────
+  publish-debian-repo:
+    name: Publish to Debian repository
+    runs-on: ubuntu-latest
+    needs: [prepare, linux-deb]
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download .deb artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: transmux-linux-amd64-deb
+          path: ./deb-artifacts
+
+      - name: Set up reprepro
+        run: sudo apt-get install -y reprepro
+
+      - name: Initialize Debian repository structure
+        run: |
+          mkdir -p site/debian/conf
+          mkdir -p site/debian/dists/stable/main/binary-amd64
+          mkdir -p site/debian/pool/main/transmux
+
+      - name: Create reprepro configuration
+        run: |
+          cat > site/debian/conf/distributions <<'EOF'
+          Codename: stable
+          Components: main
+          Architectures: amd64
+          Description: Transmux media converter
+          EOF
+
+      - name: Add .deb to repository
+        run: |
+          cd site/debian
+          for deb in ../../deb-artifacts/*.deb; do
+            reprepro includedeb stable "$deb"
+          done
+
+      - name: Configure git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Commit and push changes
+        run: |
+          git add site/debian/
+          git diff-index --quiet HEAD || git commit -m "chore: publish Transmux $VERSION to Debian repository"
+          git push
