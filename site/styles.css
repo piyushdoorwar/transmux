@@ -329,14 +329,14 @@ h3 {
 }
 
 .cvt-body {
-  padding: 22px 24px 26px;
+  padding: 28px 28px 36px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 24px;
 }
 
 .cvt-dropzone {
-  padding: 24px 26px;
+  padding: 36px 28px;
   border: 1px dashed rgba(255, 255, 255, 0.12);
   border-radius: 6px;
   background: #161616;
@@ -346,9 +346,9 @@ h3 {
 }
 
 .cvt-file-icon {
-  width: 28px;
-  height: 34px;
-  margin-bottom: 8px;
+  width: 32px;
+  height: 40px;
+  margin-bottom: 12px;
   border: 2px solid rgba(255, 255, 255, 0.18);
   border-radius: 4px;
   background: #1e1e1e;
@@ -433,11 +433,11 @@ h3 {
 .cvt-progress-section {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .cvt-progress-bar {
-  height: 6px;
+  height: 8px;
   overflow: hidden;
   border-radius: 999px;
   background: #2d2d2d;
