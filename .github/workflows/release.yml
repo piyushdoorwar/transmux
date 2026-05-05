@@ -132,13 +132,13 @@ jobs:
 
       - name: Initialize Debian repository structure
         run: |
-          mkdir -p debian/conf
-          mkdir -p debian/dists/stable/main/binary-amd64
-          mkdir -p debian/pool/main/transmux
+          mkdir -p site/debian/conf
+          mkdir -p site/debian/dists/stable/main/binary-amd64
+          mkdir -p site/debian/pool/main/transmux
 
       - name: Create reprepro configuration
         run: |
-          cat > debian/conf/distributions <<'EOF'
+          cat > site/debian/conf/distributions <<'EOF'
           Codename: stable
           Components: main
           Architectures: amd64
@@ -147,8 +147,8 @@ jobs:
 
       - name: Add .deb to repository
         run: |
-          cd debian
-          for deb in ../deb-artifacts/*.deb; do
+          cd site/debian
+          for deb in ../../deb-artifacts/*.deb; do
             reprepro includedeb stable "$deb"
           done
 
@@ -159,6 +159,6 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git add debian/
+          git add site/debian/
           git diff-index --quiet HEAD || git commit -m "chore: publish Transmux $VERSION to Debian repository"
           git push
