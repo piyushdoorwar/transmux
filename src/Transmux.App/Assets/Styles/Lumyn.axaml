@@ -27,17 +27,17 @@
   </Style>
 
   <Style Selector="Button.accent">
-    <Setter Property="Background" Value="#3A9B4B" />
-    <Setter Property="BorderBrush" Value="#48B35A" />
+    <Setter Property="Background" Value="#3A6E9B" />
+    <Setter Property="BorderBrush" Value="#4B8FBE" />
     <Setter Property="Foreground" Value="#FFFFFF" />
   </Style>
 
   <Style Selector="Button.accent:pointerover">
-    <Setter Property="Background" Value="#43AD56" />
+    <Setter Property="Background" Value="#4382AD" />
   </Style>
 
   <Style Selector="Button.accent:pressed">
-    <Setter Property="Background" Value="#2F7D3D" />
+    <Setter Property="Background" Value="#2F587D" />
   </Style>
 
   <Style Selector="Button.icon">
@@ -55,7 +55,7 @@
   </Style>
 
   <Style Selector="Slider">
-    <Setter Property="Foreground" Value="#3A9B4B" />
+    <Setter Property="Foreground" Value="#3A6E9B" />
     <Setter Property="Focusable" Value="False" />
   </Style>
 
@@ -101,7 +101,7 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="Foreground" Value="#3A9B4B" />
+    <Setter Property="Foreground" Value="#3A6E9B" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="MinHeight" Value="0" />
     <Setter Property="FontSize" Value="12" />
@@ -110,12 +110,12 @@
 
   <Style Selector="Button.link:pointerover">
     <Setter Property="Background" Value="Transparent" />
-    <Setter Property="Foreground" Value="#4BAD5D" />
+    <Setter Property="Foreground" Value="#5A9FCE" />
   </Style>
 
-  <!-- ProgressBar green fill -->
+  <!-- ProgressBar blue fill -->
   <Style Selector="ProgressBar /template/ Border#PART_Indicator">
-    <Setter Property="Background" Value="#3A9B4B" />
+    <Setter Property="Background" Value="#3A6E9B" />
     <Setter Property="CornerRadius" Value="4" />
   </Style>
 
@@ -142,14 +142,14 @@
   </Style>
 
   <Style Selector="Button.seg-on">
-    <Setter Property="Background" Value="#1D3626" />
-    <Setter Property="Foreground" Value="#4BBE5E" />
-    <Setter Property="BorderBrush" Value="#2A5038" />
+    <Setter Property="Background" Value="#1D2C36" />
+    <Setter Property="Foreground" Value="#5AA8D8" />
+    <Setter Property="BorderBrush" Value="#2A4150" />
     <Setter Property="BorderThickness" Value="1" />
   </Style>
 
   <Style Selector="Button.seg-on:pointerover">
-    <Setter Property="Background" Value="#24402F" />
-    <Setter Property="Foreground" Value="#5DBE6E" />
+    <Setter Property="Background" Value="#243847" />
+    <Setter Property="Foreground" Value="#5DA4D6" />
   </Style>
 </Styles>

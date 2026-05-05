@@ -318,7 +318,7 @@
                          Maximum="100"
                          Height="8"
                          CornerRadius="4"
-                         Foreground="#3A9B4B"
+                         Foreground="#3A6E9B"
                          Background="#252525"
                          VerticalAlignment="Center" />
             <TextBlock Grid.Column="1"
@@ -351,8 +351,8 @@
 
         <!-- Complete state -->
         <Border IsVisible="{Binding IsComplete}"
-                Background="#0D1F10"
-                BorderBrush="#1F3D24"
+                Background="#0D171F"
+                BorderBrush="#1F303D"
                 BorderThickness="1"
                 CornerRadius="6"
                 Padding="14,10">
@@ -360,13 +360,13 @@
             <TextBlock Grid.Column="0"
                        Text="✓  Conversion complete"
                        FontSize="13"
-                       Foreground="#5DBE6E"
+                       Foreground="#5DA4D6"
                        VerticalAlignment="Center" />
             <Button Grid.Column="1"
                     Command="{Binding OpenOutputFolderCommand}"
                     Background="Transparent"
-                    BorderBrush="#1F3D24"
-                    Foreground="#5DBE6E"
+                    BorderBrush="#1F303D"
+                    Foreground="#5DA4D6"
                     CornerRadius="4"
                     Padding="10,4"
                     FontSize="12"

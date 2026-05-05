@@ -5,34 +5,34 @@
   <!--
     Lumyn logo as a DrawingImage — reusable at any size via <Image>.
     Coordinate space: 256 × 256.
-    Stroke paths use a green Pen; the play-triangle uses a softened light fill.
+    Stroke paths use a blue Pen; the play-triangle uses a softened light fill.
   -->
   <DrawingImage x:Key="Icon.LumynLogo">
     <DrawingImage.Drawing>
       <DrawingGroup>
         <!-- Signal lines -->
         <GeometryDrawing Geometry="M22 71.5L135 19">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <GeometryDrawing Geometry="M22 103.5L234 5">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <GeometryDrawing Geometry="M22 135.5L234 37">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <GeometryDrawing Geometry="M22 167.5L234 69">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <!-- TV body -->
         <GeometryDrawing Geometry="M96 118V181H62L67 207H189L194 181H159V130">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="18" LineCap="Round" LineJoin="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="18" LineCap="Round" LineJoin="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <!-- TV stand legs -->
         <GeometryDrawing Geometry="M71 217L184 197">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="12" LineCap="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="12" LineCap="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <GeometryDrawing Geometry="M75 239L176 221">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="12" LineCap="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="12" LineCap="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <!-- Play triangle -->
         <GeometryDrawing
@@ -49,19 +49,19 @@
     <DrawingImage.Drawing>
       <DrawingGroup>
         <GeometryDrawing Geometry="M22 71.5L135 19">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <GeometryDrawing Geometry="M22 103.5L234 5">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <GeometryDrawing Geometry="M22 135.5L234 37">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <GeometryDrawing Geometry="M22 167.5L234 69">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="18" LineCap="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <GeometryDrawing Geometry="M96 118V181H62L67 207H189L194 181H159V130">
-          <GeometryDrawing.Pen><Pen Brush="#3A9B4B" Thickness="18" LineCap="Round" LineJoin="Round" /></GeometryDrawing.Pen>
+          <GeometryDrawing.Pen><Pen Brush="#3A6E9B" Thickness="18" LineCap="Round" LineJoin="Round" /></GeometryDrawing.Pen>
         </GeometryDrawing>
         <GeometryDrawing
             Brush="#D8D4CF"
@@ -81,8 +81,8 @@
         <GeometryDrawing Brush="#111111" Geometry="M31.77 234.14c-3.12-3.22-2.66-128.58 0-132 1.83-2.34 186.58-2.34 190.26 0 3.4 2.16 2.48 129.93 0 132-5.5 4.55-186.38 4-190.26 0z" />
         <!-- Screen body outline -->
         <GeometryDrawing Brush="#111111" Geometry="M130.77 245.35h-4.49c-24.1 0-46.88-.35-64.17-.88-32.45-1-33.59-2.18-36.09-4.75s-4.54-4.72-4.42-71.52c0-16.69.25-32.56.61-44.68.69-23 1.49-24 3.26-26.29 2.61-3.34 6.09-3.48 14.52-3.83 5.12-.21 12.4-.4 21.63-.55 17.1-.28 40-.44 64.59-.44s47.61.16 64.93.44c32 .52 32.85 1.08 35.18 2.56 4 2.53 4.44 6.86 4.95 14.94 1 16.3 1.11 49.25.87 72.51-.56 53.77-1.68 54.7-5 57.45-2.44 2-4.06 3.36-36.37 4.32-16.06.46-37.23.72-60 .72zm-92.05-18c26.43 2.62 150.17 2.66 176.21.07 1.41-20.23 2-97 .31-118-27.17-1.42-148.84-1.42-176.47 0-1.58 21.46-1.62 98-.05 117.93z" />
-        <!-- Screen body green fill -->
-        <GeometryDrawing Brush="#3A9B4B" Geometry="M31.77 234.14c-3.12-3.22-2.66-128.58 0-132 1.83-2.34 186.58-2.34 190.26 0 3.4 2.16 2.48 129.93 0 132-5.5 4.55-186.38 4-190.26 0z" />
+        <!-- Screen body blue fill -->
+        <GeometryDrawing Brush="#3A6E9B" Geometry="M31.77 234.14c-3.12-3.22-2.66-128.58 0-132 1.83-2.34 186.58-2.34 190.26 0 3.4 2.16 2.48 129.93 0 132-5.5 4.55-186.38 4-190.26 0z" />
         <!-- Separator bar dark -->
         <GeometryDrawing Brush="#111111" Geometry="M223.21 123.51c.74-1.1.94-31.2-1-32-5.6-2.46-186.21-2.29-190.8.49-1.74 1-1.88 30.31-1.1 31.55s192.16 1.06 192.9-.04z" />
         <!-- Separator bar outline -->

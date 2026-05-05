@@ -31,7 +31,7 @@
 
 - **Repo**: `piyushdoorwar/transmux`
 - **Owner/Author**: Piyush Doorwar
-- **Brand**: "Transmux — powered by Lumyn" (reuses Lumyn color palette and visual identity)
+- **Brand**: "Transmux — powered by Lumyn" (reuses Lumyn blue color palette and visual identity)
 - **License**: Source available — non-commercial personal use
 - **Current version base**: `1.0`
 - **Website**: deployed to GitHub Pages from `/site/`
@@ -247,7 +247,7 @@ A segmented **Fast / Full re-encode** toggle appears in the options panel:
 - On completion: brief success state with "Open folder" shortcut
 
 ### UI & Platform
-- Clean dark theme (Lumyn palette: `#111111` background, `#DEDAD5` text, `#3A9B4B` accent)
+- Clean dark theme (Lumyn palette: `#111111` background, `#DEDAD5` text, `#3A6E9B` accent)
 - Single window, no sidebar — focused workflow
 - Drag-and-drop input file onto the window
 - About dialog (version + credits)
