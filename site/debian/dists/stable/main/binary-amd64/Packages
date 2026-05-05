@@ -1,15 +1,15 @@
 Package: transmux
-Version: 1.4.6
+Version: 1.4.7
 Architecture: amd64
 Depends: ffmpeg
 Maintainer: Piyush Doorwar
 Priority: optional
 Section: video
-Filename: pool/main/t/transmux/transmux_1.4.6_amd64.deb
-Size: 44157054
-SHA256: 376bbf0e19505496f3ab50f1c99bb57e0fabd7281076023828fca02aee59bfa4
-SHA1: b1d67473bff4adba5df67956adb0d869707ea948
-MD5sum: 2c10e0512111539b2d40c6e319826d02
+Filename: pool/main/t/transmux/transmux_1.4.7_amd64.deb
+Size: 44157574
+SHA256: 2aeecb431a6ade48ddefe6f66a83e7028e772be999edbdf25b1a69111e220275
+SHA1: 86d9792cc7a69f9feb3ff1d712a64e641829837e
+MD5sum: 814dded235faa88206c7399f670255d3
 Description: Transmux audio/video converter
  A clean desktop converter for audio and video files, powered by Lumyn.
  Drop in a file, pick an output format, and convert.
