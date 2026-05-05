@@ -143,7 +143,8 @@
             <div class="debian-install">
               <p class="install-desc">Get automatic updates through Ubuntu's package manager:</p>
               <div class="install-code-wrapper">
-                <pre class="install-code"><code>echo "deb https://piyushdoorwar.github.io/transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
+                <pre class="install-code"><code>curl -fsSL https://piyushdoorwar.github.io/transmux/debian/transmux.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/transmux.gpg > /dev/null
+echo "deb [signed-by=/etc/apt/keyrings/transmux.gpg] https://piyushdoorwar.github.io/transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
 sudo apt update
 sudo apt install transmux</code></pre>
                 <button class="copy-button" aria-label="Copy installation command" title="Copy to clipboard">

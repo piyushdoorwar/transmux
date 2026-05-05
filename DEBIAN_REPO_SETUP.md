@@ -12,7 +12,8 @@ This document explains how the Debian repository is set up and maintained for Tr
 
 2. **User Installation**: Users can add the repository:
    ```bash
-   echo "deb https://piyushdoorwar.github.io/transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
+   curl -fsSL https://piyushdoorwar.github.io/transmux/debian/transmux.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/transmux.gpg > /dev/null
+   echo "deb [signed-by=/etc/apt/keyrings/transmux.gpg] https://piyushdoorwar.github.io/transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
    sudo apt update
    sudo apt install transmux
    ```

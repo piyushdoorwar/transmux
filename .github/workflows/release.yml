@@ -130,6 +130,14 @@ jobs:
       - name: Set up reprepro
         run: sudo apt-get install -y reprepro
 
+      - name: Import GPG signing key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          KEY_FP=$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr/{print $10; exit}')
+          echo "KEY_FP=${KEY_FP}" >> "$GITHUB_ENV"
+
       - name: Initialize Debian repository structure
         run: |
           mkdir -p site/debian/conf
@@ -138,11 +146,12 @@ jobs:
 
       - name: Create reprepro configuration
         run: |
-          cat > site/debian/conf/distributions <<'EOF'
+          cat > site/debian/conf/distributions <<EOF
           Codename: stable
           Components: main
           Architectures: amd64
           Description: Transmux media converter
+          SignWith: ${KEY_FP}
           EOF
 
       - name: Add .deb to repository
@@ -151,6 +160,10 @@ jobs:
           for deb in ../../deb-artifacts/*.deb; do
             reprepro includedeb stable "$deb"
           done
+
+      - name: Export public key
+        run: |
+          gpg --armor --export "${KEY_FP}" > site/debian/transmux.asc
 
       - name: Configure git
         run: |

@@ -40,7 +40,8 @@ On Windows and macOS, FFmpeg is included in the installer — no separate instal
 
 **Via Debian Repository** (recommended):
 ```bash
-echo "deb https://piyushdoorwar.github.io/transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
+curl -fsSL https://piyushdoorwar.github.io/transmux/debian/transmux.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/transmux.gpg > /dev/null
+echo "deb [signed-by=/etc/apt/keyrings/transmux.gpg] https://piyushdoorwar.github.io/transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
 sudo apt update
 sudo apt install transmux
 ```
