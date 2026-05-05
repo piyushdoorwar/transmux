@@ -1,0 +1,12 @@
+<svg width="512" height="512" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>Lumyn</title>
+  <path d="M22 71.5L135 19" stroke="#3A9B4B" stroke-width="18" stroke-linecap="round"/>
+  <path d="M22 103.5L234 5" stroke="#3A9B4B" stroke-width="18" stroke-linecap="round"/>
+  <path d="M22 135.5L234 37" stroke="#3A9B4B" stroke-width="18" stroke-linecap="round"/>
+  <path d="M22 167.5L234 69" stroke="#3A9B4B" stroke-width="18" stroke-linecap="round"/>
+  <path d="M155 118L229 83.5" stroke="#3A9B4B" stroke-width="18" stroke-linecap="round"/>
+  <path d="M96 118V181H62L67 207H189L194 181H159V130" stroke="#3A9B4B" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M71 217L184 197" stroke="#3A9B4B" stroke-width="12" stroke-linecap="round"/>
+  <path d="M75 239L176 221" stroke="#3A9B4B" stroke-width="12" stroke-linecap="round"/>
+  <path d="M112 150C112 147.7 114.5 146.3 116.5 147.5L142.5 163.2C145.5 165 145.5 170 142.5 171.8L116.5 187.5C114.5 188.7 112 187.3 112 185V150Z" fill="#D8D4CF"/>
+</svg>

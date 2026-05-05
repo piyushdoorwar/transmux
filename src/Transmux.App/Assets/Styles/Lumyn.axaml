@@ -1,0 +1,125 @@
+<Styles xmlns="https://github.com/avaloniaui">
+  <Style Selector="Window">
+    <Setter Property="FontFamily" Value="Cantarell, Ubuntu, Inter, Segoe UI, sans-serif" />
+  </Style>
+
+  <Style Selector="Button">
+    <Setter Property="Background" Value="#3D3846" />
+    <Setter Property="Foreground" Value="#F7F5F3" />
+    <Setter Property="BorderBrush" Value="#5E5968" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="Padding" Value="12,6" />
+    <Setter Property="MinHeight" Value="34" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="Transitions">
+      <Transitions />
+    </Setter>
+  </Style>
+
+  <Style Selector="Button:pointerover">
+    <Setter Property="Background" Value="#4D4658" />
+  </Style>
+
+  <Style Selector="Button:pressed">
+    <Setter Property="Background" Value="#2D2834" />
+  </Style>
+
+  <Style Selector="Button.accent">
+    <Setter Property="Background" Value="#3A9B4B" />
+    <Setter Property="BorderBrush" Value="#48B35A" />
+    <Setter Property="Foreground" Value="#FFFFFF" />
+  </Style>
+
+  <Style Selector="Button.accent:pointerover">
+    <Setter Property="Background" Value="#43AD56" />
+  </Style>
+
+  <Style Selector="Button.accent:pressed">
+    <Setter Property="Background" Value="#2F7D3D" />
+  </Style>
+
+  <Style Selector="Button.icon">
+    <Setter Property="Width" Value="36" />
+    <Setter Property="MinWidth" Value="36" />
+    <Setter Property="Height" Value="32" />
+    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="Button.icon:pointerover">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+
+  <Style Selector="Slider">
+    <Setter Property="Foreground" Value="#3A9B4B" />
+    <Setter Property="Focusable" Value="False" />
+  </Style>
+
+  <Style Selector="PathIcon">
+    <Setter Property="Foreground" Value="#F7F5F3" />
+  </Style>
+
+  <!-- Window chrome buttons (minimize / close) -->
+  <Style Selector="Button.wchrome">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Foreground" Value="#AAAAAA" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Width" Value="42" />
+    <Setter Property="MinWidth" Value="42" />
+    <Setter Property="Height" Value="38" />
+    <Setter Property="MinHeight" Value="38" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Focusable" Value="False" />
+  </Style>
+
+  <Style Selector="Button.wchrome:pointerover">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+
+  <Style Selector="Button.wchrome:pressed">
+    <Setter Property="Background" Value="#333333" />
+  </Style>
+
+  <Style Selector="Button.wchrome.close:pointerover">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+
+  <Style Selector="Button.wchrome.close:pressed">
+    <Setter Property="Background" Value="#A01E12" />
+  </Style>
+
+  <!-- Link-style text buttons (About dialog footer) -->
+  <Style Selector="Button.link">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Foreground" Value="#3A9B4B" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Cursor" Value="Hand" />
+  </Style>
+
+  <Style Selector="Button.link:pointerover">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="#4BAD5D" />
+  </Style>
+
+  <!-- ProgressBar green fill -->
+  <Style Selector="ProgressBar /template/ Border#PART_Indicator">
+    <Setter Property="Background" Value="#3A9B4B" />
+    <Setter Property="CornerRadius" Value="4" />
+  </Style>
+
+  <Style Selector="TextBlock">
+    <Setter Property="Foreground" Value="#F7F5F3" />
+  </Style>
+</Styles>

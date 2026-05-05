@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Lumyn is a clean desktop media player for local video playback, built with Avalonia and mpv."
+    />
+    <title>Lumyn Media Player</title>
+    <link rel="icon" href="assets/lumyn.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Lumyn home">
+        <img src="assets/lumyn.svg" alt="" />
+        <span>Lumyn</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="releases/">Releases</a>
+        <a href="policy/">Policy</a>
+        <a href="https://github.com/piyushdoorwar/lumyn-media-player" rel="noreferrer">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Desktop media player</p>
+          <h1>Lumyn</h1>
+          <p class="lede">
+            A quiet, fast local video player with a focused interface, mpv playback, subtitle tools,
+            and the controls you expect close at hand.
+          </p>
+          <div class="actions">
+            <a class="button primary" id="downloadLink" href="#download">Download latest</a>
+            <a class="button secondary" href="https://github.com/piyushdoorwar/lumyn-media-player" rel="noreferrer">
+              View source
+            </a>
+          </div>
+        </div>
+
+        <div class="player-preview" aria-label="Lumyn player preview">
+          <div class="window-bar">
+            <div class="mark">
+              <img src="assets/lumyn.svg" alt="" />
+            </div>
+            <span>sample-video.mkv - Lumyn</span>
+            <div class="window-buttons" aria-hidden="true">
+              <i></i><i></i><i></i>
+            </div>
+          </div>
+          <div class="screen">
+            <div class="play-ring">
+              <span></span>
+            </div>
+            <div class="subtitle">Clean playback, readable subtitles, no clutter.</div>
+          </div>
+          <div class="controls">
+            <div class="timeline"><span></span></div>
+            <div class="control-row">
+              <span>00:42</span>
+              <div class="control-icons" aria-hidden="true">
+                <i></i><i></i><i></i><i></i>
+              </div>
+              <span>1:28:04</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Feature marquee ──────────────────────────────────────────── -->
+        <div class="marquee-wrap" aria-hidden="true">
+          <div class="marquee-track">
+            <!-- row duplicated once for seamless loop -->
+            <ul class="marquee-row">
+              <li><img src="assets/ic-bookmark.svg" alt="" />Bookmarks</li>
+              <li><img src="assets/ic-subtitle-search.svg" alt="" />Subtitle Search</li>
+              <li><img src="assets/ic-subtitle-delay.svg" alt="" />Subtitle Delay</li>
+              <li><img src="assets/ic-subtitle-appearance.svg" alt="" />Subtitle Appearance</li>
+              <li><img src="assets/ic-playlist.svg" alt="" />Playlist / Queue</li>
+              <li><img src="assets/ic-audio.svg" alt="" />Audio Tracks</li>
+              <li><img src="assets/ic-speed.svg" alt="" />Playback Speed</li>
+              <li><img src="assets/ic-screenshot.svg" alt="" />Screenshot</li>
+              <li><img src="assets/ic-loop.svg" alt="" />Loop</li>
+              <li><img src="assets/ic-chapters.svg" alt="" />Chapter Markers</li>
+              <li><img src="assets/ic-open-file.svg" alt="" />Open File</li>
+              <li><img src="assets/ic-drag-drop.svg" alt="" />Drag &amp; Drop</li>
+              <li><img src="assets/ic-jump-to-time.svg" alt="" />Jump to Time</li>
+              <li><img src="assets/ic-always-on-top.svg" alt="" />Always on Top</li>
+              <li><img src="assets/ic-fullscreen.svg" alt="" />Fullscreen</li>
+              <li><img src="assets/ic-queue.svg" alt="" />Keyboard Shortcuts</li>
+            </ul>
+            <!-- duplicate for infinite scroll -->
+            <ul class="marquee-row" aria-hidden="true">
+              <li><img src="assets/ic-bookmark.svg" alt="" />Bookmarks</li>
+              <li><img src="assets/ic-subtitle-search.svg" alt="" />Subtitle Search</li>
+              <li><img src="assets/ic-subtitle-delay.svg" alt="" />Subtitle Delay</li>
+              <li><img src="assets/ic-subtitle-appearance.svg" alt="" />Subtitle Appearance</li>
+              <li><img src="assets/ic-playlist.svg" alt="" />Playlist / Queue</li>
+              <li><img src="assets/ic-audio.svg" alt="" />Audio Tracks</li>
+              <li><img src="assets/ic-speed.svg" alt="" />Playback Speed</li>
+              <li><img src="assets/ic-screenshot.svg" alt="" />Screenshot</li>
+              <li><img src="assets/ic-loop.svg" alt="" />Loop</li>
+              <li><img src="assets/ic-chapters.svg" alt="" />Chapter Markers</li>
+              <li><img src="assets/ic-open-file.svg" alt="" />Open File</li>
+              <li><img src="assets/ic-drag-drop.svg" alt="" />Drag &amp; Drop</li>
+              <li><img src="assets/ic-jump-to-time.svg" alt="" />Jump to Time</li>
+              <li><img src="assets/ic-always-on-top.svg" alt="" />Always on Top</li>
+              <li><img src="assets/ic-fullscreen.svg" alt="" />Fullscreen</li>
+              <li><img src="assets/ic-queue.svg" alt="" />Keyboard Shortcuts</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" id="features">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">What it does</p>
+          <h2>Built for watching, not managing.</h2>
+        </div>
+        <div class="feature-grid">
+          <article data-reveal>
+            <h3>mpv powered</h3>
+            <p>Native playback through mpv, packaged with release builds for a smoother first run.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.1s">
+            <h3>Subtitle friendly</h3>
+            <p>Load subtitle files, pick embedded tracks, adjust appearance, and tune sync delay.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.2s">
+            <h3>Focused controls</h3>
+            <p>Hover controls, seek shortcuts, speed controls, screenshots, looping, and track switching.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.3s">
+            <h3>Desktop native</h3>
+            <p>Avalonia UI with a compact custom title bar and a simple local-media workflow.</p>
+          </article>
+        </div>
+
+        <!-- ── Feature preview card marquee (image-based) ──────────────── -->
+        <div class="marquee-wrap marquee-wrap--cards" aria-hidden="true">
+          <div class="marquee-track marquee-track--rtl">
+            <div class="marquee-cards">
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-bookmarks.svg')"></div><span>Bookmarks</span></div>
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-playlist.svg')"></div><span>Playlist &amp; Queue</span></div>
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-subtitle-search.svg')"></div><span>Subtitle Search</span></div>
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-subtitles.svg')"></div><span>Subtitle Settings</span></div>
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-speed.svg')"></div><span>Playback Speed</span></div>
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-screenshot.svg')"></div><span>Screenshot</span></div>
+            </div>
+            <!-- duplicate for loop -->
+            <div class="marquee-cards" aria-hidden="true">
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-bookmarks.svg')"></div><span>Bookmarks</span></div>
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-playlist.svg')"></div><span>Playlist &amp; Queue</span></div>
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-subtitle-search.svg')"></div><span>Subtitle Search</span></div>
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-subtitles.svg')"></div><span>Subtitle Settings</span></div>
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-speed.svg')"></div><span>Playback Speed</span></div>
+              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-screenshot.svg')"></div><span>Screenshot</span></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="download" id="download">
+        <div data-reveal>
+          <p class="eyebrow">Latest release</p>
+          <h2>Get Lumyn for Ubuntu, Windows, and macOS</h2>
+          <p>
+            Release builds are distributed as a Debian package for Linux, a single-file installer for Windows, and a DMG for macOS.
+          </p>
+        </div>
+        <div class="download-actions" aria-label="Download Lumyn" data-reveal style="--reveal-delay: 0.15s">
+          <a class="button primary large platform-download disabled" id="linuxDownloadLink" aria-disabled="true" aria-label="Download Lumyn for Linux">
+            <img src="assets/ubuntu.svg" alt="" />
+            <span>Download</span>
+          </a>
+          <a class="button primary large platform-download disabled" id="windowsDownloadLink" aria-disabled="true" aria-label="Download Lumyn for Windows">
+            <img src="assets/windows.svg" alt="" />
+            <span>Download</span>
+          </a>
+          <a class="button primary large platform-download disabled" id="macosDownloadLink" aria-disabled="true" aria-label="Download Lumyn for macOS">
+            <img src="assets/apple.svg" alt="" />
+            <span>Download</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Lumyn Media Player</span>
+      <div class="footer-links">
+        <a href="releases/">All releases</a>
+        <a href="policy/">Policy</a>
+        <a href="https://github.com/piyushdoorwar/lumyn-media-player" rel="noreferrer">GitHub</a>
+        <button class="footer-support-link" id="footerSupportBtn">Support</button>
+      </div>
+    </footer>
+
+    <!-- Support modal -->
+    <div class="modal-backdrop hidden" id="supportModal" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle">
+      <div class="modal-box">
+        <div class="modal-header">
+          <p class="eyebrow" style="margin:0">Support and issues</p>
+          <button class="modal-close" aria-label="Close support dialog" id="closeSupportModal">✕</button>
+        </div>
+        <h2 id="supportModalTitle" class="modal-title">Need help with Lumyn?</h2>
+        <p class="modal-body">
+          Found a bug, hit a playback issue, or want to share feedback? Send an email and include your OS,
+          Lumyn version, and a short note about what happened.
+        </p>
+        <a class="button secondary large email-link" href="mailto:piyushdoorwar+lumyn.mp@gmail.com">
+          <img src="assets/mail.svg" alt="" />
+          <span>piyushdoorwar+lumyn.mp@gmail.com</span>
+        </a>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+      // Support modal
+      const supportBtn   = document.getElementById("footerSupportBtn");
+      const supportModal = document.getElementById("supportModal");
+      const closeModal   = document.getElementById("closeSupportModal");
+      supportBtn.addEventListener("click", () => { supportModal.classList.remove("hidden"); document.body.style.overflow = "hidden"; });
+      closeModal.addEventListener("click",  () => { supportModal.classList.add("hidden");    document.body.style.overflow = ""; });
+      supportModal.addEventListener("click", e => { if (e.target === supportModal) { supportModal.classList.add("hidden"); document.body.style.overflow = ""; } });
+      document.addEventListener("keydown", e => { if (e.key === "Escape" && !supportModal.classList.contains("hidden")) { supportModal.classList.add("hidden"); document.body.style.overflow = ""; } });
+    </script>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e9cd556fb46f4880a8842d37e2dfe3fb"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+  </body>
+</html>

@@ -1,0 +1,68 @@
+## Build output
+bin/
+obj/
+artifacts/
+publish/
+out/
+dist/
+Debug/
+Release/
+x64/
+x86/
+arm64/
+
+## .NET
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+project.lock.json
+project.fragment.lock.json
+artifacts/**/*.nupkg
+artifacts/**/*.snupkg
+*.nupkg
+*.snupkg
+
+## Test output
+TestResults/
+coverage/
+coverage*/
+*.coverage
+*.coveragexml
+coverage.cobertura.xml
+coverage.opencover.xml
+*.trx
+
+## IDEs and editors
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+## Rider
+_ReSharper*/
+*.DotSettings.user
+
+## Visual Studio Code local settings
+.history/
+
+## OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+## Logs and diagnostics
+*.log
+*.binlog
+*.dmp
+
+## Local environment
+.env
+.env.*
+!.env.example
+
+## Avalonia designer/cache
+*.avalonia.cache

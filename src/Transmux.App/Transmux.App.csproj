@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>Transmux</AssemblyName>
+    <RootNamespace>Transmux.App</RootNamespace>
+    <ApplicationIcon>Assets/Icons/lumyn.ico</ApplicationIcon>
+    <!-- Default version for local dev builds. Release builds override via -p:Version and -p:InformationalVersion. -->
+    <Version>0.0.0</Version>
+    <InformationalVersion>0.0.0-dev</InformationalVersion>
+    <!-- Trim unused code on publish to reduce output size -->
+    <PublishTrimmed>false</PublishTrimmed>
+    <PublishSingleFile>false</PublishSingleFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Transmux.Core/Transmux.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- lumyn.ico and lumyn.svg are native platform files, not Avalonia resources -->
+    <AvaloniaResource Include="Assets/**" Exclude="Assets/Icons/lumyn.ico;Assets/Icons/lumyn.svg" />
+  </ItemGroup>
+</Project>

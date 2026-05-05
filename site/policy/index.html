@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Lumyn privacy policy - local-first desktop media player, no app telemetry, clear third-party disclosures."
+    />
+    <title>Privacy Policy - Lumyn Media Player</title>
+    <link rel="icon" href="../assets/lumyn.svg" type="image/svg+xml" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #111111;
+        --panel: #161616;
+        --panel-2: #1e1e1e;
+        --line: #333333;
+        --muted: #9d9b98;
+        --text: #f7f5f3;
+        --soft: #dedad5;
+        --green: #3a9b4b;
+        --green-bright: #49b35c;
+        --green-glow: rgba(58, 155, 75, 0.12);
+        --warn: #d6a84f;
+        --warn-glow: rgba(214, 168, 79, 0.12);
+        --restrict: #e27b7b;
+        --restrict-glow: rgba(226, 123, 123, 0.1);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Cantarell, Ubuntu, Inter, "Segoe UI", sans-serif;
+        line-height: 1.6;
+      }
+
+      a {
+        color: var(--green-bright);
+        text-decoration: none;
+      }
+
+      a:hover { color: var(--text); }
+      h1, h2, h3, p { margin-top: 0; }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        min-height: 64px;
+        padding: 0 clamp(18px, 5vw, 64px);
+        background: rgba(20, 20, 20, 0.92);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(16px);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text);
+        font-weight: 800;
+      }
+
+      .brand img {
+        width: 30px;
+        height: 30px;
+      }
+
+      .topbar-link {
+        color: var(--soft);
+        font-size: 14px;
+      }
+
+      .topbar-link:hover { color: var(--text); }
+
+      .page-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: clamp(40px, 7vw, 80px) clamp(18px, 5vw, 48px) 80px;
+      }
+
+      .page-hero {
+        margin-bottom: clamp(32px, 5vw, 56px);
+        padding-bottom: clamp(24px, 4vw, 40px);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--green-bright);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .page-title {
+        margin-bottom: 16px;
+        font-size: clamp(34px, 6vw, 58px);
+        line-height: 1;
+      }
+
+      .page-lede {
+        max-width: 640px;
+        margin-bottom: 20px;
+        color: var(--soft);
+        font-size: clamp(15px, 2vw, 18px);
+      }
+
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 5px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--panel-2);
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--green-bright);
+        flex: 0 0 auto;
+      }
+
+      .dot.warn { background: var(--warn); }
+
+      .policy-section {
+        display: grid;
+        grid-template-columns: 52px 1fr;
+        gap: clamp(14px, 3vw, 24px);
+        padding: clamp(18px, 3vw, 28px) 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .section-num {
+        padding-top: 3px;
+        color: var(--green-bright);
+        font-size: 13px;
+        font-weight: 800;
+        opacity: 0.75;
+      }
+
+      .section-body h2 {
+        margin-bottom: 8px;
+        font-size: clamp(15px, 2vw, 18px);
+        font-weight: 800;
+      }
+
+      .section-body p {
+        margin-bottom: 10px;
+        color: var(--soft);
+        font-size: 14.5px;
+      }
+
+      .section-body p:last-child,
+      .section-body ul:last-child { margin-bottom: 0; }
+
+      .section-body ul {
+        display: grid;
+        gap: 8px;
+        margin: 8px 0 12px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .section-body li {
+        position: relative;
+        padding-left: 16px;
+        color: var(--soft);
+        font-size: 14.5px;
+      }
+
+      .section-body li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.68em;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--green);
+        transform: translateY(-50%);
+      }
+
+      .section-body strong { color: var(--text); }
+
+      code {
+        color: var(--soft);
+        font-family: "Ubuntu Mono", "Cascadia Code", monospace;
+        font-size: 0.9em;
+      }
+
+      .callout {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 6px;
+        padding: 7px 13px;
+        border: 1px solid rgba(58, 155, 75, 0.26);
+        border-radius: 6px;
+        background: var(--green-glow);
+        color: #a7ecb4;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .callout.warn {
+        border-color: rgba(214, 168, 79, 0.32);
+        background: var(--warn-glow);
+        color: #e8c980;
+      }
+
+      .callout.restrict {
+        border-color: rgba(226, 123, 123, 0.3);
+        background: var(--restrict-glow);
+        color: #f0a2a2;
+      }
+
+      footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+        padding: 24px clamp(18px, 5vw, 64px);
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .footer-links {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      footer a,
+      .footer-links a { color: var(--soft); }
+
+      footer a:hover,
+      .footer-links a:hover { color: var(--text); }
+
+      @media (max-width: 640px) {
+        .topbar {
+          align-items: flex-start;
+          flex-direction: column;
+          justify-content: center;
+          gap: 4px;
+          padding-top: 12px;
+          padding-bottom: 12px;
+        }
+
+        .policy-section {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+
+        .section-num {
+          padding-top: 0;
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../">
+        <img src="../assets/lumyn.svg" alt="" />
+        <span>Lumyn</span>
+      </a>
+      <a class="topbar-link" href="../">Back to site</a>
+    </header>
+
+    <main>
+      <div class="page-inner">
+        <div class="page-hero">
+          <p class="eyebrow">Lumyn Media Player</p>
+          <h1 class="page-title">Privacy Policy</h1>
+          <p class="page-lede">
+            Lumyn is built as a local-first desktop media player. The app does not have developer-run accounts, a backend service, advertising, or hidden telemetry. Some optional features contact third-party services when you use them.
+          </p>
+          <div class="meta-row">
+            <span class="meta-pill"><span class="dot"></span>Last updated: May 2, 2026</span>
+            <span class="meta-pill"><span class="dot"></span>App telemetry: None</span>
+            <span class="meta-pill"><span class="dot warn"></span>Third-party services: Optional</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="policy-section">
+            <p class="section-num">01</p>
+            <div class="section-body">
+              <h2>Scope</h2>
+              <p>This Privacy Policy applies to the Lumyn desktop application, the Lumyn website, release downloads, and related support channels operated by Piyush Doorwar (the "Developer"). By using Lumyn or the Lumyn website, you agree to this policy.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">02</p>
+            <div class="section-body">
+              <h2>Plain-English Summary</h2>
+              <p>Lumyn plays local media files on your device. The Developer does <strong>not</strong> collect your media files, watch history, subtitles, playlists, screenshots, settings, or playback activity from the app.</p>
+              <span class="callout">No app accounts. No developer backend. No hidden app telemetry.</span>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">03</p>
+            <div class="section-body">
+              <h2>Data the App Stores Locally</h2>
+              <p>Lumyn stores limited data on your device so the player can behave like a desktop app:</p>
+              <ul>
+                <li>Recent media file paths shown in the app.</li>
+                <li>Resume positions and media durations, keyed by a hash of the local file path.</li>
+                <li>Bookmarks and bookmark labels for local media files.</li>
+                <li>Subtitle settings, including subtitle file path, font, color, size, delay, and embedded track selection.</li>
+                <li>Session preferences such as volume, playback speed, and seek step.</li>
+              </ul>
+              <p>On supported desktop systems this data is stored in the operating system's application data area, including a Lumyn <code>settings.json</code> file. It remains on your device unless you share it, back it up, sync it, or delete it through your system.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">04</p>
+            <div class="section-body">
+              <h2>Media Files and Local Playback</h2>
+              <p>Lumyn opens media files and folders you choose through the file picker, drag and drop, command-line file association, or similar operating-system flows. Playback is local. The app does not upload your audio, video, cover art, playlists, or local subtitle files to the Developer.</p>
+              <p>If you use operating-system integrations, installers, file associations, sandbox permissions, or Flatpak portals, your operating system may process file paths and permissions according to its own behavior.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">05</p>
+            <div class="section-body">
+              <h2>Subtitle Search</h2>
+              <p>Lumyn includes optional online subtitle search. When you search for subtitles, the app normalizes the search query, usually from a media title or filename, and sends that query plus selected language information directly to third-party subtitle providers.</p>
+              <ul>
+                <li>OpenSubtitles may receive the query, language code, request metadata, and IP address.</li>
+                <li>Podnapisi may receive the query, language code, request metadata, and IP address.</li>
+                <li>YTS Subtitles may receive related search or IMDb lookup requests, request metadata, and IP address.</li>
+              </ul>
+              <p>Downloaded subtitles are saved to a temporary Lumyn subtitle folder on your device. The Developer does not proxy, store, or monitor subtitle searches or downloads.</p>
+              <span class="callout warn">Online subtitle search sends your search query to third-party subtitle services.</span>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">06</p>
+            <div class="section-body">
+              <h2>Update Checks</h2>
+              <p>The About dialog includes a manual "Check for Updates" action. When you use it, Lumyn contacts the GitHub releases API to check the latest published version. GitHub may receive your IP address, user agent, request time, and other standard request metadata.</p>
+              <p>The update check is not routed through a Developer-controlled server. Lumyn does not send your media library, settings, watch history, or personal files as part of the update check.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">07</p>
+            <div class="section-body">
+              <h2>Website and Release Downloads</h2>
+              <p>The Lumyn website fetches public release information from GitHub so it can show download links. When you visit the website, download releases, open GitHub links, or report issues on GitHub, GitHub and your browser/network providers may receive standard web request data.</p>
+              <p>The Lumyn website currently uses Cloudflare Web Analytics. Cloudflare may process limited website analytics data such as page views, referrers, device/browser information, approximate location derived from IP address, and similar request metadata. The Developer does not use the Lumyn desktop app to send analytics events.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">08</p>
+            <div class="section-body">
+              <h2>Support, Email, and Issues</h2>
+              <p>If you email support, open a GitHub issue, submit a pull request, or otherwise contact the Developer, you choose what information to provide. That may include your name, email address, GitHub username, operating system, logs, screenshots, media filenames, file paths, or other diagnostic details.</p>
+              <p>Please avoid sending private media files, sensitive screenshots, secrets, passwords, API keys, or personal information that is not needed to handle your request.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">09</p>
+            <div class="section-body">
+              <h2>What the Developer Does Not Do</h2>
+              <ul>
+                <li>The Developer does not sell your personal data.</li>
+                <li>The Developer does not operate Lumyn user accounts.</li>
+                <li>The Developer does not collect your media library from the app.</li>
+                <li>The Developer does not track what you watch or listen to in the app.</li>
+                <li>The Developer does not receive your local subtitles, bookmarks, screenshots, or playback settings from the app.</li>
+                <li>The Developer does not use the desktop app for advertising, profiling, or hidden telemetry.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">10</p>
+            <div class="section-body">
+              <h2>Third-Party Software and Services</h2>
+              <p>Lumyn uses third-party software and services, including Avalonia, .NET, mpv/libmpv, GitHub, Cloudflare Web Analytics on the website, and optional subtitle providers. Third-party software and services are governed by their own license terms, privacy policies, and operational practices.</p>
+              <p>The Developer is not responsible for third-party services, content, subtitle accuracy, service availability, security incidents, policy changes, or data practices outside the Developer's control.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">11</p>
+            <div class="section-body">
+              <h2>Security</h2>
+              <p>Lumyn is designed to keep app data local by default, but no software, operating system, network, storage medium, or third-party service can be guaranteed completely secure. You are responsible for securing your device, backups, synced folders, user account, downloads, and files.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">12</p>
+            <div class="section-body">
+              <h2>Children's Privacy</h2>
+              <p>Lumyn is a general-purpose desktop media player and is not directed to children. The Developer does not knowingly collect personal data from children through the Lumyn app.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">13</p>
+            <div class="section-body">
+              <h2>License and Usage Terms</h2>
+              <p>Lumyn source code is publicly viewable but is <strong>not open source</strong> under any OSI-approved license. The following apply:</p>
+              <ul>
+                <li><strong>Permitted:</strong> view the source, download/install/use official releases for personal non-commercial purposes, build from the official source repository for personal evaluation/testing/contribution, and contribute through the official repository.</li>
+                <li><strong>Prohibited:</strong> copying, mirroring, redistribution, republishing, modification for distribution, forks or derivative works for distribution, repackaging, resale, sublicensing, hosting as a service, or commercial use without explicit written permission.</li>
+              </ul>
+              <span class="callout restrict">Commercial use, redistribution, and modification for distribution are not permitted without explicit written permission from the copyright holder.</span>
+              <p style="margin-top: 10px;">Full license: <a href="https://github.com/piyushdoorwar/lumyn-media-player/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">github.com/piyushdoorwar/lumyn-media-player</a></p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">14</p>
+            <div class="section-body">
+              <h2>User Responsibility</h2>
+              <p>You are responsible for how you use Lumyn, including the media you open, subtitles you search for or download, screenshots you create, files you save, third-party services you contact, and compliance with laws, copyright rules, platform terms, and third-party rights that apply to you.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">15</p>
+            <div class="section-body">
+              <h2>No Warranty</h2>
+              <p>Lumyn, the website, release downloads, subtitle search, update checks, documentation, and support channels are provided on an <strong>"as is"</strong> and <strong>"as available"</strong> basis, without warranties of any kind, whether express, implied, statutory, or otherwise.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">16</p>
+            <div class="section-body">
+              <h2>Limitation of Liability</h2>
+              <p>To the maximum extent permitted by applicable law, the Developer shall not be liable for any direct, indirect, incidental, consequential, special, exemplary, or punitive damages, including loss of data, loss of files, playback failures, subtitle errors, device issues, security incidents, business interruption, loss of profits, or reputational harm arising out of or related to Lumyn.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">17</p>
+            <div class="section-body">
+              <h2>Indemnification</h2>
+              <p>You agree to indemnify, defend, and hold harmless the Developer from any claims, damages, liabilities, losses, and expenses, including legal fees, arising out of or related to:</p>
+              <ul>
+                <li>Your use or misuse of Lumyn, the website, release downloads, or support channels.</li>
+                <li>Your media files, subtitles, screenshots, downloads, or other content.</li>
+                <li>Your violation of laws, license terms, platform rules, or third-party rights.</li>
+                <li>Your use of third-party software, subtitle providers, GitHub, Cloudflare, operating-system integrations, or distribution platforms.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">18</p>
+            <div class="section-body">
+              <h2>Changes to This Policy</h2>
+              <p>This policy may be updated from time to time. Continued use of Lumyn or the Lumyn website after updates indicates acceptance of the revised policy. The "Last updated" date above identifies the current version.</p>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <p class="section-num">19</p>
+            <div class="section-body">
+              <h2>Contact</h2>
+              <p>Questions about this policy? Email <a href="mailto:piyushdoorwar+lumyn.mp@gmail.com">piyushdoorwar+lumyn.mp@gmail.com</a>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <span>&copy; <span id="yr"></span> Piyush Doorwar. Lumyn Media Player.</span>
+      <div class="footer-links">
+        <a href="../">Home</a>
+        <a href="../releases/">Releases</a>
+        <a href="https://github.com/piyushdoorwar/lumyn-media-player" rel="noreferrer">GitHub</a>
+        <a href="mailto:piyushdoorwar+lumyn.mp@gmail.com">Contact</a>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById("yr").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

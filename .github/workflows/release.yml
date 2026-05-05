@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version without v prefix (e.g. 1.2.3 or 1.2.3-beta.1)'
+        required: true
+        default: '0.0.0-dev'
+
+permissions:
+  contents: write
+
+jobs:
+  # ── Determine version ──────────────────────────────────────────────────────
+  prepare:
+    name: Determine version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.ver.outputs.version }}
+    steps:
+      - name: Extract version
+        id: ver
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+  # ── Linux .deb ─────────────────────────────────────────────────────────────
+  linux-deb:
+    name: Linux Debian package
+    runs-on: ubuntu-latest
+    needs: prepare
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build deb
+        run: ./scripts/build-linux.sh
+
+      - name: Upload deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: transmux-linux-amd64-deb
+          path: artifacts/packages/*.deb
+
+  # ── Windows installer ──────────────────────────────────────────────────────
+  windows-installer:
+    name: Windows installer
+    runs-on: windows-latest
+    needs: prepare
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Build Windows installer
+        shell: pwsh
+        run: ./scripts/build-windows.ps1
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: transmux-windows-x64-installer
+          path: artifacts/packages/*_setup.exe
+
+  # ── GitHub Release ─────────────────────────────────────────────────────────
+  github-release:
+    name: Attach artifacts to release
+    runs-on: ubuntu-latest
+    needs: [prepare, linux-deb, windows-installer]
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "Transmux ${{ needs.prepare.outputs.version }}"
+          files: release-artifacts/**/*

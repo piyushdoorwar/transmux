@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="All Lumyn Media Player releases - download for Linux, Windows, and macOS." />
+    <title>Releases - Lumyn Media Player</title>
+    <link rel="icon" href="../assets/lumyn.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Lumyn home">
+        <img src="../assets/lumyn.svg" alt="" />
+        <span>Lumyn</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="../#features">Features</a>
+        <a href="../#download">Download</a>
+        <a href="./" aria-current="page">Releases</a>
+        <a href="../policy/">Policy</a>
+        <a href="https://github.com/piyushdoorwar/lumyn-media-player" rel="noreferrer">GitHub</a>
+      </nav>
+    </header>
+
+    <main class="releases-main">
+      <div class="releases-header">
+        <div>
+          <p class="eyebrow">All versions</p>
+          <h1 class="releases-title">Releases</h1>
+          <p class="releases-subtitle">Download any previous release. Stable builds are listed by default.</p>
+        </div>
+
+        <!-- OS filter tabs + stable toggle -->
+        <div class="releases-filters">
+          <div class="os-tabs" role="tablist" aria-label="Filter by operating system">
+            <button class="os-tab active" role="tab" aria-selected="true"  data-os="all"     aria-controls="release-list">All</button>
+            <button class="os-tab"        role="tab" aria-selected="false" data-os="linux"   aria-controls="release-list">
+              <img src="../assets/ubuntu.svg" alt="" /> Linux
+            </button>
+            <button class="os-tab"        role="tab" aria-selected="false" data-os="windows" aria-controls="release-list">
+              <img src="../assets/windows.svg" alt="" /> Windows
+            </button>
+            <button class="os-tab"        role="tab" aria-selected="false" data-os="macos"   aria-controls="release-list">
+              <img src="../assets/apple.svg" alt="" /> macOS
+            </button>
+          </div>
+          <span class="releases-filters-sep" aria-hidden="true"></span>
+          <label class="stable-toggle" for="stableOnlyToggle">
+            <input type="checkbox" id="stableOnlyToggle" checked />
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            <span class="toggle-label">Stable only</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Release list -->
+      <div id="release-list" class="release-list">
+        <div id="releases-loading" class="releases-state">
+          <span class="spinner" aria-hidden="true"></span>
+          <span>Fetching releases…</span>
+        </div>
+        <div id="releases-error" class="releases-state hidden">
+          Could not load releases. <a href="https://github.com/piyushdoorwar/lumyn-media-player/releases" rel="noreferrer">View on GitHub →</a>
+        </div>
+        <div id="releases-empty" class="releases-state hidden">
+          No releases found for this platform yet.
+        </div>
+        <div id="releases-items"></div>
+      </div>
+
+      <!-- Pagination -->
+      <nav class="pagination" id="pagination" aria-label="Releases pagination" hidden>
+        <button id="page-prev" class="page-btn" aria-label="Previous page" disabled>← Prev</button>
+        <span id="page-label" class="page-label"></span>
+        <button id="page-next" class="page-btn" aria-label="Next page">Next →</button>
+      </nav>
+    </main>
+
+    <footer>
+      <span>Lumyn Media Player</span>
+      <div class="footer-links">
+        <a href="../policy/">Policy</a>
+        <a href="https://github.com/piyushdoorwar/lumyn-media-player" rel="noreferrer">GitHub</a>
+        <button class="footer-support-link" id="footerSupportBtnReleases">Support</button>
+      </div>
+    </footer>
+
+    <!-- Support modal (shared) -->
+    <div class="modal-backdrop hidden" id="supportModalReleases" role="dialog" aria-modal="true" aria-labelledby="supportModalTitleReleases">
+      <div class="modal-box">
+        <div class="modal-header">
+          <p class="eyebrow" style="margin:0">Support and issues</p>
+          <button class="modal-close" aria-label="Close support dialog" id="closeSupportReleases">✕</button>
+        </div>
+        <h2 id="supportModalTitleReleases" class="modal-title">Need help with Lumyn?</h2>
+        <p class="modal-body">
+          Found a bug, hit a playback issue, or want to share feedback? Send an email and include your OS,
+          Lumyn version, and a short note about what happened.
+        </p>
+        <a class="button secondary large email-link" href="mailto:piyushdoorwar+lumyn.mp@gmail.com">
+          <img src="../assets/mail.svg" alt="" />
+          <span>piyushdoorwar+lumyn.mp@gmail.com</span>
+        </a>
+      </div>
+    </div>
+
+    <script src="releases.js"></script>
+    <script>
+      // Support modal wiring for releases page
+      const btn = document.getElementById("footerSupportBtnReleases");
+      const modal = document.getElementById("supportModalReleases");
+      const closeBtn = document.getElementById("closeSupportReleases");
+      btn.addEventListener("click", () => { modal.classList.remove("hidden"); document.body.style.overflow = "hidden"; });
+      closeBtn.addEventListener("click", () => { modal.classList.add("hidden"); document.body.style.overflow = ""; });
+      modal.addEventListener("click", e => { if (e.target === modal) { modal.classList.add("hidden"); document.body.style.overflow = ""; } });
+      document.addEventListener("keydown", e => { if (e.key === "Escape" && !modal.classList.contains("hidden")) { modal.classList.add("hidden"); document.body.style.overflow = ""; } });
+    </script>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e9cd556fb46f4880a8842d37e2dfe3fb"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+  </body>
+</html>

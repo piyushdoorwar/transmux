@@ -1,0 +1,352 @@
+<Window
+    x:Class="Transmux.App.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Transmux.App.ViewModels"
+    Title="Transmux"
+    Width="680"
+    Height="560"
+    MinWidth="500"
+    MinHeight="430"
+    SystemDecorations="BorderOnly"
+    Background="#111111"
+    ExtendClientAreaToDecorationsHint="True">
+
+  <Grid RowDefinitions="38,*,32">
+
+    <!-- ── Top bar ──────────────────────────────────────────────────────── -->
+    <Border Grid.Row="0" Background="#141414">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+
+        <!-- Logo + title -->
+        <StackPanel Grid.Column="0"
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    VerticalAlignment="Center"
+                    Margin="12,0,0,0">
+          <Image Width="20" Height="20"
+                 Source="{StaticResource Icon.LumynMark}"
+                 VerticalAlignment="Center" />
+          <TextBlock Text="Transmux"
+                     FontSize="13"
+                     FontWeight="SemiBold"
+                     Foreground="#DEDAD5"
+                     VerticalAlignment="Center" />
+        </StackPanel>
+
+        <!-- Drag region -->
+        <Border Grid.Column="1"
+                Name="DragRegion"
+                Background="Transparent"
+                PointerPressed="DragRegion_PointerPressed" />
+
+        <!-- Window chrome -->
+        <StackPanel Grid.Column="2" Orientation="Horizontal">
+          <Button Classes="wchrome"
+                  Command="{Binding OpenAboutDialogCommand}"
+                  ToolTip.Tip="About">
+            <PathIcon Width="14" Height="14"
+                      Data="{StaticResource Icon.Info}"
+                      Foreground="#888" />
+          </Button>
+          <Button Classes="wchrome"
+                  Name="MinimizeButton"
+                  Click="MinimizeButton_Click">
+            <TextBlock Text="—" FontSize="13" Foreground="#888" />
+          </Button>
+          <Button Classes="wchrome close"
+                  Name="CloseButton"
+                  Click="CloseButton_Click">
+            <TextBlock Text="✕" FontSize="12" Foreground="#888" />
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- ── Main content ─────────────────────────────────────────────────── -->
+    <ScrollViewer Grid.Row="1"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Margin="32,24,32,24" Spacing="20">
+
+        <!-- Drop zone -->
+        <Border Name="DropZone"
+                Background="#1A1A1A"
+                BorderBrush="#2D2D2D"
+                BorderThickness="1"
+                CornerRadius="8"
+                MinHeight="100"
+                Cursor="Hand"
+                PointerPressed="DropZone_PointerPressed"
+                DragDrop.AllowDrop="True">
+          <Panel>
+            <!-- Empty state -->
+            <StackPanel IsVisible="{Binding !HasMedia}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="8"
+                        Margin="0,24">
+              <PathIcon Width="28" Height="28"
+                        HorizontalAlignment="Center"
+                        Data="{StaticResource Icon.Open}"
+                        Foreground="#3D3D3D" />
+              <TextBlock Text="Drop a file here, or click to browse"
+                         FontSize="14"
+                         Foreground="#555"
+                         HorizontalAlignment="Center" />
+              <TextBlock Text="Audio and video formats supported"
+                         FontSize="12"
+                         Foreground="#3A3A3A"
+                         HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <!-- File loaded state -->
+            <StackPanel IsVisible="{Binding HasMedia}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="4"
+                        Margin="0,20">
+              <TextBlock Text="{Binding InputFileName}"
+                         FontSize="14"
+                         FontWeight="SemiBold"
+                         Foreground="#DEDAD5"
+                         HorizontalAlignment="Center" />
+              <TextBlock Text="Click to change file"
+                         FontSize="11"
+                         Foreground="#444"
+                         HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Inspecting overlay -->
+            <Border IsVisible="{Binding IsInspecting}"
+                    Background="#1A1A1A"
+                    CornerRadius="8">
+              <TextBlock Text="Inspecting file…"
+                         FontSize="13"
+                         Foreground="#555"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         Margin="0,32" />
+            </Border>
+          </Panel>
+        </Border>
+
+        <!-- Media info panel -->
+        <Border IsVisible="{Binding HasMedia}"
+                Background="#161616"
+                BorderBrush="#242424"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="16,12">
+          <Grid ColumnDefinitions="80,*" RowDefinitions="Auto,Auto,Auto,Auto" >
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="Format"
+                       FontSize="12" Foreground="#555" Margin="0,0,0,7" />
+            <TextBlock Grid.Row="0" Grid.Column="1"
+                       Text="{Binding MediaSummaryFormat}"
+                       FontSize="12" Foreground="#C0BBB8" Margin="0,0,0,7" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0"
+                       Text="Video"
+                       FontSize="12" Foreground="#555" Margin="0,0,0,7" />
+            <TextBlock Grid.Row="1" Grid.Column="1"
+                       Text="{Binding MediaSummaryVideo}"
+                       FontSize="12" Foreground="#C0BBB8" Margin="0,0,0,7" />
+
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                       Text="Audio"
+                       FontSize="12" Foreground="#555" Margin="0,0,0,7" />
+            <TextBlock Grid.Row="2" Grid.Column="1"
+                       Text="{Binding MediaSummaryAudio}"
+                       FontSize="12" Foreground="#C0BBB8" Margin="0,0,0,7" />
+
+            <TextBlock Grid.Row="3" Grid.Column="0"
+                       Text="Subtitles"
+                       FontSize="12" Foreground="#555" />
+            <TextBlock Grid.Row="3" Grid.Column="1"
+                       Text="{Binding MediaSummarySubtitles}"
+                       FontSize="12" Foreground="#C0BBB8" />
+          </Grid>
+        </Border>
+
+        <!-- Options panel -->
+        <StackPanel IsVisible="{Binding HasMedia}" Spacing="12">
+
+          <!-- Output format -->
+          <Grid ColumnDefinitions="130,*">
+            <TextBlock Grid.Column="0"
+                       Text="Output format"
+                       FontSize="13" Foreground="#888"
+                       VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1"
+                      IsEnabled="{Binding IsInputEnabled}"
+                      ItemsSource="{Binding Formats}"
+                      SelectedItem="{Binding SelectedFormat}"
+                      HorizontalAlignment="Stretch"
+                      Background="#1E1E1E"
+                      BorderBrush="#303030"
+                      Foreground="#DEDAD5"
+                      CornerRadius="5"
+                      Padding="10,6">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding DisplayName}" FontSize="13" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </Grid>
+
+          <!-- Subtitle mode (only if input has subtitles) -->
+          <Grid IsVisible="{Binding ShowSubtitleMode}"
+                ColumnDefinitions="130,*">
+            <TextBlock Grid.Column="0"
+                       Text="Subtitles"
+                       FontSize="13" Foreground="#888"
+                       VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1"
+                      IsEnabled="{Binding IsInputEnabled}"
+                      ItemsSource="{Binding SubtitleModes}"
+                      SelectedItem="{Binding SelectedSubtitleModeOption}"
+                      HorizontalAlignment="Stretch"
+                      Background="#1E1E1E"
+                      BorderBrush="#303030"
+                      Foreground="#DEDAD5"
+                      CornerRadius="5"
+                      Padding="10,6">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Label}" FontSize="13" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </Grid>
+
+          <!-- Output path -->
+          <Grid ColumnDefinitions="130,*,Auto">
+            <TextBlock Grid.Column="0"
+                       Text="Save to"
+                       FontSize="13" Foreground="#888"
+                       VerticalAlignment="Center" />
+            <TextBox Grid.Column="1"
+                     IsEnabled="{Binding IsInputEnabled}"
+                     Text="{Binding OutputFilePath}"
+                     Background="#1E1E1E"
+                     BorderBrush="#303030"
+                     Foreground="#DEDAD5"
+                     CornerRadius="5,0,0,5"
+                     Padding="10,6"
+                     FontSize="13" />
+            <Button Grid.Column="2"
+                    IsEnabled="{Binding IsInputEnabled}"
+                    Command="{Binding BrowseOutputPathCommand}"
+                    Background="#2A2A2A"
+                    BorderBrush="#303030"
+                    BorderThickness="1,1,1,1"
+                    CornerRadius="0,5,5,0"
+                    Padding="10,6"
+                    Content="Browse" />
+          </Grid>
+
+        </StackPanel>
+
+        <!-- Convert button -->
+        <Button Classes="accent"
+                IsVisible="{Binding !IsConverting}"
+                Command="{Binding StartConversionCommand}"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                FontSize="14"
+                Padding="0,10"
+                Content="Convert" />
+
+        <!-- Progress bar + status -->
+        <StackPanel IsVisible="{Binding IsConverting}" Spacing="10">
+          <Grid ColumnDefinitions="*,Auto,Auto">
+            <ProgressBar Grid.Column="0"
+                         Value="{Binding ProgressPercent}"
+                         Maximum="100"
+                         Height="8"
+                         CornerRadius="4"
+                         Foreground="#3A9B4B"
+                         Background="#252525"
+                         VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1"
+                       Text="{Binding SpeedText}"
+                       FontSize="12" Foreground="#666"
+                       VerticalAlignment="Center"
+                       Margin="10,0,0,0" />
+            <TextBlock Grid.Column="2"
+                       Text="{Binding EtaText}"
+                       FontSize="12" Foreground="#666"
+                       VerticalAlignment="Center"
+                       Margin="8,0,0,0" />
+          </Grid>
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0"
+                       Text="{Binding ProgressPercent, StringFormat={}{0:F0}%}"
+                       FontSize="12" Foreground="#555"
+                       VerticalAlignment="Center" />
+            <Button Grid.Column="1"
+                    Command="{Binding CancelConversionCommand}"
+                    Background="#2A2A2A"
+                    BorderBrush="#3D3D3D"
+                    Foreground="#C8C3C2"
+                    CornerRadius="4"
+                    Padding="14,5"
+                    FontSize="12"
+                    Content="Cancel" />
+          </Grid>
+        </StackPanel>
+
+        <!-- Complete state -->
+        <Border IsVisible="{Binding IsComplete}"
+                Background="#0D1F10"
+                BorderBrush="#1F3D24"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="14,10">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0"
+                       Text="✓  Conversion complete"
+                       FontSize="13"
+                       Foreground="#5DBE6E"
+                       VerticalAlignment="Center" />
+            <Button Grid.Column="1"
+                    Command="{Binding OpenOutputFolderCommand}"
+                    Background="Transparent"
+                    BorderBrush="#1F3D24"
+                    Foreground="#5DBE6E"
+                    CornerRadius="4"
+                    Padding="10,4"
+                    FontSize="12"
+                    Content="Open folder" />
+          </Grid>
+        </Border>
+
+        <!-- Error state -->
+        <Border IsVisible="{Binding HasError}"
+                Background="#1F0D0D"
+                BorderBrush="#3D1F1F"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="14,10">
+          <TextBlock Text="{Binding ErrorMessage}"
+                     FontSize="12"
+                     Foreground="#C85050"
+                     TextWrapping="Wrap" />
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+
+    <!-- ── Footer ────────────────────────────────────────────────────────── -->
+    <Border Grid.Row="2" Background="#0D0D0D">
+      <TextBlock Text="Powered by Lumyn"
+                 FontSize="11"
+                 Foreground="#333"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center" />
+    </Border>
+
+  </Grid>
+</Window>

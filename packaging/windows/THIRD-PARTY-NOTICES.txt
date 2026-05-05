@@ -1,0 +1,12 @@
+Lumyn Windows package third-party notices
+
+The Windows portable package includes Lumyn and may include redistributable native
+mpv runtime binaries plus their dependency DLLs. mpv is licensed under GPLv2 or
+later. Some codecs and dependency DLLs bundled with mpv may have separate open
+source licenses.
+
+When creating a release, keep this file in the package and include any license,
+copying, copyright, or notice files distributed with the mpv build.
+
+mpv project: https://mpv.io/
+Windows mpv builds used by the packaging script: https://github.com/shinchiro/mpv-winbuild-cmake

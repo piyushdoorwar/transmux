@@ -1,0 +1,59 @@
+name: Build release artifacts
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  VERSION: "0.0.0-dev"
+
+jobs:
+  linux-deb:
+    name: Linux Debian package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build deb
+        run: ./scripts/build-linux.sh
+
+      - name: Upload deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: transmux-linux-amd64-deb
+          path: artifacts/packages/*.deb
+
+  windows-installer:
+    name: Windows installer
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Build Windows installer
+        shell: pwsh
+        run: ./scripts/build-windows.ps1
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: transmux-windows-x64-installer
+          path: artifacts/packages/*_setup.exe

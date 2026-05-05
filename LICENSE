@@ -1,0 +1,86 @@
+Transmux Source Available License
+
+Copyright (c) 2026 Piyush Doorwar. All rights reserved.
+
+This software, including its source code, application code, assets,
+documentation, build scripts, packaging files, branding, names, logos, and
+other project materials, is made publicly viewable under the terms below.
+
+Permission is granted, free of charge, to any person to:
+
+  1. VIEW this software and its source code.
+  2. DOWNLOAD, INSTALL, and USE official releases of this software for
+     personal, non-commercial purposes.
+  3. BUILD this software from the official source repository for personal,
+     non-commercial evaluation, testing, and contribution purposes.
+  4. CONTRIBUTE to this project by submitting issues, pull requests, patches,
+     documentation, suggestions, bug reports, or other materials to the
+     official repository at github.com/piyushdoorwar/transmux.
+
+The following are expressly PROHIBITED without prior written permission from
+the copyright holder:
+
+  - Copying, reproducing, mirroring, scraping, archiving, or redistributing
+    this software or any portion of it outside the official repository or
+    official release channels.
+  - Publishing, uploading, repackaging, reselling, or distributing this
+    software, in original or modified form, through any website, repository,
+    package manager, app store, extension store, marketplace, installer,
+    bundle, torrent, file-sharing service, or other distribution platform.
+  - Modifying, adapting, translating, transforming, porting, merging, forking,
+    or creating derivative works based on this software, except as necessary
+    to prepare a contribution for submission to the official repository.
+  - Publishing, distributing, deploying, sublicensing, selling, renting,
+    leasing, lending, hosting, offering as a service, or otherwise making
+    available any modified version, derivative work, fork, copy, or competing
+    implementation based on this software.
+  - Using this software, or any portion of it, in or as part of any commercial
+    product, paid service, monetized project, sponsored distribution, client
+    work, internal business tool, revenue-generating workflow, or other
+    commercial activity.
+  - Removing, obscuring, or altering copyright notices, license notices,
+    attribution notices, trademarks, names, logos, or other proprietary
+    notices included with this software.
+  - Using the Transmux name, logo, branding, or confusingly similar marks to
+    endorse, promote, distribute, or identify any unofficial copy, modified
+    version, derivative work, product, service, or project.
+
+Contributions
+
+By submitting a contribution to this project, you represent that you have the
+right to submit it and that it does not violate any third-party rights. You
+grant the copyright holder a perpetual, worldwide, irrevocable, royalty-free,
+sublicensable license to use, copy, modify, publish, distribute, relicense,
+and otherwise exploit the contribution as part of this project or any related
+work. Accepted contributions become part of this project and are subject to
+this license unless the copyright holder states otherwise in writing.
+
+No Open Source License
+
+This software is source available. It is not licensed under an open source
+license approved by the Open Source Initiative, and no rights are granted
+except those expressly stated in this license. All rights not expressly
+granted are reserved by the copyright holder.
+
+Third-Party Software
+
+This license applies only to Transmux materials owned by the copyright holder.
+Third-party software, libraries, tools, fonts, media, and other dependencies
+remain subject to their own license terms.
+
+Termination
+
+Any permission granted under this license terminates automatically and
+immediately if you violate these terms. Upon termination, you must stop using
+the software and delete all copies in your possession or control, except where
+retention is required by law.
+
+No Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. IN NO EVENT
+SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING
+FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
