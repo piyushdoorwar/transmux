@@ -57,6 +57,30 @@ public partial class MainWindow : Window
         WindowState = WindowState.Minimized;
     }
 
+    private void MaximizeButton_Click(object? sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState == WindowState.Maximized
+            ? WindowState.Normal
+            : WindowState.Maximized;
+        UpdateMaximizeIcon();
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == WindowStateProperty)
+            UpdateMaximizeIcon();
+    }
+
+    private void UpdateMaximizeIcon()
+    {
+        var icon = this.FindControl<PathIcon>("MaximizeIcon");
+        if (icon is null) return;
+        icon.Data = WindowState == WindowState.Maximized
+            ? (Avalonia.Media.Geometry?)this.FindResource("Icon.Restore")
+            : (Avalonia.Media.Geometry?)this.FindResource("Icon.Maximize");
+    }
+
     private void CloseButton_Click(object? sender, RoutedEventArgs e)
     {
         Close();

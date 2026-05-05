@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:Transmux.App.ViewModels"
     Title="Transmux"
-    Width="680"
-    Height="560"
-    MinWidth="500"
-    MinHeight="430"
+    Width="850"
+    Height="700"
+    MinWidth="625"
+    MinHeight="538"
     SystemDecorations="BorderOnly"
     Background="#111111"
     ExtendClientAreaToDecorationsHint="True">
@@ -25,7 +25,7 @@
                     VerticalAlignment="Center"
                     Margin="12,0,0,0">
           <Image Width="20" Height="20"
-                 Source="{StaticResource Icon.LumynMark}"
+                 Source="{StaticResource Icon.TransmuxMark}"
                  VerticalAlignment="Center" />
           <TextBlock Text="Transmux"
                      FontSize="13"
@@ -52,12 +52,24 @@
           <Button Classes="wchrome"
                   Name="MinimizeButton"
                   Click="MinimizeButton_Click">
-            <TextBlock Text="—" FontSize="13" Foreground="#888" />
+            <PathIcon Width="12" Height="12"
+                      Data="{StaticResource Icon.Minimize}"
+                      Foreground="#888" />
+          </Button>
+          <Button Classes="wchrome"
+                  Name="MaximizeButton"
+                  Click="MaximizeButton_Click">
+            <PathIcon Name="MaximizeIcon"
+                      Width="11" Height="11"
+                      Data="{StaticResource Icon.Maximize}"
+                      Foreground="#888" />
           </Button>
           <Button Classes="wchrome close"
                   Name="CloseButton"
                   Click="CloseButton_Click">
-            <TextBlock Text="✕" FontSize="12" Foreground="#888" />
+            <PathIcon Width="11" Height="11"
+                      Data="{StaticResource Icon.Close}"
+                      Foreground="#888" />
           </Button>
         </StackPanel>
       </Grid>
