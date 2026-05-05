@@ -24,6 +24,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private SubtitleMode _selectedSubtitleMode = SubtitleMode.None;
     private string? _outputFilePath;
 
+    // Conversion mode
+    private bool _isFastConvert;
+
     // Conversion
     private bool _isInspecting;
     private bool _isConverting;
@@ -64,6 +67,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         CancelConversionCommand = new RelayCommand(_ => CancelConversion(), _ => _isConverting);
         OpenOutputFolderCommand = new RelayCommand(_ => OpenOutputFolder(), _ => _isComplete && _outputFilePath is not null);
         OpenAboutDialogCommand = new RelayCommand(async _ => await OpenAboutDialogAsync());
+        SetFastConvertOnCommand = new RelayCommand(_ => IsFastConvert = true, _ => IsInputEnabled);
+        SetFullConvertCommand = new RelayCommand(_ => IsFastConvert = false, _ => IsInputEnabled);
     }
 
     // ── Bindable properties ───────────────────────────────────────────────────
@@ -145,6 +150,18 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public bool ShowSubtitleMode => _detectedMedia?.HasSubtitles == true;
 
+    public bool IsFastConvert
+    {
+        get => _isFastConvert;
+        set
+        {
+            if (SetField(ref _isFastConvert, value))
+                OnPropertyChanged(nameof(IsFullConvert));
+        }
+    }
+
+    public bool IsFullConvert => !_isFastConvert;
+
     public FormatInfo? SelectedFormat
     {
         get => _selectedFormat;
@@ -180,7 +197,13 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public bool IsInspecting
     {
         get => _isInspecting;
-        private set { SetField(ref _isInspecting, value); OnPropertyChanged(nameof(IsInputEnabled)); }
+        private set
+        {
+            SetField(ref _isInspecting, value);
+            OnPropertyChanged(nameof(IsInputEnabled));
+            ((RelayCommand)SetFastConvertOnCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)SetFullConvertCommand).RaiseCanExecuteChanged();
+        }
     }
 
     public bool IsInputEnabled => !_isInspecting && !_isConverting;
@@ -195,6 +218,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
             ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
             ((RelayCommand)CancelConversionCommand).RaiseCanExecuteChanged();
             ((RelayCommand)BrowseOutputPathCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)SetFastConvertOnCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)SetFullConvertCommand).RaiseCanExecuteChanged();
         }
     }
 
@@ -249,6 +274,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public ICommand CancelConversionCommand { get; }
     public ICommand OpenOutputFolderCommand { get; }
     public ICommand OpenAboutDialogCommand { get; }
+    public ICommand SetFastConvertOnCommand { get; }
+    public ICommand SetFullConvertCommand { get; }
 
     // Injected by the Window after construction
     public IStorageProvider? StorageProvider { get; set; }
@@ -381,7 +408,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
             SubtitleOutputPath: subOutputPath,
             Format: _selectedFormat,
             SubtitleMode: _selectedSubtitleMode,
-            InputDuration: _detectedMedia.Duration);
+            InputDuration: _detectedMedia.Duration,
+            FastConvert: _isFastConvert);
 
         var progress = new Progress<ConversionProgress>(p =>
         {

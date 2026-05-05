@@ -222,6 +222,12 @@ Pattern: **MVVM + Service Layer**, single process, single window.
   - **Audio-only**: MP3, AAC, FLAC, OGG, WAV, OPUS, M4A
 - Format list is aware of the input: audio-only formats are promoted when input has no video stream
 
+### Conversion Mode
+A segmented **Fast / Full re-encode** toggle appears in the options panel:
+- **Fast** (`IsFastConvert = true`): passes `-c copy` (or `-c:a copy` for audio-only) — stream copy, no re-encoding; near-instant but requires the source codec to be compatible with the target container.
+- **Full re-encode** (default): uses the format's `VideoArgs`/`AudioArgs` (e.g. `-c:v libx264 -crf 23 -preset fast`).
+- Stored in `ConversionOptions.FastConvert`; handled in `FfmpegService.BuildArguments`.
+
 ### Subtitle Handling
 - If the input file contains subtitle tracks:
   - **Include subtitles**: embed them in the output (for containers that support it, e.g. MKV, MP4)

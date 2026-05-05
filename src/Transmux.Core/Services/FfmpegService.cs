@@ -116,7 +116,20 @@ public sealed class FfmpegService
             $"-i {Q(options.InputPath)}"
         };
 
-        if (options.Format.IsAudioOnly)
+        if (options.FastConvert)
+        {
+            // Stream copy — no re-encoding; very fast but container must be compatible
+            if (options.Format.IsAudioOnly)
+            {
+                parts.Add("-vn");
+                parts.Add("-c:a copy");
+            }
+            else
+            {
+                parts.Add("-c copy");
+            }
+        }
+        else if (options.Format.IsAudioOnly)
         {
             // Strip video, encode audio only
             parts.Add("-vn");

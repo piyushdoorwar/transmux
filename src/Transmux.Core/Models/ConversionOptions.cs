@@ -72,4 +72,5 @@ public sealed record ConversionOptions(
     string? SubtitleOutputPath,
     FormatInfo Format,
     SubtitleMode SubtitleMode,
-    TimeSpan InputDuration);
+    TimeSpan InputDuration,
+    bool FastConvert = false);
