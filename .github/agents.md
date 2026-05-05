@@ -1,4 +1,4 @@
-# Transmux (powered by Lumyn) — Agent Reference
+# Transmux — Agent Reference
 
 > **Usage**: At the start of every session, read this file first. It provides a complete picture of the solution — structure, architecture, features, release pipeline, and conventions — so you don't need to crawl the codebase from scratch.
 > After completing any feature work, update the relevant section(s) of this file.
@@ -27,9 +27,9 @@
 
 ## 1. Project Overview
 
-**Transmux** is a clean, minimal desktop audio/video conversion tool powered by FFmpeg, built on .NET 10 + Avalonia UI. It targets Windows x64, Ubuntu Linux amd64/arm64, and macOS (Apple Silicon + Intel).
+**Transmux** is a clean, minimal desktop audio/video conversion tool powered by FFmpeg, built on .NET 10 + Avalonia UI. It targets Windows x64 and Ubuntu Linux amd64.
 
-- **Repo**: `lumyn-transmux`
+- **Repo**: `piyushdoorwar/transmux`
 - **Owner/Author**: Piyush Doorwar
 - **Brand**: "Transmux — powered by Lumyn" (reuses Lumyn color palette and visual identity)
 - **License**: Source available — non-commercial personal use
@@ -50,7 +50,7 @@ Design philosophy: a single-purpose, no-frills conversion tool. Pick a file, pic
 | UI Theme | Fluent (dark, Lumyn palette) |
 | Conversion Engine | FFmpeg (process-based, bundled binary) |
 | Media Inspection | FFprobe (bundled alongside FFmpeg) |
-| Packaging | dpkg (Linux .deb), Inno Setup (Windows .exe), native .app/.dmg (macOS) |
+| Packaging | dpkg (Linux .deb), Inno Setup (Windows .exe) |
 | Build System | .NET CLI (`dotnet build / publish`) |
 | Package Manager | NuGet (centralized via `Directory.Packages.props`) |
 | CI/CD | GitHub Actions |
@@ -64,16 +64,16 @@ Design philosophy: a single-purpose, no-frills conversion tool. Pick a file, pic
 
 ```
 lumyn-transmux/
-├── Lumyn.sln                        # Visual Studio solution (2 projects)
+├── Transmux.sln                     # Visual Studio solution (2 projects)
 ├── Directory.Build.props            # Global build config (net10.0, nullable, etc.)
 ├── Directory.Packages.props         # Central NuGet version management
 │
 ├── src/
-│   ├── Lumyn.App/                   # UI / Presentation layer
+│   ├── Transmux.App/                # UI / Presentation layer
 │   │   ├── Program.cs               # Entry point
 │   │   ├── App.axaml / App.axaml.cs # Application bootstrap, styles, resources
 │   │   ├── Assets/
-│   │   │   ├── Icons/               # SVG icons + transmux.ico (Lumyn logo)
+│   │   │   ├── Icons/               # transmux.svg + transmux.ico (multi-res); lumyn.svg (kept for branding, not active)
 │   │   │   └── Styles/Lumyn.axaml   # Custom styling (Lumyn dark theme overrides)
 │   │   ├── Models/
 │   │   │   └── ConversionJob.cs     # Represents a single conversion job (input, output format, subtitle options)
@@ -83,7 +83,7 @@ lumyn-transmux/
 │   │       ├── MainWindow.axaml / .axaml.cs   # Main single-window UI
 │   │       └── AboutDialog.axaml / .axaml.cs  # Credits + version
 │   │
-│   └── Lumyn.Core/                  # Core business logic (no UI dependency)
+│   └── Transmux.Core/               # Core business logic (no UI dependency)
 │       ├── Models/
 │       │   ├── MediaInfo.cs         # Detected format, streams, codec info from ffprobe
 │       │   ├── ConversionOptions.cs # Input/output paths, format, codec, subtitle mode
@@ -91,17 +91,14 @@ lumyn-transmux/
 │       └── Services/
 │           ├── FfmpegService.cs          # FFmpeg/ffprobe process wrapper — core engine
 │           ├── MediaInspector.cs         # Runs ffprobe, parses JSON output into MediaInfo
-│           └── SettingsService.cs        # JSON persistence (last output dir, preferences)
+│           └── SettingsService.cs        # JSON persistence (last output format, preferences)
 │
 ├── scripts/
 │   ├── build-linux.sh               # Linux .deb packaging
-│   ├── build-windows.ps1            # Windows installer via Inno Setup
-│   └── build-macos.sh               # macOS .app + .dmg packaging
+│   └── build-windows.ps1            # Windows installer via Inno Setup
 │
 ├── packaging/
-│   ├── windows/                     # Inno Setup .iss config (bundles ffmpeg)
-│   ├── linux/                       # .deb resources (desktop file, MIME types, postinst for ffmpeg)
-│   └── macos/                       # macOS packaging resources
+│   └── windows/                     # Inno Setup .iss config (bundles ffmpeg)
 │
 ├── artifacts/                       # Build output (gitignored)
 │
@@ -124,54 +121,7 @@ Avalonia.Themes.Fluent  11.3.14
 Avalonia.Fonts.Inter    11.3.14
 ```
 
-`Lumyn.Core` has **no NuGet dependencies** beyond the base runtime. All FFmpeg interaction is via `Process`.
-│       │   ├── VideoFrameData.cs    # Frame data for OpenGL rendering
-│       │   └── SubtitleSearchResult.cs
-│       └── Services/
-│           ├── PlaybackService.cs        # mpv wrapper, 995 lines — main engine
-│           ├── SettingsService.cs        # JSON persistence, 257 lines
-│           ├── ChromecastCastService.cs  # Chromecast (Google Cast v2) discovery, HTTP file server, cast control
-│           ├── SubtitleParser.cs         # SRT/ASS/SSA/VTT parser
-│           └── SubtitleSearchService.cs  # Online subtitle search
-│
-├── scripts/
-│   ├── build-linux.sh               # Linux .deb packaging (266 lines)
-│   ├── build-windows.ps1            # Windows installer via Inno Setup (363 lines, PowerShell)
-│   ├── build-macos.sh               # macOS .app + .dmg packaging
-│   └── build-linux-flatpak.sh       # Flatpak packaging (alternate format)
-│
-├── packaging/
-│   ├── windows/                     # Inno Setup .iss config
-│   └── linux/                       # Linux packaging resources (desktop file, MIME types)
-│
-├── artifacts/                       # Build output (gitignored)
-│   ├── packages/                    # Final distributable packages
-│   ├── publish/                     # Intermediate dotnet publish output
-│   └── pkg/                         # Packaged app structures
-│
-├── site/                            # Static website (GitHub Pages)
-│
-└── .github/
-    ├── agents.md                    # THIS FILE
-    └── workflows/
-        ├── build-artifacts.yml      # Build all platforms on push to main
-        ├── release.yml              # Tag-triggered release with GitHub Release artifacts
-        └── static.yml              # Deploy /site to GitHub Pages
-```
-
-### NuGet Dependencies (`Directory.Packages.props`)
-
-```
-Avalonia             11.3.14
-Avalonia.Desktop     11.3.14
-Avalonia.Themes.Fluent  11.3.14
-Avalonia.Fonts.Inter    11.3.14
-```
-
-`Lumyn.Core` NuGet dependencies:
-```
-GoogleCast           1.7.0   (Google Cast v2 protocol — includes Zeroconf for mDNS and protobuf-net)
-```
+`Transmux.Core` has **no NuGet dependencies** beyond the base runtime. All FFmpeg interaction is via `Process`.
 
 ---
 
@@ -194,7 +144,7 @@ Pattern: **MVVM + Service Layer**, single process, single window.
 └───────────────────┬─────────────────────────────────┘
                     │ Direct method calls + events
 ┌───────────────────▼─────────────────────────────────┐
-│  Lumyn.Core Services                                │
+│  Transmux.Core Services                             │
 │                                                     │
 │  FfmpegService                                      │
 │  ├─ Launches ffmpeg as a child Process              │
@@ -211,7 +161,7 @@ Pattern: **MVVM + Service Layer**, single process, single window.
 │                                                     │
 │  SettingsService                                    │
 │  ├─ ~/.config/Transmux/settings.json (Linux)        │
-│  └─ Persists: last output directory, preferences    │
+│  └─ Persists: last output format, preferences       │
 └───────────────────┬─────────────────────────────────┘
                     │ Process spawn
 ┌───────────────────▼─────────────────────────────────┐
@@ -247,15 +197,15 @@ Pattern: **MVVM + Service Layer**, single process, single window.
 
 | File | Role |
 |---|---|
-| `src/Lumyn.Core/Services/FfmpegService.cs` | Core FFmpeg process wrapper — argument building, progress parsing, cancellation |
-| `src/Lumyn.Core/Services/MediaInspector.cs` | Runs ffprobe, parses JSON into MediaInfo |
-| `src/Lumyn.Core/Services/SettingsService.cs` | JSON persistence: last output directory, preferences |
-| `src/Lumyn.Core/Models/MediaInfo.cs` | Detected container, duration, stream list |
-| `src/Lumyn.Core/Models/ConversionOptions.cs` | Input/output paths, target format, codec, subtitle mode |
-| `src/Lumyn.Core/Models/ConversionProgress.cs` | Progress report (percent, elapsed, ETA, speed) |
-| `src/Lumyn.App/ViewModels/MainViewModel.cs` | MVVM hub: commands, UI state, job lifecycle |
-| `src/Lumyn.App/Views/MainWindow.axaml` | Full single-window UI layout |
-| `src/Lumyn.App/Models/ConversionJob.cs` | UI-layer job descriptor |
+| `src/Transmux.Core/Services/FfmpegService.cs` | Core FFmpeg process wrapper — argument building, progress parsing, cancellation |
+| `src/Transmux.Core/Services/MediaInspector.cs` | Runs ffprobe, parses JSON into MediaInfo |
+| `src/Transmux.Core/Services/SettingsService.cs` | JSON persistence: last output format, preferences |
+| `src/Transmux.Core/Models/MediaInfo.cs` | Detected container, duration, stream list |
+| `src/Transmux.Core/Models/ConversionOptions.cs` | Input/output paths, target format, codec, subtitle mode |
+| `src/Transmux.Core/Models/ConversionProgress.cs` | Progress report (percent, elapsed, ETA, speed) |
+| `src/Transmux.App/ViewModels/MainViewModel.cs` | MVVM hub: commands, UI state, job lifecycle |
+| `src/Transmux.App/Views/MainWindow.axaml` | Full single-window UI layout |
+| `src/Transmux.App/Models/ConversionJob.cs` | UI-layer job descriptor |
 
 ---
 
@@ -295,7 +245,6 @@ Pattern: **MVVM + Service Layer**, single process, single window.
 - Single window, no sidebar — focused workflow
 - Drag-and-drop input file onto the window
 - About dialog (version + credits)
-- "Powered by Lumyn" branding in footer
 
 ---
 
@@ -352,7 +301,6 @@ Parses the JSON into `MediaInfo` (format name, duration in seconds, list of `Str
 
 - **Linux .deb**: ffmpeg installed as system dependency (`Depends: ffmpeg` in control file). `FfmpegService` uses `"ffmpeg"` / `"ffprobe"` directly on PATH.
 - **Windows**: ffmpeg binaries bundled in the install directory. Build script downloads `ffmpeg-release-essentials.zip` from BtbN/FFmpeg-Builds. `FfmpegService` checks `AppContext.BaseDirectory` first, then PATH.
-- **macOS**: ffmpeg bundled inside `.app/Contents/MacOS/`. Build script installs via Homebrew and copies binaries.
 
 ---
 
@@ -380,7 +328,7 @@ CancellationTokenSource? _cts
 
 ### Settings Persistence
 
-- **Location**: `~/.config/Transmux/settings.json` (Linux); `%AppData%\Transmux\settings.json` (Windows); `~/Library/Application Support/Transmux/settings.json` (macOS)
+- **Location**: `~/.config/Transmux/settings.json` (Linux); `%AppData%\Transmux\settings.json` (Windows)
 - **Contents**:
   - `LastOutputDirectory` — last directory the user saved to
   - `LastOutputFormat` — last selected output format name
@@ -390,14 +338,14 @@ CancellationTokenSource? _cts
 ## 9. UI Layout & Windows
 
 ### MainWindow
-- **Default size**: 680×520; **Minimum**: 500×420
+- **Default size**: 680×560; **Minimum**: 500×430
 - **Decorations**: `BorderOnly` (custom title bar, Lumyn style)
 - **Background**: `#111111`; **Foreground**: `#DEDAD5`
 - **Theme**: Fluent dark + `Lumyn.axaml` overrides
 
 ```
 ┌─────────────────────────────────────────────┐  ← TopBar (38px)
-│  [Transmux logo]   Title        [About] [✕] │
+│  [Transmux logo]   Title   [About] [—] [✕] │
 ├─────────────────────────────────────────────┤
 │  ┌───────────────────────────────────────┐  │
 │  │  Drop a file or click to browse       │  │  ← Drop zone / file picker
@@ -415,9 +363,9 @@ CancellationTokenSource? _cts
 │  ████████████████░░░░░  64%  2.4×  ~00:12  │  ← Progress bar (hidden until converting)
 │  [ Cancel ]                                 │
 │                                             │
-│  ✓ Done — output.mp4                [ Open folder ] │  ← Completion state
+│  ✓ Done — output.mp4        [ Open folder ]│  ← Completion state
 └─────────────────────────────────────────────┘
-│  Powered by Lumyn                           │  ← Footer
+│  status bar                                 │  ← Footer (32px)
 ```
 
 ### Visual States
@@ -434,7 +382,7 @@ CancellationTokenSource? _cts
 
 | Dialog | Purpose |
 |---|---|
-| `AboutDialog` | Version + credits + "Powered by Lumyn" |
+| `AboutDialog` | Version + credits |
 
 ---
 
@@ -443,9 +391,9 @@ CancellationTokenSource? _cts
 ### Local Dev
 
 ```bash
-dotnet restore Lumyn.sln
-dotnet build Lumyn.sln
-dotnet run --project src/Lumyn.App/Lumyn.App.csproj
+dotnet restore Transmux.sln
+dotnet build Transmux.sln
+dotnet run --project src/Transmux.App/Transmux.App.csproj
 ```
 
 FFmpeg must be on PATH for local development.
@@ -463,8 +411,6 @@ FFmpeg must be on PATH for local development.
 
 **ffmpeg strategy (Linux)**: listed as a package dependency (`Depends: ffmpeg`). No bundling — the system ffmpeg is used. `FfmpegService` resolves via PATH.
 
-**Supports**: `amd64` and `arm64`.
-
 ### Windows — `.exe` installer (`scripts/build-windows.ps1`)
 
 1. `dotnet publish -c Release -r win-x64 --self-contained true`
@@ -473,15 +419,6 @@ FFmpeg must be on PATH for local development.
 4. Compile Inno Setup `.iss` → `transmux_X.X.X_win-x64_setup.exe`
 
 **Inno Setup** (`packaging/windows/transmux.iss`): Bundles `ffmpeg.exe` and `ffprobe.exe` alongside the app. No separate ffmpeg install step needed for the end user.
-
-### macOS — `.dmg` bundle (`scripts/build-macos.sh`)
-
-1. `dotnet publish -c Release -r osx-arm64 (or osx-x64) --self-contained true`
-2. `brew install ffmpeg` to get binaries
-3. Copy `ffmpeg` + `ffprobe` into `.app/Contents/MacOS/`
-4. Code-sign ad-hoc, create `.dmg` via `hdiutil`
-
-**No flatpak support.** Linux distribution is exclusively via `.deb`.
 
 ---
 
@@ -493,8 +430,6 @@ FFmpeg must be on PATH for local development.
 |---|---|---|
 | `linux-deb` | ubuntu-latest | `transmux-linux-amd64-deb` (*.deb) |
 | `windows-installer` | windows-latest | `transmux-windows-x64-installer` (*_setup.exe) |
-| `macos-arm64` | macos-15 | `transmux-macos-osx-arm64` (*.dmg) |
-| `macos-x64` | macos-15-intel | `transmux-macos-osx-x64` (*.dmg) |
 
 All jobs install .NET 10.0 SDK.
 
@@ -520,7 +455,7 @@ All jobs install .NET 10.0 SDK.
   4. Baked into `AssemblyInformationalVersionAttribute`
   5. `AboutDialog.axaml.cs` reads it at runtime
 - **Local dev builds**: Show `0.0.0-dev`
-- **Artifact names**: e.g., `transmux_1.0.0_amd64.deb`, `transmux_1.0.0_win-x64_setup.exe`, `transmux_1.0.0_macos-arm64.dmg`
+- **Artifact names**: e.g., `transmux_1.0.0_amd64.deb`, `transmux_1.0.0_win-x64_setup.exe`
 
 ### Release checklist
 
@@ -533,22 +468,35 @@ All jobs install .NET 10.0 SDK.
 ## 13. Website / Site
 
 - Located at `/site/` in the repo
-- Static HTML/CSS site, reusing Lumyn visual design
+- Static HTML/CSS/JS site, reusing Lumyn visual design
 - Deployed automatically to GitHub Pages via `static.yml` on every push to `main`
-- URL: `https://piyushdoorwar.github.io/lumyn-transmux/`
-- Contains: landing page (what it does, download section), releases page, privacy/policy page
+- URL: `https://piyushdoorwar.github.io/transmux/`
+- Contains: landing page, releases page, privacy/policy page
 
 ### Landing page (`/site/index.html`)
 
-- Hero section: tool description, "Convert any audio/video" tagline
-- Feature highlights: FFmpeg-powered, subtitle extraction, simple format picker, cross-platform
-- Download section: per-platform buttons (Linux .deb / Windows .exe / macOS .dmg) populated by `app.js` from GitHub Releases API
-- "Powered by Lumyn" footer branding
+- Hero section: converter preview mockup, "Desktop media converter" tagline
+- Feature highlights: FFmpeg-powered, wide format support, subtitle handling, live progress
+- Download section: Linux .deb and Windows .exe buttons populated by `app.js` from GitHub Releases API (`piyushdoorwar/transmux`)
+
+### `app.js`
+
+- Fetches latest stable release assets from `https://api.github.com/repos/piyushdoorwar/transmux/releases`
+- Matches Linux asset: `/_amd64\.deb$/i`
+- Matches Windows asset: `/win-x64.*_setup\.exe$/i`
+- Enables the corresponding download button when a matching asset is found
 
 ### Releases page (`/site/releases/`)
 
-- `index.html` — OS filter tabs + stable-only toggle
-- `releases.js` — fetches all non-draft releases from GitHub API, renders paginated list with OS-filtered assets
+- `index.html` — OS filter tabs (All / Linux / Windows) + stable-only toggle
+- `releases.js` — fetches all non-draft releases from GitHub API (`piyushdoorwar/transmux`), renders paginated list with OS-filtered `.deb` and `.exe` assets
+
+### Policy page (`/site/policy/`)
+
+- 18-section privacy and terms document
+- Describes Transmux as a local-first converter with no app telemetry
+- Third-party disclosures: Avalonia, .NET, FFmpeg, GitHub, Cloudflare Web Analytics
+- Contact: `piyushdoorwar+transmux@gmail.com`
 
 ---
 
@@ -564,23 +512,16 @@ All jobs install .NET 10.0 SDK.
 sudo apt install ffmpeg
 
 # Clone and run
-git clone ...
-cd lumyn-transmux
-dotnet run --project src/Lumyn.App/Lumyn.App.csproj
+git clone https://github.com/piyushdoorwar/transmux
+cd transmux
+dotnet run --project src/Transmux.App/Transmux.App.csproj
 ```
 
 ### Windows
 
 - Install .NET SDK 10.0
 - Download `ffmpeg.exe` + `ffprobe.exe` from BtbN/FFmpeg-Builds and add to PATH (or set `FFMPEG_BIN_DIR`)
-- Run via VS or `dotnet run`
-
-### macOS
-
-```bash
-brew install dotnet ffmpeg
-dotnet run --project src/Lumyn.App/Lumyn.App.csproj
-```
+- Run via VS or `dotnet run --project src/Transmux.App/Transmux.App.csproj`
 
 ---
 
@@ -591,20 +532,10 @@ dotnet run --project src/Lumyn.App/Lumyn.App.csproj
 - **Thread safety**: All UI updates via `Dispatcher.UIThread.InvokeAsync`. FFmpeg process stderr is read on a background thread; progress events dispatched to UI thread.
 - **Nullable**: Enabled globally. All fields/properties use nullable annotations.
 - **No DI container**: Services are concrete classes, injected via constructor. Manual injection in `App.axaml.cs`.
-- **No unsafe code**: Unlike the media player origin, Transmux has no P/Invoke or OpenGL interop. `AllowUnsafeBlocks` can be removed.
-- **FFmpeg path resolution**: `FfmpegService` checks `AppContext.BaseDirectory` first (for bundled binaries on Windows/macOS), then falls back to PATH resolution. Fail-fast with a clear error message if ffmpeg is not found.
+- **No unsafe code**: No P/Invoke or OpenGL interop. `AllowUnsafeBlocks` not required.
+- **FFmpeg path resolution**: `FfmpegService` checks `AppContext.BaseDirectory` first (for bundled binaries on Windows), then falls back to PATH resolution. Fail-fast with a clear error message if ffmpeg is not found.
 - **Settings path**: `Environment.GetFolderPath(SpecialFolder.ApplicationData)` + `Transmux/settings.json`.
-- **Avalonia resources**: Icons and styles defined in `App.axaml` as `Application.Resources`. `Lumyn.axaml` style sheet reused wholesale for branding consistency.
-- **Output format enum**: `OutputFormat` is a C# enum with an associated metadata record (`FormatInfo`) carrying the display name, file extension, and ffmpeg argument fragments. New formats are added by extending this record list — no scattered switch statements.
+- **Avalonia resources**: Icons and styles defined in `App.axaml` as `Application.Resources`. `Lumyn.axaml` style sheet provides branding.
+- **Output format record**: `FormatInfo` is a C# record carrying the display name, file extension, and ffmpeg argument fragments. New formats are added by extending the `OutputFormats.All` list — no scattered switch statements.
 
 ---
-
-## Changelog (Feature Updates)
-
-> Update this section whenever a feature is added, removed, or significantly changed.
-
-- **v1.0** — Initial release: file open, ffprobe media inspection, output format selection, subtitle mode (embed/extract/none), output path picker, ffmpeg conversion with progress, cancel, Windows/Linux/macOS packaging.
-
-| Date | Change |
-|---|---|
-
