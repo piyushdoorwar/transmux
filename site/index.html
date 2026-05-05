@@ -122,15 +122,19 @@
 
           <!-- Direct download tab -->
           <div class="tab-content active" data-tab="direct">
-            <div class="download-actions" aria-label="Download Transmux">
-              <a class="button primary large platform-download disabled" id="linuxDownloadLink" aria-disabled="true" aria-label="Download Transmux for Linux">
-                <img src="assets/ubuntu.svg" alt="" />
-                <span>Download for Linux</span>
-              </a>
-              <a class="button primary large platform-download disabled" id="windowsDownloadLink" aria-disabled="true" aria-label="Download Transmux for Windows">
-                <img src="assets/windows.svg" alt="" />
-                <span>Download for Windows</span>
-              </a>
+            <div class="download-container">
+              <p class="download-desc">Download the latest release for your platform:</p>
+              <div class="download-actions" aria-label="Download Transmux">
+                <a class="button primary large platform-download disabled" id="linuxDownloadLink" aria-disabled="true" aria-label="Download Transmux for Linux">
+                  <img src="assets/ubuntu.svg" alt="" />
+                  <span>Download for Linux</span>
+                </a>
+                <a class="button primary large platform-download disabled" id="windowsDownloadLink" aria-disabled="true" aria-label="Download Transmux for Windows">
+                  <img src="assets/windows.svg" alt="" />
+                  <span>Download for Windows</span>
+                </a>
+              </div>
+              <p class="download-note">FFmpeg is bundled with Windows releases. Linux requires <code>ffmpeg</code> installed via <code>sudo apt install ffmpeg</code></p>
             </div>
           </div>
 

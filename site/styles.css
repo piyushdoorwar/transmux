@@ -505,8 +505,26 @@ h3 {
 .download-actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
   gap: 12px;
+}
+
+.download-container {
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.download-desc {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: var(--soft);
+}
+
+.download-note {
+  margin: 12px 0 0 0;
+  font-size: 13px;
+  color: var(--muted);
 }
 
 .platform-download {
