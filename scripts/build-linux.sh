@@ -47,7 +47,7 @@ mkdir -p \
   "${DEB_DIR}"
 
 cp -R "${PUBLISH_DIR}/." "${PACKAGE_ROOT}/opt/transmux/"
-cp "src/Transmux.App/Assets/Icons/lumyn.svg" \
+cp "src/Transmux.App/Assets/Icons/transmux.svg" \
    "${PACKAGE_ROOT}/usr/share/icons/hicolor/scalable/apps/transmux.svg"
 
 # Wrapper launcher

@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <AssemblyName>Transmux</AssemblyName>
     <RootNamespace>Transmux.App</RootNamespace>
-    <ApplicationIcon>Assets/Icons/lumyn.ico</ApplicationIcon>
+    <ApplicationIcon>Assets/Icons/transmux.ico</ApplicationIcon>
     <!-- Default version for local dev builds. Release builds override via -p:Version and -p:InformationalVersion. -->
     <Version>0.0.0</Version>
     <InformationalVersion>0.0.0-dev</InformationalVersion>
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- lumyn.ico and lumyn.svg are native platform files, not Avalonia resources -->
-    <AvaloniaResource Include="Assets/**" Exclude="Assets/Icons/lumyn.ico;Assets/Icons/lumyn.svg" />
+    <!-- transmux.ico and lumyn.svg are native platform files, not Avalonia resources -->
+    <AvaloniaResource Include="Assets/**" Exclude="Assets/Icons/transmux.ico;Assets/Icons/lumyn.svg" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 /* releases.js - powers the /releases/ page */
 
 (function () {
-  const REPO = "piyushdoorwar/lumyn-media-player";
+  const REPO = "piyushdoorwar/transmux";
   const PER_PAGE = 10;
 
   // ── State ──────────────────────────────────────────────────────────────────
@@ -54,16 +54,7 @@
       release.assets.find(a => /win-x64\.zip$/i.test(a.name))
     );
   }
-  function macosAsset(release) {
-    return (
-      release.assets.find(a => /macos-arm64\.dmg$/i.test(a.name)) ??
-      release.assets.find(a => /macos-x64\.dmg$/i.test(a.name)) ??
-      release.assets.find(a => /osx.*\.dmg$/i.test(a.name)) ??
-      release.assets.find(a => /macos-arm64\.zip$/i.test(a.name)) ??
-      release.assets.find(a => /macos-x64\.zip$/i.test(a.name)) ??
-      release.assets.find(a => /osx.*\.zip$/i.test(a.name))
-    );
-  }
+  function macosAsset(_release) { return null; }
 
   function hasOsAsset(release, os) {
     if (os === "all") return true;

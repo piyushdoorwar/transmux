@@ -5,113 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Lumyn is a clean desktop media player for local video playback, built with Avalonia and mpv."
+      content="Transmux is a clean desktop media converter for Windows and Linux, powered by FFmpeg."
     />
-    <title>Lumyn Media Player</title>
-    <link rel="icon" href="assets/lumyn.svg" type="image/svg+xml" />
+    <title>Transmux</title>
+    <link rel="icon" href="assets/transmux.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="#top" aria-label="Lumyn home">
-        <img src="assets/lumyn.svg" alt="" />
-        <span>Lumyn</span>
+      <a class="brand" href="#top" aria-label="Transmux home">
+        <img src="assets/transmux.svg" alt="" />
       </a>
       <nav aria-label="Primary navigation">
         <a href="#features">Features</a>
         <a href="#download">Download</a>
         <a href="releases/">Releases</a>
         <a href="policy/">Policy</a>
-        <a href="https://github.com/piyushdoorwar/lumyn-media-player" rel="noreferrer">GitHub</a>
-      </nav>
+        <a href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">GitHub</a>
     </header>
 
     <main id="top">
       <section class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">Desktop media player</p>
-          <h1>Lumyn</h1>
+          <p class="eyebrow">Desktop media converter</p>
+          <h1>Transmux</h1>
           <p class="lede">
-            A quiet, fast local video player with a focused interface, mpv playback, subtitle tools,
-            and the controls you expect close at hand.
+            Convert video and audio to any format you need. Drag in a file, pick an output format,
+            and let FFmpeg do the work — with live progress tracking.
           </p>
           <div class="actions">
             <a class="button primary" id="downloadLink" href="#download">Download latest</a>
-            <a class="button secondary" href="https://github.com/piyushdoorwar/lumyn-media-player" rel="noreferrer">
+            <a class="button secondary" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
               View source
             </a>
           </div>
         </div>
 
-        <div class="player-preview" aria-label="Lumyn player preview">
+        <div class="converter-preview" aria-label="Transmux converter preview">
           <div class="window-bar">
             <div class="mark">
-              <img src="assets/lumyn.svg" alt="" />
+              <img src="assets/transmux.svg" alt="" />
             </div>
-            <span>sample-video.mkv - Lumyn</span>
+            <span>Transmux</span>
             <div class="window-buttons" aria-hidden="true">
-              <i></i><i></i><i></i>
+              <i></i><i></i><i class="cvt-close"></i>
             </div>
           </div>
-          <div class="screen">
-            <div class="play-ring">
-              <span></span>
+          <div class="cvt-body">
+            <div class="cvt-dropzone">
+              <div class="cvt-file-icon" aria-hidden="true"></div>
+              <p class="cvt-filename">movie.mkv</p>
+              <p class="cvt-filemeta">1920 × 1080 · H.264 · AAC · 1:28:04</p>
             </div>
-            <div class="subtitle">Clean playback, readable subtitles, no clutter.</div>
-          </div>
-          <div class="controls">
-            <div class="timeline"><span></span></div>
-            <div class="control-row">
-              <span>00:42</span>
-              <div class="control-icons" aria-hidden="true">
-                <i></i><i></i><i></i><i></i>
+            <div class="cvt-fields">
+              <div class="cvt-field-row">
+                <span class="cvt-field-label">Output format</span>
+                <div class="cvt-select-mock">MP4 (H.264 / AAC)<span class="cvt-chevron" aria-hidden="true"></span></div>
               </div>
-              <span>1:28:04</span>
+              <div class="cvt-field-row">
+                <span class="cvt-field-label">Subtitles</span>
+                <div class="cvt-select-mock">Include in output<span class="cvt-chevron" aria-hidden="true"></span></div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <!-- ── Feature marquee ──────────────────────────────────────────── -->
-        <div class="marquee-wrap" aria-hidden="true">
-          <div class="marquee-track">
-            <!-- row duplicated once for seamless loop -->
-            <ul class="marquee-row">
-              <li><img src="assets/ic-bookmark.svg" alt="" />Bookmarks</li>
-              <li><img src="assets/ic-subtitle-search.svg" alt="" />Subtitle Search</li>
-              <li><img src="assets/ic-subtitle-delay.svg" alt="" />Subtitle Delay</li>
-              <li><img src="assets/ic-subtitle-appearance.svg" alt="" />Subtitle Appearance</li>
-              <li><img src="assets/ic-playlist.svg" alt="" />Playlist / Queue</li>
-              <li><img src="assets/ic-audio.svg" alt="" />Audio Tracks</li>
-              <li><img src="assets/ic-speed.svg" alt="" />Playback Speed</li>
-              <li><img src="assets/ic-screenshot.svg" alt="" />Screenshot</li>
-              <li><img src="assets/ic-loop.svg" alt="" />Loop</li>
-              <li><img src="assets/ic-chapters.svg" alt="" />Chapter Markers</li>
-              <li><img src="assets/ic-open-file.svg" alt="" />Open File</li>
-              <li><img src="assets/ic-drag-drop.svg" alt="" />Drag &amp; Drop</li>
-              <li><img src="assets/ic-jump-to-time.svg" alt="" />Jump to Time</li>
-              <li><img src="assets/ic-always-on-top.svg" alt="" />Always on Top</li>
-              <li><img src="assets/ic-fullscreen.svg" alt="" />Fullscreen</li>
-              <li><img src="assets/ic-queue.svg" alt="" />Keyboard Shortcuts</li>
-            </ul>
-            <!-- duplicate for infinite scroll -->
-            <ul class="marquee-row" aria-hidden="true">
-              <li><img src="assets/ic-bookmark.svg" alt="" />Bookmarks</li>
-              <li><img src="assets/ic-subtitle-search.svg" alt="" />Subtitle Search</li>
-              <li><img src="assets/ic-subtitle-delay.svg" alt="" />Subtitle Delay</li>
-              <li><img src="assets/ic-subtitle-appearance.svg" alt="" />Subtitle Appearance</li>
-              <li><img src="assets/ic-playlist.svg" alt="" />Playlist / Queue</li>
-              <li><img src="assets/ic-audio.svg" alt="" />Audio Tracks</li>
-              <li><img src="assets/ic-speed.svg" alt="" />Playback Speed</li>
-              <li><img src="assets/ic-screenshot.svg" alt="" />Screenshot</li>
-              <li><img src="assets/ic-loop.svg" alt="" />Loop</li>
-              <li><img src="assets/ic-chapters.svg" alt="" />Chapter Markers</li>
-              <li><img src="assets/ic-open-file.svg" alt="" />Open File</li>
-              <li><img src="assets/ic-drag-drop.svg" alt="" />Drag &amp; Drop</li>
-              <li><img src="assets/ic-jump-to-time.svg" alt="" />Jump to Time</li>
-              <li><img src="assets/ic-always-on-top.svg" alt="" />Always on Top</li>
-              <li><img src="assets/ic-fullscreen.svg" alt="" />Fullscreen</li>
-              <li><img src="assets/ic-queue.svg" alt="" />Keyboard Shortcuts</li>
-            </ul>
+            <div class="cvt-progress-section">
+              <div class="cvt-progress-bar"><span style="width:62%"></span></div>
+              <div class="cvt-progress-meta">
+                <span>Converting… 62%</span>
+                <span>3.4× · ETA 0:42</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -119,71 +81,43 @@
       <section class="band" id="features">
         <div class="section-heading" data-reveal>
           <p class="eyebrow">What it does</p>
-          <h2>Built for watching, not managing.</h2>
+          <h2>Convert once, play anywhere.</h2>
         </div>
         <div class="feature-grid">
           <article data-reveal>
-            <h3>mpv powered</h3>
-            <p>Native playback through mpv, packaged with release builds for a smoother first run.</p>
+            <h3>FFmpeg powered</h3>
+            <p>Solid conversion through FFmpeg, bundled with release builds so it works out of the box.</p>
           </article>
           <article data-reveal style="--reveal-delay: 0.1s">
-            <h3>Subtitle friendly</h3>
-            <p>Load subtitle files, pick embedded tracks, adjust appearance, and tune sync delay.</p>
+            <h3>Wide format support</h3>
+            <p>MP4, WebM, MKV, AVI, MOV, MP3, AAC, FLAC, OGG, WAV, Opus — video and audio in one tool.</p>
           </article>
           <article data-reveal style="--reveal-delay: 0.2s">
-            <h3>Focused controls</h3>
-            <p>Hover controls, seek shortcuts, speed controls, screenshots, looping, and track switching.</p>
+            <h3>Subtitle handling</h3>
+            <p>Embed subtitles in the output, extract tracks to SRT or ASS, or strip them entirely.</p>
           </article>
           <article data-reveal style="--reveal-delay: 0.3s">
-            <h3>Desktop native</h3>
-            <p>Avalonia UI with a compact custom title bar and a simple local-media workflow.</p>
+            <h3>Live progress</h3>
+            <p>Real-time speed and ETA feedback while converting, with cancel support at any point.</p>
           </article>
         </div>
-
-        <!-- ── Feature preview card marquee (image-based) ──────────────── -->
-        <div class="marquee-wrap marquee-wrap--cards" aria-hidden="true">
-          <div class="marquee-track marquee-track--rtl">
-            <div class="marquee-cards">
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-bookmarks.svg')"></div><span>Bookmarks</span></div>
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-playlist.svg')"></div><span>Playlist &amp; Queue</span></div>
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-subtitle-search.svg')"></div><span>Subtitle Search</span></div>
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-subtitles.svg')"></div><span>Subtitle Settings</span></div>
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-speed.svg')"></div><span>Playback Speed</span></div>
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-screenshot.svg')"></div><span>Screenshot</span></div>
-            </div>
-            <!-- duplicate for loop -->
-            <div class="marquee-cards" aria-hidden="true">
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-bookmarks.svg')"></div><span>Bookmarks</span></div>
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-playlist.svg')"></div><span>Playlist &amp; Queue</span></div>
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-subtitle-search.svg')"></div><span>Subtitle Search</span></div>
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-subtitles.svg')"></div><span>Subtitle Settings</span></div>
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-speed.svg')"></div><span>Playback Speed</span></div>
-              <div class="preview-card"><div class="preview-card__img" style="background-image:url('assets/preview-screenshot.svg')"></div><span>Screenshot</span></div>
-            </div>
-          </div>
-        </div>
-
       </section>
 
       <section class="download" id="download">
         <div data-reveal>
           <p class="eyebrow">Latest release</p>
-          <h2>Get Lumyn for Ubuntu, Windows, and macOS</h2>
+          <h2>Get Transmux for Ubuntu and Windows</h2>
           <p>
-            Release builds are distributed as a Debian package for Linux, a single-file installer for Windows, and a DMG for macOS.
+            Release builds are distributed as a Debian package for Linux and a single-file installer for Windows.
           </p>
         </div>
-        <div class="download-actions" aria-label="Download Lumyn" data-reveal style="--reveal-delay: 0.15s">
-          <a class="button primary large platform-download disabled" id="linuxDownloadLink" aria-disabled="true" aria-label="Download Lumyn for Linux">
+        <div class="download-actions" aria-label="Download Transmux" data-reveal style="--reveal-delay: 0.15s">
+          <a class="button primary large platform-download disabled" id="linuxDownloadLink" aria-disabled="true" aria-label="Download Transmux for Linux">
             <img src="assets/ubuntu.svg" alt="" />
             <span>Download</span>
           </a>
-          <a class="button primary large platform-download disabled" id="windowsDownloadLink" aria-disabled="true" aria-label="Download Lumyn for Windows">
+          <a class="button primary large platform-download disabled" id="windowsDownloadLink" aria-disabled="true" aria-label="Download Transmux for Windows">
             <img src="assets/windows.svg" alt="" />
-            <span>Download</span>
-          </a>
-          <a class="button primary large platform-download disabled" id="macosDownloadLink" aria-disabled="true" aria-label="Download Lumyn for macOS">
-            <img src="assets/apple.svg" alt="" />
             <span>Download</span>
           </a>
         </div>
@@ -191,11 +125,11 @@
     </main>
 
     <footer>
-      <span>Lumyn Media Player</span>
+      <span>Transmux</span>
       <div class="footer-links">
         <a href="releases/">All releases</a>
         <a href="policy/">Policy</a>
-        <a href="https://github.com/piyushdoorwar/lumyn-media-player" rel="noreferrer">GitHub</a>
+        <a href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">GitHub</a>
         <button class="footer-support-link" id="footerSupportBtn">Support</button>
       </div>
     </footer>
@@ -207,14 +141,14 @@
           <p class="eyebrow" style="margin:0">Support and issues</p>
           <button class="modal-close" aria-label="Close support dialog" id="closeSupportModal">✕</button>
         </div>
-        <h2 id="supportModalTitle" class="modal-title">Need help with Lumyn?</h2>
+        <h2 id="supportModalTitle" class="modal-title">Need help with Transmux?</h2>
         <p class="modal-body">
-          Found a bug, hit a playback issue, or want to share feedback? Send an email and include your OS,
-          Lumyn version, and a short note about what happened.
+          Found a bug, hit a conversion issue, or want to share feedback? Send an email and include your OS,
+          Transmux version, and a short note about what happened.
         </p>
-        <a class="button secondary large email-link" href="mailto:piyushdoorwar+lumyn.mp@gmail.com">
+        <a class="button secondary large email-link" href="mailto:piyushdoorwar+transmux@gmail.com">
           <img src="assets/mail.svg" alt="" />
-          <span>piyushdoorwar+lumyn.mp@gmail.com</span>
+          <span>piyushdoorwar+transmux@gmail.com</span>
         </a>
       </div>
     </div>
