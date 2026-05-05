@@ -116,6 +116,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout main branch
+        run: git checkout main
+
       - name: Download .deb artifact
         uses: actions/download-artifact@v4
         with:
