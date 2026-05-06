@@ -1,4 +1,5 @@
 Source: transmux
+Section: utils
 Priority: optional
 Maintainer: Piyush Doorwar <piyushdoorwar+transmux@gmail.com>
 Build-Depends: debhelper-compat (= 13), dotnet-sdk-10.0
@@ -8,6 +9,7 @@ Vcs-Git: https://github.com/piyushdoorwar/lumyn-transmux.git
 Vcs-Browser: https://github.com/piyushdoorwar/lumyn-transmux
 
 Package: transmux
+Section: utils
 Architecture: amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}, dotnet-runtime-10.0, ffmpeg
 Description: Clean desktop audio/video converter powered by Lumyn
