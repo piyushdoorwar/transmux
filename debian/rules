@@ -1,6 +1,9 @@
 #!/usr/bin/make -f
 
 export DH_VERBOSE = 1
+export DOTNET_CLI_HOME = /tmp/dotnet-home
+export DOTNET_NOLOGO = 1
+export DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
 
 %:
 	dh $@
