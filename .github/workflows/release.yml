@@ -150,7 +150,7 @@ jobs:
           [transmux-ppa]
           fqdn = ppa.launchpad.net
           method = sftp
-          incoming = ~piyushdoorwar/transmux/ubuntu
+          incoming = ~piyushdoorwar/ubuntu/transmux/
           login = piyushdoorwar
           allow_unsigned_uploads = 0
           EOF
