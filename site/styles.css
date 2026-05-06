@@ -35,6 +35,12 @@ a {
   text-decoration: none;
 }
 
+img {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
 .topbar {
   position: sticky;
   top: 0;
