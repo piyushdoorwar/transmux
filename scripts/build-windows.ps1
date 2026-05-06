@@ -41,7 +41,14 @@ function Resolve-FfmpegDirectory {
 
     Write-Host "Fetching latest ffmpeg essentials release from BtbN/FFmpeg-Builds..."
     $apiUrl  = "https://api.github.com/repos/BtbN/FFmpeg-Builds/releases/latest"
-    $release = Invoke-RestMethod -Uri $apiUrl -Headers @{ "User-Agent" = "Transmux-Packager" }
+    $headers = @{ "User-Agent" = "Transmux-Packager" }
+    
+    # Add GitHub token if available for higher API rate limits
+    if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) {
+        $headers["Authorization"] = "token $env:GITHUB_TOKEN"
+    }
+    
+    $release = Invoke-RestMethod -Uri $apiUrl -Headers $headers
 
     $asset = $release.assets |
         Where-Object { $_.name -match '^ffmpeg-master-latest-win64-gpl\.zip$' } |
