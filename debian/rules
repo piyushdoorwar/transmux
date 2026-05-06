@@ -2,14 +2,20 @@
 
 export DH_VERBOSE = 1
 export DOTNET_CLI_HOME = /tmp/dotnet-home
+export HOME = /tmp/dotnet-home
 export DOTNET_NOLOGO = 1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
+export DOTNET_CLI_TELEMETRY_OPTOUT = 1
+export AVALONIA_TELEMETRY_OPTOUT = 1
+export XDG_CACHE_HOME = /tmp/dotnet-home/.cache
+export XDG_CONFIG_HOME = /tmp/dotnet-home/.config
 export NUGET_PACKAGES = $(CURDIR)/packages
 
 %:
 	dh $@
 
 override_dh_auto_build:
+	mkdir -p "$(HOME)" "$(XDG_CACHE_HOME)" "$(XDG_CONFIG_HOME)"
 	printf '<configuration><packageSources><clear /></packageSources></configuration>' > NuGet.Config
 	dotnet restore src/Transmux.App/Transmux.App.csproj
 	dotnet publish src/Transmux.App/Transmux.App.csproj \
