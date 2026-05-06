@@ -10,8 +10,6 @@
     <!-- Trim unused code on publish to reduce output size -->
     <PublishTrimmed>false</PublishTrimmed>
     <PublishSingleFile>false</PublishSingleFile>
-    <!-- Declare supported RIDs so dotnet restore populates net10.0/linux-x64 in the assets file -->
-    <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
