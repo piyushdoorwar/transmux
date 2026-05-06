@@ -64,15 +64,15 @@
                 <div class="cvt-select-mock">MP4 (H.264 / AAC)<span class="cvt-chevron" aria-hidden="true"></span></div>
               </div>
               <div class="cvt-field-row">
-                <span class="cvt-field-label">Subtitles</span>
+                <span class="cvt-field-label">Subtitles &emsp;&emsp;&nbsp;</span>
                 <div class="cvt-select-mock">Include in output<span class="cvt-chevron" aria-hidden="true"></span></div>
               </div>
             </div>
             <div class="cvt-progress-section">
-              <div class="cvt-progress-bar"><span style="width:62%"></span></div>
+              <div class="cvt-progress-bar"><span id="progBar" style="width:1%"></span></div>
               <div class="cvt-progress-meta">
-                <span>Converting… 62%</span>
-                <span>3.4× · ETA 0:42</span>
+                <span id="progPercent">Converting… 1%</span>
+                <span id="progEta">3.4× · ETA 3:00</span>
               </div>
             </div>
           </div>
@@ -162,6 +162,47 @@
 
     <script src="app.js"></script>
     <script>
+      // Progress bar animation
+      function animateProgress() {
+        const progBar = document.getElementById("progBar");
+        const progPercent = document.getElementById("progPercent");
+        const progEta = document.getElementById("progEta");
+        const duration = 22000; // 22 seconds per cycle
+        const startTime = Date.now();
+
+        function updateProgress() {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1); // 0 to 1
+
+          // Smooth easing (cubic easeInOut)
+          const easeProgress = progress < 0.5
+            ? 4 * progress ** 3
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+          const percent = Math.round(1 + easeProgress * 98); // 1% to 99%
+          const eta = Math.max(0, 180 - Math.floor(easeProgress * 176)); // 3:00 down to 0:04
+
+          progBar.style.width = percent + "%";
+          progPercent.textContent = `Converting… ${percent}%`;
+          
+          const mins = Math.floor(eta / 60);
+          const secs = eta % 60;
+          progEta.textContent = `3.4× · ETA ${mins}:${String(secs).padStart(2, "0")}`;
+
+          if (progress < 1) {
+            requestAnimationFrame(updateProgress);
+          } else {
+            // Loop: restart animation
+            setTimeout(animateProgress, 500);
+          }
+        }
+
+        updateProgress();
+      }
+
+      // Start animation when page loads
+      animateProgress();
+
       // Support modal
       const supportBtn   = document.getElementById("footerSupportBtn");
       const supportModal = document.getElementById("supportModal");

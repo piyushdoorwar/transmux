@@ -448,6 +448,7 @@ h3 {
   height: 100%;
   background: var(--blue);
   border-radius: 999px;
+  transition: width 50ms linear;
 }
 
 .cvt-progress-meta {
