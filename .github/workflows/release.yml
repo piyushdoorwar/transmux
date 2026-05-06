@@ -149,7 +149,6 @@ jobs:
 
       - name: Create dput configuration
         run: |
-          mkdir -p ~/.dput.cf
           cat > ~/.dput.cf <<EOF
           [transmux-ppa]
           fqdn = ppa.launchpad.net
