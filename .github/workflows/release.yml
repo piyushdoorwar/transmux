@@ -127,7 +127,6 @@ jobs:
       - name: Import GPG signing key
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
           KEY_FP=$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr/{print $10; exit}')
@@ -142,24 +141,20 @@ jobs:
           dpkg-buildpackage -S -d -us -uc
 
       - name: Sign source package
-        env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          debsign -k "${KEY_FP}" -p "gpg --batch --no-tty --passphrase $GPG_PASSPHRASE" ../*.changes
+          debsign -k "${KEY_FP}" ../*.changes
 
       - name: Create dput configuration
         run: |
           cat > ~/.dput.cf <<EOF
           [transmux-ppa]
           fqdn = ppa.launchpad.net
-          method = sftp
+          method = ftp
           incoming = ~piyushdoorwar/ubuntu/transmux/
-          login = piyushdoorwar
+          login = anonymous
           allow_unsigned_uploads = 0
           EOF
 
       - name: Upload to PPA
-        env:
-          DPUT_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           dput transmux-ppa ../*.changes
