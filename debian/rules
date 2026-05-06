@@ -28,6 +28,9 @@ override_dh_auto_build:
 override_dh_auto_install:
 	mkdir -p debian/transmux/usr/lib/transmux debian/transmux/usr/bin
 	cp -a debian/build/. debian/transmux/usr/lib/transmux/
+	if [ -d debian/transmux/usr/lib/transmux/runtimes ]; then \
+		find debian/transmux/usr/lib/transmux/runtimes -mindepth 1 -maxdepth 1 ! -name linux-x64 -exec rm -rf {} +; \
+	fi
 	printf '#!/bin/sh\nexec dotnet /usr/lib/transmux/Transmux.dll "$$@"\n' > debian/transmux/usr/bin/transmux
 	chmod 755 debian/transmux/usr/bin/transmux
 
