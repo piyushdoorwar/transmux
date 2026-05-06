@@ -134,7 +134,7 @@ jobs:
 
       - name: Update debian/changelog
         run: |
-          dch -v "${VERSION}-0piyushdoorwar1" --distribution jammy "Release version ${VERSION}"
+          dch -v "${VERSION}-0piyushdoorwar1" --distribution resolute "Release version ${VERSION}"
 
       - name: Build source package
         run: |
