@@ -11,8 +11,7 @@ export NUGET_PACKAGES = $(CURDIR)/packages
 
 override_dh_auto_build:
 	printf '<configuration><packageSources><clear /></packageSources></configuration>' > NuGet.Config
-	dotnet restore src/Transmux.App/Transmux.App.csproj \
-		--runtime linux-x64
+	dotnet restore src/Transmux.App/Transmux.App.csproj
 	dotnet publish src/Transmux.App/Transmux.App.csproj \
 		--configuration Release \
 		--runtime linux-x64 \

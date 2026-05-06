@@ -127,7 +127,6 @@ jobs:
       - name: Vendor NuGet packages
         run: |
           dotnet restore src/Transmux.App/Transmux.App.csproj \
-            --runtime linux-x64 \
             --packages ./packages
 
       - name: Import GPG signing key
