@@ -9,10 +9,15 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
 	dh $@
 
 override_dh_auto_build:
+	dotnet restore src/Transmux.App/Transmux.App.csproj \
+		--runtime linux-x64 \
+		--source ./packages \
+		--packages ./packages
 	dotnet publish src/Transmux.App/Transmux.App.csproj \
 		--configuration Release \
 		--runtime linux-x64 \
 		--self-contained=false \
+		--no-restore \
 		--output debian/build
 
 override_dh_auto_install:

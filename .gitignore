@@ -8,6 +8,7 @@ dist/
 Debug/
 Release/
 x64/
+packages/
 x86/
 arm64/
 
