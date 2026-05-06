@@ -1,5 +1,3 @@
-const repo = "piyushdoorwar/transmux";
-
 const linuxLink = document.querySelector("#linuxDownloadLink");
 const windowsLink = document.querySelector("#windowsDownloadLink");
 const heroDownloadLink = document.querySelector("#downloadLink");
@@ -30,9 +28,7 @@ function latestAssetWithInstaller(releases, findAsset) {
 
 async function hydrateDownloadLinks() {
   try {
-    const response = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=100`, {
-      headers: { Accept: "application/vnd.github+json" },
-    });
+    const response = await fetch("releases.json");
     if (!response.ok) return;
 
     const releases = await response.json();

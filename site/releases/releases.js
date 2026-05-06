@@ -1,7 +1,6 @@
 /* releases.js - powers the /releases/ page */
 
 (function () {
-  const REPO = "piyushdoorwar/transmux";
   const PER_PAGE = 10;
 
   // ── State ──────────────────────────────────────────────────────────────────
@@ -22,22 +21,12 @@
   const osTabs          = document.querySelectorAll(".os-tab");
   const stableToggle    = document.getElementById("stableOnlyToggle");
 
-  // ── Fetch all releases from GitHub (traverse pages) ───────────────────────
+  // ── Fetch static release manifest generated during the Pages deploy ───────
   async function fetchAllReleases() {
-    const results = [];
-    let page = 1;
-    while (true) {
-      const res = await fetch(
-        `https://api.github.com/repos/${REPO}/releases?per_page=100&page=${page}`,
-        { headers: { Accept: "application/vnd.github+json" } }
-      );
-      if (!res.ok) throw new Error(`GitHub API ${res.status}`);
-      const batch = await res.json();
-      if (!batch.length) break;
-      results.push(...batch.filter(r => !r.draft));
-      if (batch.length < 100) break;
-      page++;
-    }
+    const res = await fetch("../releases.json");
+    if (!res.ok) throw new Error(`Release manifest ${res.status}`);
+    const results = await res.json();
+
     // Newest first (GitHub returns newest first, but be explicit)
     results.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
     return results;

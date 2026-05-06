@@ -475,7 +475,7 @@ All jobs install .NET 10.0 SDK.
 
 - Located at `/site/` in the repo
 - Static HTML/CSS/JS site, reusing Lumyn visual design
-- Deployed automatically to GitHub Pages via `static.yml` on every push to `main`
+- Deployed automatically to GitHub Pages via `static.yml` on every push to `main`, release changes, and successful `Release` workflow runs
 - URL: `https://piyushdoorwar.github.io/transmux/`
 - Contains: landing page, releases page, privacy/policy page
 
@@ -483,11 +483,11 @@ All jobs install .NET 10.0 SDK.
 
 - Hero section: converter preview mockup, "Desktop media converter" tagline
 - Feature highlights: FFmpeg-powered, wide format support, subtitle handling, live progress
-- Download section: Linux .deb and Windows .exe buttons populated by `app.js` from GitHub Releases API (`piyushdoorwar/transmux`)
+- Download section: Linux .deb and Windows .exe buttons populated by `app.js` from the generated `site/releases.json` manifest
 
 ### `app.js`
 
-- Fetches latest stable release assets from `https://api.github.com/repos/piyushdoorwar/transmux/releases`
+- Fetches latest stable release assets from `site/releases.json`
 - Matches Linux asset: `/_amd64\.deb$/i`
 - Matches Windows asset: `/win-x64.*_setup\.exe$/i`
 - Enables the corresponding download button when a matching asset is found
@@ -495,7 +495,7 @@ All jobs install .NET 10.0 SDK.
 ### Releases page (`/site/releases/`)
 
 - `index.html` — OS filter tabs (All / Linux / Windows) + stable-only toggle
-- `releases.js` — fetches all non-draft releases from GitHub API (`piyushdoorwar/transmux`), renders paginated list with OS-filtered `.deb` and `.exe` assets
+- `releases.js` — fetches all non-draft releases from generated `site/releases.json`, renders paginated list with OS-filtered `.deb` and `.exe` assets
 
 ### Policy page (`/site/policy/`)
 
