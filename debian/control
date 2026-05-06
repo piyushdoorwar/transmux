@@ -1,0 +1,27 @@
+Source: transmux
+Priority: optional
+Maintainer: Piyush Doorwar <piyushdoorwar+transmux@gmail.com>
+Build-Depends: debhelper-compat (= 13), dotnet-sdk-10.0
+Standards-Version: 4.6.2
+Homepage: https://github.com/piyushdoorwar/lumyn-transmux
+Vcs-Git: https://github.com/piyushdoorwar/lumyn-transmux.git
+Vcs-Browser: https://github.com/piyushdoorwar/lumyn-transmux
+
+Package: transmux
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}, dotnet-runtime-10.0, ffmpeg
+Description: Clean desktop audio/video converter powered by Lumyn
+ Transmux is a minimal, clean desktop audio/video converter powered by
+ FFmpeg. Drop in a media file, inspect its format and streams, pick an
+ output format, and convert — all without touching a command line.
+ .
+ Features:
+  - Open audio and video files via file picker or drag and drop
+  - Inspect detected format, video stream, audio streams, and subtitle tracks
+  - Convert to MP4, WebM, MKV, AVI, MOV, MP3, AAC, FLAC, OGG, WAV, or Opus
+  - Include subtitles in output, extract to separate .srt/.ass, or strip them
+  - Live progress bar with speed and ETA
+  - Cancel in-flight conversions
+  - Remember last output directory and format between sessions
+ .
+ Built with .NET 10 and Avalonia UI.

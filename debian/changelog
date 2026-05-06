@@ -1,0 +1,5 @@
+transmux (0.1.0-0piyushdoorwar1) jammy; urgency=medium
+
+  * Initial Ubuntu PPA release
+
+ -- Piyush Doorwar <piyushdoorwar+transmux@gmail.com>  Tue, 06 May 2026 05:00:00 +0000

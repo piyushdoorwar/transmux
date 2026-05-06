@@ -103,75 +103,60 @@ jobs:
           name: "Transmux ${{ needs.prepare.outputs.version }}"
           files: release-artifacts/**/*
 
-  # ── Publish to Debian Repository ────────────────────────────────────────────
-  publish-debian-repo:
-    name: Publish to Debian repository
+  # ── Publish to Ubuntu PPA ──────────────────────────────────────────────────
+  publish-ppa:
+    name: Publish to Ubuntu PPA
     runs-on: ubuntu-latest
-    needs: [prepare, linux-deb]
+    needs: [prepare]
     env:
       VERSION: ${{ needs.prepare.outputs.version }}
-    permissions:
-      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Checkout main branch
-        run: git checkout -B main origin/main
-
-      - name: Download .deb artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: transmux-linux-amd64-deb
-          path: ./deb-artifacts
-
-      - name: Set up reprepro
-        run: sudo apt-get install -y reprepro
 
       - name: Import GPG signing key
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
           KEY_FP=$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr/{print $10; exit}')
           echo "KEY_FP=${KEY_FP}" >> "$GITHUB_ENV"
 
-      - name: Initialize Debian repository structure
+      - name: Install build dependencies
         run: |
-          mkdir -p site/debian/conf
-          mkdir -p site/debian/dists/stable/main/binary-amd64
-          mkdir -p site/debian/pool/main/transmux
+          sudo apt-get update
+          sudo apt-get install -y devscripts debhelper-compat dput
 
-      - name: Create reprepro configuration
+      - name: Update debian/changelog
         run: |
-          cat > site/debian/conf/distributions <<EOF
-          Codename: stable
-          Components: main
-          Architectures: amd64
-          Description: Transmux media converter
-          SignWith: ${KEY_FP}
+          cd debian
+          dch -v "${VERSION}-0piyushdoorwar1" --distribution jammy "Release version ${VERSION}"
+
+      - name: Build source package
+        run: |
+          dpkg-buildpackage -S -d -us -uc
+
+      - name: Sign source package
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          debsign -k "${KEY_FP}" -p "gpg --batch --no-tty --passphrase $GPG_PASSPHRASE" ../*.changes
+
+      - name: Create dput configuration
+        run: |
+          mkdir -p ~/.dput.cf
+          cat > ~/.dput.cf <<EOF
+          [transmux-ppa]
+          fqdn = ppa.launchpad.net
+          method = sftp
+          incoming = ~piyushdoorwar/transmux/ubuntu
+          login = piyushdoorwar
+          allow_unsigned_uploads = 0
           EOF
 
-      - name: Add .deb to repository
+      - name: Upload to PPA
+        env:
+          DPUT_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          cd site/debian
-          for deb in ../../deb-artifacts/*.deb; do
-            reprepro includedeb stable "$deb"
-          done
-
-      - name: Export public key
-        run: |
-          gpg --armor --export "${KEY_FP}" > site/debian/transmux.asc
-
-      - name: Configure git
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-      - name: Commit and push changes
-        run: |
-          git add site/debian/
-          git diff-index --quiet HEAD || git commit -m "chore: publish Transmux $VERSION to Debian repository"
-          git push
+          dput transmux-ppa ../*.changes

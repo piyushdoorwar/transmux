@@ -113,50 +113,20 @@
           </p>
         </div>
 
-        <!-- Installation tabs for Linux -->
-        <div class="install-tabs" data-reveal style="--reveal-delay: 0.1s">
-          <div class="tab-buttons">
-            <button class="tab-button active" data-tab="direct">Direct Download</button>
-            <button class="tab-button" data-tab="debian-repo">Debian Repository</button>
+        <!-- Download buttons -->
+        <div class="download-container" data-reveal style="--reveal-delay: 0.1s">
+          <p class="download-desc">Download the latest release for your platform:</p>
+          <div class="download-actions" aria-label="Download Transmux">
+            <a class="button primary large platform-download disabled" id="linuxDownloadLink" aria-disabled="true" aria-label="Download Transmux for Linux">
+              <img src="assets/ubuntu.svg" alt="" />
+              <span>Download for Linux</span>
+            </a>
+            <a class="button primary large platform-download disabled" id="windowsDownloadLink" aria-disabled="true" aria-label="Download Transmux for Windows">
+              <img src="assets/windows.svg" alt="" />
+              <span>Download for Windows</span>
+            </a>
           </div>
-
-          <!-- Direct download tab -->
-          <div class="tab-content active" data-tab="direct">
-            <div class="download-container">
-              <p class="download-desc">Download the latest release for your platform:</p>
-              <div class="download-actions" aria-label="Download Transmux">
-                <a class="button primary large platform-download disabled" id="linuxDownloadLink" aria-disabled="true" aria-label="Download Transmux for Linux">
-                  <img src="assets/ubuntu.svg" alt="" />
-                  <span>Download for Linux</span>
-                </a>
-                <a class="button primary large platform-download disabled" id="windowsDownloadLink" aria-disabled="true" aria-label="Download Transmux for Windows">
-                  <img src="assets/windows.svg" alt="" />
-                  <span>Download for Windows</span>
-                </a>
-              </div>
-              <p class="download-note">FFmpeg is bundled with Windows releases. Linux requires <code>ffmpeg</code> installed via <code>sudo apt install ffmpeg</code></p>
-            </div>
-          </div>
-
-          <!-- Debian repository tab -->
-          <div class="tab-content" data-tab="debian-repo">
-            <div class="debian-install">
-              <p class="install-desc">Get automatic updates through Ubuntu's package manager:</p>
-              <div class="install-code-wrapper">
-                <pre class="install-code"><code>curl -fsSL https://piyushdoorwar.github.io/transmux/debian/transmux.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/transmux.gpg > /dev/null
-echo "deb [signed-by=/etc/apt/keyrings/transmux.gpg] https://piyushdoorwar.github.io/transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
-sudo apt update
-sudo apt install transmux</code></pre>
-                <button class="copy-button" aria-label="Copy installation command" title="Copy to clipboard">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                  </svg>
-                </button>
-              </div>
-              <p class="install-note">Updates will be installed automatically with your system packages.</p>
-            </div>
-          </div>
+          <p class="download-note">FFmpeg is bundled with Windows releases. Linux requires <code>ffmpeg</code> installed via <code>sudo apt install ffmpeg</code></p>
         </div>
       </section>
     </main>

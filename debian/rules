@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	dotnet publish src/Transmux.App/Transmux.App.csproj \
+		--configuration Release \
+		--runtime linux-x64 \
+		--self-contained=false \
+		--output debian/build
+
+override_dh_auto_install:
+	mkdir -p debian/transmux/usr/bin
+	install -D -m 755 debian/build/Transmux debian/transmux/usr/bin/transmux
+
+override_dh_auto_test:
+	# No tests to run

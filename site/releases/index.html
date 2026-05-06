@@ -83,10 +83,9 @@
         <div class="tab-content" data-tab="installation">
           <div class="installation-guide">
             <div class="install-method">
-              <h3>Linux (Ubuntu/Debian) – Debian Repository</h3>
-              <p>Add the signing key and package source for automatic updates:</p>
-              <pre><code>curl -fsSL https://piyushdoorwar.github.io/transmux/debian/transmux.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/transmux.gpg > /dev/null
-echo "deb [signed-by=/etc/apt/keyrings/transmux.gpg] https://piyushdoorwar.github.io/transmux/debian stable main" | sudo tee /etc/apt/sources.list.d/transmux.list
+              <h3>Linux (Ubuntu/Debian) – Ubuntu PPA</h3>
+              <p>Add the PPA for automatic updates:</p>
+              <pre><code>sudo add-apt-repository ppa:piyushdoorwar/transmux
 sudo apt update
 sudo apt install transmux</code></pre>
             </div>
@@ -95,7 +94,6 @@ sudo apt install transmux</code></pre>
               <h3>Linux (Ubuntu/Debian) – Direct .deb Install</h3>
               <p>Download the <code>.deb</code> file from the Versions tab, then install directly:</p>
               <pre><code>sudo apt install ~/Downloads/transmux_*.deb</code></pre>
-            </br>
               <p class="install-note">Requires <code>ffmpeg</code> installed via <code>sudo apt install ffmpeg</code></p>
             </div>
 
