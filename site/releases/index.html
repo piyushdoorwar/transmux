@@ -15,11 +15,27 @@
         <span>Transmux</span>
       </a>
       <nav aria-label="Primary navigation">
-        <a href="../#features">Features</a>
-        <a href="../#download">Download</a>
-        <a href="./" aria-current="page">Releases</a>
-        <a href="../policy/">Policy</a>
-        <a href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">GitHub</a>
+        <a class="icon-link" href="../#features">
+          <img src="../assets/features.svg" alt="" />
+          <span>Features</span>
+        </a>
+        <a class="icon-link" href="../#download">
+          <img src="../assets/download.svg" alt="" />
+          <span>Download</span>
+        </a>
+        <a class="icon-link" href="./" aria-current="page">
+          <img src="../assets/releases.svg" alt="" />
+          <span>Releases</span>
+        </a>
+        <a class="icon-link" href="../policy/">
+          <img src="../assets/policy.svg" alt="" />
+          <span>Policy</span>
+        </a>
+        <a class="github-link icon-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
+          <img src="../assets/github.svg" alt="" />
+          <span>GitHub</span>
+        </a>
+      </nav>
     </header>
 
     <main class="releases-main">
@@ -64,7 +80,11 @@
             <span>Fetching releases…</span>
           </div>
           <div id="releases-error" class="releases-state hidden">
-            Could not load releases. <a href="https://github.com/piyushdoorwar/transmux/releases" rel="noreferrer">View on GitHub →</a>
+            Could not load releases.
+            <a class="github-link" href="https://github.com/piyushdoorwar/transmux/releases" rel="noreferrer">
+              <img src="../assets/github.svg" alt="" />
+              <span>View on GitHub</span>
+            </a>
           </div>
           <div id="releases-empty" class="releases-state hidden">
             No releases found for this platform yet.
@@ -109,9 +129,22 @@ sudo apt install transmux</code></pre>
     <footer>
       <span>Transmux</span>
       <div class="footer-links">
-        <a href="../policy/">Policy</a>
-        <a href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">GitHub</a>
-        <button class="footer-support-link" id="footerSupportBtnReleases">Support</button>
+        <a class="icon-link" href="./" aria-current="page">
+          <img src="../assets/releases.svg" alt="" />
+          <span>Releases</span>
+        </a>
+        <a class="icon-link" href="../policy/">
+          <img src="../assets/policy.svg" alt="" />
+          <span>Policy</span>
+        </a>
+        <a class="github-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
+          <img src="../assets/github.svg" alt="" />
+          <span>GitHub</span>
+        </a>
+        <button class="footer-support-link icon-link" id="footerSupportBtnReleases">
+          <img src="../assets/support.svg" alt="" />
+          <span>Support</span>
+        </button>
       </div>
     </footer>
 

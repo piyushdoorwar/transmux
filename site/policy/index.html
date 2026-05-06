@@ -83,6 +83,30 @@
 
       .topbar-link:hover { color: var(--text); }
 
+      .topbar nav,
+      .icon-link {
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .topbar nav {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: clamp(12px, 3vw, 28px);
+      }
+
+      .icon-link {
+        gap: 7px;
+      }
+
+      .icon-link img {
+        width: 16px;
+        height: 16px;
+        flex: 0 0 auto;
+        filter: brightness(0) invert(1);
+        opacity: 0.9;
+      }
+
       .page-inner {
         max-width: 900px;
         margin: 0 auto;
@@ -271,6 +295,11 @@
           padding-bottom: 12px;
         }
 
+        .topbar nav {
+          justify-content: flex-start;
+          gap: 12px 18px;
+        }
+
         .policy-section {
           grid-template-columns: 1fr;
           gap: 6px;
@@ -289,7 +318,28 @@
         <img src="../assets/transmux.svg" alt="" />
         <span>Transmux</span>
       </a>
-      <a class="topbar-link" href="../">Back to site</a>
+      <nav aria-label="Primary navigation">
+        <a class="topbar-link icon-link" href="../#features">
+          <img src="../assets/features.svg" alt="" />
+          <span>Features</span>
+        </a>
+        <a class="topbar-link icon-link" href="../#download">
+          <img src="../assets/download.svg" alt="" />
+          <span>Download</span>
+        </a>
+        <a class="topbar-link icon-link" href="../releases/">
+          <img src="../assets/releases.svg" alt="" />
+          <span>Releases</span>
+        </a>
+        <a class="topbar-link icon-link" href="./" aria-current="page">
+          <img src="../assets/policy.svg" alt="" />
+          <span>Policy</span>
+        </a>
+        <a class="topbar-link icon-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
+          <img src="../assets/github.svg" alt="" />
+          <span>GitHub</span>
+        </a>
+      </nav>
     </header>
 
     <main>
@@ -487,10 +537,26 @@
     <footer>
       <span>&copy; <span id="yr"></span> Piyush Doorwar. Transmux.</span>
       <div class="footer-links">
-        <a href="../">Home</a>
-        <a href="../releases/">Releases</a>
-        <a href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">GitHub</a>
-        <a href="mailto:piyushdoorwar+transmux@gmail.com">Contact</a>
+        <a class="icon-link" href="../">
+          <img src="../assets/transmux.svg" alt="" />
+          <span>Home</span>
+        </a>
+        <a class="icon-link" href="../releases/">
+          <img src="../assets/releases.svg" alt="" />
+          <span>Releases</span>
+        </a>
+        <a class="icon-link" href="./" aria-current="page">
+          <img src="../assets/policy.svg" alt="" />
+          <span>Policy</span>
+        </a>
+        <a class="icon-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
+          <img src="../assets/github.svg" alt="" />
+          <span>GitHub</span>
+        </a>
+        <a class="icon-link" href="mailto:piyushdoorwar+transmux@gmail.com">
+          <img src="../assets/mail.svg" alt="" />
+          <span>Contact</span>
+        </a>
       </div>
     </footer>
 

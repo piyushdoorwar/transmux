@@ -140,7 +140,7 @@
           <time class="release-date" datetime="${escHtml(published)}" title="${formatDate(published)}">${timeAgo(published)} · ${formatDate(published)}</time>
         </div>
         <div class="release-downloads">
-          ${downloads || `<a class="release-gh-link" href="${escHtml(release.html_url)}" rel="noreferrer">View on GitHub →</a>`}
+          ${downloads || `<a class="release-gh-link github-link" href="${escHtml(release.html_url)}" rel="noreferrer"><img src="../assets/github.svg" alt="" /><span>View on GitHub</span></a>`}
         </div>
       </article>`;
     }).join("");

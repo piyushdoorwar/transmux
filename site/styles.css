@@ -75,6 +75,22 @@ nav a:hover {
   color: var(--text);
 }
 
+.icon-link,
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.icon-link img,
+.github-link img {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
 main {
   overflow: hidden;
 }
@@ -715,9 +731,11 @@ footer a:hover,
 }
 
 .footer-support-link {
+  align-items: center;
   background: none;
   border: none;
   cursor: pointer;
+  display: inline-flex;
   color: var(--soft);
   font-family: inherit;
   font-size: inherit;
@@ -1096,6 +1114,9 @@ footer a:hover,
 }
 
 .release-gh-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   font-size: 13px;
   color: var(--soft);
 }
