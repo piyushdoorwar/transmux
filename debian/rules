@@ -4,15 +4,14 @@ export DH_VERBOSE = 1
 export DOTNET_CLI_HOME = /tmp/dotnet-home
 export DOTNET_NOLOGO = 1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
+export NUGET_PACKAGES = $(CURDIR)/packages
 
 %:
 	dh $@
 
 override_dh_auto_build:
 	dotnet restore src/Transmux.App/Transmux.App.csproj \
-		--runtime linux-x64 \
-		--source ./packages \
-		--packages ./packages
+		--runtime linux-x64
 	dotnet publish src/Transmux.App/Transmux.App.csproj \
 		--configuration Release \
 		--runtime linux-x64 \
