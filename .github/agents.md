@@ -31,7 +31,7 @@
 
 - **Repo**: `piyushdoorwar/transmux`
 - **Owner/Author**: Piyush Doorwar
-- **Brand**: "Transmux — powered by Lumyn" (reuses Lumyn blue color palette and visual identity)
+- **Brand**: "Transmux — powered by Lumyn" (Transmux uses a blue UI palette; only the small Lumyn mark in the credit line is green)
 - **License**: Source available — non-commercial personal use
 - **Current version base**: `1.0`
 - **Website**: deployed to GitHub Pages from `/site/`
@@ -47,7 +47,7 @@ Design philosophy: a single-purpose, no-frills conversion tool. Pick a file, pic
 | Language | C# (latest, nullable enabled, implicit usings) |
 | Runtime | .NET 10.0 |
 | UI Framework | Avalonia UI 11.3.14 |
-| UI Theme | Fluent (dark, Lumyn palette) |
+| UI Theme | Fluent (dark, Transmux blue palette) |
 | Conversion Engine | FFmpeg (process-based, bundled binary) |
 | Media Inspection | FFprobe (bundled alongside FFmpeg) |
 | Packaging | dpkg (Linux .deb), Inno Setup (Windows .exe) |
@@ -73,8 +73,8 @@ transmux/
 │   │   ├── Program.cs               # Entry point
 │   │   ├── App.axaml / App.axaml.cs # Application bootstrap, styles, resources
 │   │   ├── Assets/
-│   │   │   ├── Icons/               # transmux.svg + transmux.ico (multi-res); lumyn.svg (kept for branding, not active)
-│   │   │   └── Styles/Lumyn.axaml   # Custom styling (Lumyn dark theme overrides)
+│   │   │   ├── Icons/               # Transmux/Lumyn drawing resources, SVG source files, app .ico
+│   │   │   └── Styles/Lumyn.axaml   # Custom styling (dark theme + blue accent overrides)
 │   │   ├── Models/
 │   │   │   └── ConversionJob.cs     # Represents a single conversion job (input, output format, subtitle options)
 │   │   ├── ViewModels/
@@ -247,10 +247,11 @@ A segmented **Fast / Full re-encode** toggle appears in the options panel:
 - On completion: brief success state with "Open folder" shortcut
 
 ### UI & Platform
-- Clean dark theme (Lumyn palette: `#111111` background, `#DEDAD5` text, `#3A6E9B` accent)
+- Clean dark theme (Transmux palette: `#111111` background, `#DEDAD5` text, `#3A6E9B` accent)
+- Accent/selection colors should be blue throughout the app. Do not allow platform green highlights to leak into ComboBox selected/hover states.
 - Single window, no sidebar — focused workflow
 - Drag-and-drop input file onto the window
-- About dialog (version + credits)
+- About dialog (Transmux logo, version + credits, GitHub link, releases link)
 
 ---
 
@@ -344,10 +345,10 @@ CancellationTokenSource? _cts
 ## 9. UI Layout & Windows
 
 ### MainWindow
-- **Default size**: 680×560; **Minimum**: 500×430
+- **Default size**: 850×700; **Minimum**: 625×538
 - **Decorations**: `BorderOnly` (custom title bar, Lumyn style)
 - **Background**: `#111111`; **Foreground**: `#DEDAD5`
-- **Theme**: Fluent dark + `Lumyn.axaml` overrides
+- **Theme**: Fluent dark + `Lumyn.axaml` overrides. `App.axaml` sets Fluent dark/light palette accents to `#3A6E9B`; `Lumyn.axaml` also overrides `SystemAccentColor*` resources and ComboBox item selected/hover backgrounds so dropdown highlights stay blue.
 
 ```
 ┌─────────────────────────────────────────────┐  ← TopBar (38px)
@@ -388,7 +389,17 @@ CancellationTokenSource? _cts
 
 | Dialog | Purpose |
 |---|---|
-| `AboutDialog` | Version + credits |
+| `AboutDialog` | Version + credits, Transmux logo, green Lumyn mark credit, GitHub link, releases link |
+
+About dialog link targets:
+- `GitHub` opens `https://github.com/piyushdoorwar/transmux`
+- `Releases` opens `https://piyushdoorwar.github.io/transmux/releases/`
+
+About/footer branding:
+- Use `Icon.TransmuxMark` as the About dialog app logo.
+- The `Powered by Lumyn` credit is gray text with a small green Lumyn mark beside it.
+- Do not point Avalonia `Image.Source` directly at `lumyn.svg`; without an SVG image loader package, Avalonia treats it as a bitmap and throws `Unable to load bitmap from provided data`.
+- For the small green Lumyn credit mark, use vector `Path`/`Viewbox` geometry resources in `TransmuxIcons.axaml` (`Icon.LumynSignal*`, `Icon.LumynBody`, `Icon.LumynStand*`, `Icon.LumynPlay`) rather than adding green variants to `LumynLogo.axaml`.
 
 ---
 
@@ -474,7 +485,7 @@ All jobs install .NET 10.0 SDK.
 ## 13. Website / Site
 
 - Located at `/site/` in the repo
-- Static HTML/CSS/JS site, reusing Lumyn visual design
+- Static HTML/CSS/JS site, reusing the Transmux/Lumyn visual design
 - Deployed automatically to GitHub Pages via `static.yml` on every push to `main`, release changes, and successful `Release` workflow runs
 - URL: `https://piyushdoorwar.github.io/transmux/`
 - Contains: landing page, releases page, privacy/policy page
@@ -541,7 +552,8 @@ dotnet run --project src/Transmux.App/Transmux.App.csproj
 - **No unsafe code**: No P/Invoke or OpenGL interop. `AllowUnsafeBlocks` not required.
 - **FFmpeg path resolution**: `FfmpegService` checks `AppContext.BaseDirectory` first (for bundled binaries on Windows), then falls back to PATH resolution. Fail-fast with a clear error message if ffmpeg is not found.
 - **Settings path**: `Environment.GetFolderPath(SpecialFolder.ApplicationData)` + `Transmux/settings.json`.
-- **Avalonia resources**: Icons and styles defined in `App.axaml` as `Application.Resources`. `Lumyn.axaml` style sheet provides branding.
+- **Avalonia resources**: Icons and styles are merged in `App.axaml` as `Application.Resources`. `LumynLogo.axaml` contains the reusable blue Lumyn drawing resources and the Transmux logo drawing; `TransmuxIcons.axaml` contains path/icon geometries used by window chrome, About links, and the small green Lumyn credit mark. `Lumyn.axaml` style sheet provides dark theme and blue accent overrides.
+- **SVG files**: `lumyn.svg` and `transmux.svg` are source/native assets, not runtime Avalonia `Image.Source` targets. Keep `lumyn.svg` excluded from `AvaloniaResource` unless an SVG rendering package is added.
 - **Output format record**: `FormatInfo` is a C# record carrying the display name, file extension, and ffmpeg argument fragments. New formats are added by extending the `OutputFormats.All` list — no scattered switch statements.
 
 ---

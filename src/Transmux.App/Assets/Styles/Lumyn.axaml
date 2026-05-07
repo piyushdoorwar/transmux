@@ -1,4 +1,24 @@
-<Styles xmlns="https://github.com/avaloniaui">
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Styles.Resources>
+    <Color x:Key="SystemAccentColor">#3A6E9B</Color>
+    <Color x:Key="SystemAccentColorLight1">#4B8FBE</Color>
+    <Color x:Key="SystemAccentColorLight2">#5A9FCE</Color>
+    <Color x:Key="SystemAccentColorLight3">#7AB7DC</Color>
+    <Color x:Key="SystemAccentColorDark1">#2F587D</Color>
+    <Color x:Key="SystemAccentColorDark2">#24445F</Color>
+    <Color x:Key="SystemAccentColorDark3">#193044</Color>
+
+    <SolidColorBrush x:Key="SystemAccentColorBrush" Color="{StaticResource SystemAccentColor}" />
+    <SolidColorBrush x:Key="SystemAccentColorLight1Brush" Color="{StaticResource SystemAccentColorLight1}" />
+    <SolidColorBrush x:Key="SystemAccentColorLight2Brush" Color="{StaticResource SystemAccentColorLight2}" />
+    <SolidColorBrush x:Key="SystemAccentColorLight3Brush" Color="{StaticResource SystemAccentColorLight3}" />
+    <SolidColorBrush x:Key="SystemAccentColorDark1Brush" Color="{StaticResource SystemAccentColorDark1}" />
+    <SolidColorBrush x:Key="SystemAccentColorDark2Brush" Color="{StaticResource SystemAccentColorDark2}" />
+    <SolidColorBrush x:Key="SystemAccentColorDark3Brush" Color="{StaticResource SystemAccentColorDark3}" />
+  </Styles.Resources>
+
   <Style Selector="Window">
     <Setter Property="FontFamily" Value="Cantarell, Ubuntu, Inter, Segoe UI, sans-serif" />
   </Style>
@@ -121,6 +141,18 @@
 
   <Style Selector="TextBlock">
     <Setter Property="Foreground" Value="#F7F5F3" />
+  </Style>
+
+  <Style Selector="ComboBoxItem:selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="#3A6E9B" />
+  </Style>
+
+  <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="#1D2C36" />
+  </Style>
+
+  <Style Selector="ComboBoxItem:selected:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="#4382AD" />
   </Style>
 
   <!-- Segmented mode toggle (Fast / Full) -->

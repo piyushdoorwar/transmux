@@ -392,11 +392,34 @@
 
     <!-- ── Footer ────────────────────────────────────────────────────────── -->
     <Border Grid.Row="2" Background="#0D0D0D">
-      <TextBlock Text="Powered by Lumyn"
-                 FontSize="11"
-                 Foreground="#333"
-                 HorizontalAlignment="Center"
-                 VerticalAlignment="Center" />
+      <StackPanel Orientation="Horizontal"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Spacing="5">
+        <TextBlock Text="Powered by"
+                   FontSize="11"
+                   Foreground="#333"
+                   VerticalAlignment="Center" />
+        <Viewbox Width="12"
+                 Height="12"
+                 VerticalAlignment="Center">
+          <Canvas Width="256" Height="256">
+            <Path Data="{StaticResource Icon.LumynSignal1}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" />
+            <Path Data="{StaticResource Icon.LumynSignal2}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" />
+            <Path Data="{StaticResource Icon.LumynSignal3}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" />
+            <Path Data="{StaticResource Icon.LumynSignal4}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" />
+            <Path Data="{StaticResource Icon.LumynSignal5}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" />
+            <Path Data="{StaticResource Icon.LumynBody}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" StrokeJoin="Round" />
+            <Path Data="{StaticResource Icon.LumynStand1}" Stroke="#3A9B4B" StrokeThickness="12" StrokeLineCap="Round" />
+            <Path Data="{StaticResource Icon.LumynStand2}" Stroke="#3A9B4B" StrokeThickness="12" StrokeLineCap="Round" />
+            <Path Data="{StaticResource Icon.LumynPlay}" Fill="#D8D4CF" />
+          </Canvas>
+        </Viewbox>
+        <TextBlock Text="Lumyn"
+                   FontSize="11"
+                   Foreground="#333"
+                   VerticalAlignment="Center" />
+      </StackPanel>
     </Border>
 
   </Grid>

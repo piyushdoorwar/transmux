@@ -12,7 +12,7 @@
 
     <!-- Logo + app name -->
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Margin="0,0,0,6">
-      <Image Width="32" Height="32" Source="{StaticResource Icon.LumynMark}" />
+      <Image Width="32" Height="32" Source="{StaticResource Icon.TransmuxMark}" />
       <TextBlock Text="Transmux" FontSize="22" FontWeight="Bold"
                  Foreground="#F7F5F3" VerticalAlignment="Center" />
     </StackPanel>
@@ -21,9 +21,34 @@
                HorizontalAlignment="Center"
                FontSize="12" Foreground="#5A5560" Margin="0,0,0,6" />
 
-    <TextBlock Text="Powered by Lumyn"
-               HorizontalAlignment="Center"
-               FontSize="11" Foreground="#3A3835" Margin="0,0,0,18" />
+    <StackPanel Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                Spacing="5"
+                Margin="0,0,0,18">
+      <TextBlock Text="Powered by"
+                 FontSize="11"
+                 Foreground="#3A3835"
+                 VerticalAlignment="Center" />
+      <Viewbox Width="12"
+               Height="12"
+               VerticalAlignment="Center">
+        <Canvas Width="256" Height="256">
+          <Path Data="{StaticResource Icon.LumynSignal1}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" />
+          <Path Data="{StaticResource Icon.LumynSignal2}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" />
+          <Path Data="{StaticResource Icon.LumynSignal3}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" />
+          <Path Data="{StaticResource Icon.LumynSignal4}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" />
+          <Path Data="{StaticResource Icon.LumynSignal5}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" />
+          <Path Data="{StaticResource Icon.LumynBody}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" StrokeJoin="Round" />
+          <Path Data="{StaticResource Icon.LumynStand1}" Stroke="#3A9B4B" StrokeThickness="12" StrokeLineCap="Round" />
+          <Path Data="{StaticResource Icon.LumynStand2}" Stroke="#3A9B4B" StrokeThickness="12" StrokeLineCap="Round" />
+          <Path Data="{StaticResource Icon.LumynPlay}" Fill="#D8D4CF" />
+        </Canvas>
+      </Viewbox>
+      <TextBlock Text="Lumyn"
+                 FontSize="11"
+                 Foreground="#3A3835"
+                 VerticalAlignment="Center" />
+    </StackPanel>
 
     <!-- Divider -->
     <Border Height="1" Background="#242424" Margin="0,0,0,14" />
@@ -51,9 +76,33 @@
 
     <!-- Footer links -->
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="16">
-      <Button Classes="link" Content="GitHub" Click="GitHub_Click" />
+      <Button Classes="link" Click="GitHub_Click">
+        <StackPanel Orientation="Horizontal" Spacing="5">
+          <PathIcon Width="13"
+                    Height="13"
+                    Data="{StaticResource Icon.GitHub}"
+                    Foreground="#3A6E9B"
+                    VerticalAlignment="Center" />
+          <TextBlock Text="GitHub"
+                     FontSize="12"
+                     Foreground="#3A6E9B"
+                     VerticalAlignment="Center" />
+        </StackPanel>
+      </Button>
       <TextBlock Text="·" Foreground="#3A3A3A" VerticalAlignment="Center" />
-      <Button Classes="link" Content="Releases" Click="Releases_Click" />
+      <Button Classes="link" Click="Releases_Click">
+        <StackPanel Orientation="Horizontal" Spacing="5">
+          <PathIcon Width="13"
+                    Height="13"
+                    Data="{StaticResource Icon.Releases}"
+                    Foreground="#3A6E9B"
+                    VerticalAlignment="Center" />
+          <TextBlock Text="Releases"
+                     FontSize="12"
+                     Foreground="#3A6E9B"
+                     VerticalAlignment="Center" />
+        </StackPanel>
+      </Button>
     </StackPanel>
 
     <TextBlock Text="Source Available · © 2026 Piyush Doorwar"
