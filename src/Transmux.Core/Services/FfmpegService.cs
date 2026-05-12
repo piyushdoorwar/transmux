@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.IO.Compression;
 using Transmux.Core.Models;
 
 namespace Transmux.Core.Services;
@@ -18,76 +19,119 @@ public sealed class FfmpegService
         IProgress<ConversionProgress>? progress,
         CancellationToken cancellationToken)
     {
-        var args = BuildArguments(options);
-        var ffmpeg = ResolveBinary("ffmpeg");
+        string? subtitleTempDir = null;
+        IReadOnlyList<SubtitleOutputTarget> subtitleOutputs = [];
 
-        using var process = new System.Diagnostics.Process();
-        process.StartInfo = new System.Diagnostics.ProcessStartInfo
+        if (ShouldExtractSubtitles(options) && options.SubtitleOutputPath is not null)
         {
-            FileName = ffmpeg,
-            Arguments = args,
-            RedirectStandardError = true,
-            RedirectStandardOutput = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
-
-        process.Start();
-
-        var startTime = DateTime.UtcNow;
-
-        _ = Task.Run(async () =>
-        {
-            string? line;
-            while ((line = await process.StandardError.ReadLineAsync(cancellationToken)) is not null)
+            if (options.SubtitleTracks.Count > 1)
             {
-                if (progress is null || options.InputDuration == TimeSpan.Zero)
-                    continue;
+                subtitleTempDir = Path.Combine(Path.GetTempPath(), "transmux-subs-" + Guid.NewGuid().ToString("N"));
+                Directory.CreateDirectory(subtitleTempDir);
 
-                var timeMatch = TimeRegex.Match(line);
-                if (!timeMatch.Success) continue;
-
-                var h = int.Parse(timeMatch.Groups[1].Value);
-                var m = int.Parse(timeMatch.Groups[2].Value);
-                var s = double.Parse(timeMatch.Groups[3].Value,
-                    System.Globalization.CultureInfo.InvariantCulture);
-
-                var current = TimeSpan.FromSeconds(h * 3600 + m * 60 + s);
-                var percent = Math.Min(100.0, current / options.InputDuration * 100.0);
-
-                var speedMatch = SpeedRegex.Match(line);
-                var speed = speedMatch.Success
-                    ? double.Parse(speedMatch.Groups[1].Value,
-                        System.Globalization.CultureInfo.InvariantCulture)
-                    : 0;
-
-                var elapsed = DateTime.UtcNow - startTime;
-                TimeSpan? eta = null;
-                if (speed > 0 && percent > 0)
-                {
-                    var remaining = options.InputDuration - current;
-                    eta = speed > 0 ? remaining / speed : null;
-                }
-
-                progress.Report(new ConversionProgress(percent, speed, elapsed, eta));
+                subtitleOutputs = options.SubtitleTracks
+                    .Select(t => new SubtitleOutputTarget(t.SubtitleIndex, Path.Combine(subtitleTempDir, t.FileName)))
+                    .ToList();
             }
-        }, cancellationToken);
+            else
+            {
+                var track = options.SubtitleTracks.Count == 1
+                    ? options.SubtitleTracks[0]
+                    : new SubtitleExtractionTrack(0, 0, Path.GetFileName(options.SubtitleOutputPath));
+                subtitleOutputs = [new SubtitleOutputTarget(track.SubtitleIndex, options.SubtitleOutputPath)];
+            }
+        }
+
+        var args = BuildArguments(options, subtitleOutputs);
+        var ffmpeg = ResolveBinary("ffmpeg");
 
         try
         {
-            await process.WaitForExitAsync(cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            process.Kill(entireProcessTree: true);
-            throw;
-        }
+            using var process = new System.Diagnostics.Process();
+            process.StartInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = ffmpeg,
+                Arguments = args,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
 
-        if (process.ExitCode != 0)
+            process.Start();
+
+            var startTime = DateTime.UtcNow;
+
+            _ = Task.Run(async () =>
+            {
+                string? line;
+                while ((line = await process.StandardError.ReadLineAsync(cancellationToken)) is not null)
+                {
+                    if (progress is null || options.InputDuration == TimeSpan.Zero)
+                        continue;
+
+                    var timeMatch = TimeRegex.Match(line);
+                    if (!timeMatch.Success) continue;
+
+                    var h = int.Parse(timeMatch.Groups[1].Value);
+                    var m = int.Parse(timeMatch.Groups[2].Value);
+                    var s = double.Parse(timeMatch.Groups[3].Value,
+                        System.Globalization.CultureInfo.InvariantCulture);
+
+                    var current = TimeSpan.FromSeconds(h * 3600 + m * 60 + s);
+                    var percent = Math.Min(100.0, current / options.InputDuration * 100.0);
+
+                    var speedMatch = SpeedRegex.Match(line);
+                    var speed = speedMatch.Success
+                        ? double.Parse(speedMatch.Groups[1].Value,
+                            System.Globalization.CultureInfo.InvariantCulture)
+                        : 0;
+
+                    var elapsed = DateTime.UtcNow - startTime;
+                    TimeSpan? eta = null;
+                    if (speed > 0 && percent > 0)
+                    {
+                        var remaining = options.InputDuration - current;
+                        eta = speed > 0 ? remaining / speed : null;
+                    }
+
+                    progress.Report(new ConversionProgress(percent, speed, elapsed, eta));
+                }
+            }, cancellationToken);
+
+            try
+            {
+                await process.WaitForExitAsync(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                process.Kill(entireProcessTree: true);
+                throw;
+            }
+
+            if (process.ExitCode != 0)
+            {
+                throw new InvalidOperationException(
+                    $"FFmpeg exited with code {process.ExitCode}. " +
+                    "Check that the output format is supported by your FFmpeg build.");
+            }
+
+            if (subtitleTempDir is not null && options.SubtitleOutputPath is not null)
+            {
+                if (File.Exists(options.SubtitleOutputPath))
+                    File.Delete(options.SubtitleOutputPath);
+
+                ZipFile.CreateFromDirectory(
+                    subtitleTempDir,
+                    options.SubtitleOutputPath,
+                    CompressionLevel.Optimal,
+                    includeBaseDirectory: false);
+            }
+        }
+        finally
         {
-            throw new InvalidOperationException(
-                $"FFmpeg exited with code {process.ExitCode}. " +
-                "Check that the output format is supported by your FFmpeg build.");
+            if (subtitleTempDir is not null && Directory.Exists(subtitleTempDir))
+                Directory.Delete(subtitleTempDir, recursive: true);
         }
     }
 
@@ -108,7 +152,9 @@ public sealed class FfmpegService
 
     // ── Argument builder ──────────────────────────────────────────────────────
 
-    private static string BuildArguments(ConversionOptions options)
+    private static string BuildArguments(
+        ConversionOptions options,
+        IReadOnlyList<SubtitleOutputTarget> subtitleOutputs)
     {
         var parts = new List<string>
         {
@@ -168,18 +214,24 @@ public sealed class FfmpegService
         parts.Add(Q(options.OutputPath));
 
         // Subtitle extraction as a separate pass appended to the same ffmpeg invocation
-        if ((options.SubtitleMode == SubtitleMode.ExtractSrt ||
-             options.SubtitleMode == SubtitleMode.ExtractAss) &&
-            options.SubtitleOutputPath is not null)
+        if (ShouldExtractSubtitles(options) && subtitleOutputs.Count > 0)
         {
             // Re-input the source for subtitle extraction after the main output
             parts.Add($"-i {Q(options.InputPath)}");
-            parts.Add("-map 1:s:0");
-            parts.Add(Q(options.SubtitleOutputPath));
+            foreach (var output in subtitleOutputs)
+            {
+                parts.Add($"-map 1:s:{output.SubtitleIndex}");
+                parts.Add(Q(output.OutputPath));
+            }
         }
 
         return string.Join(" ", parts.Where(p => !string.IsNullOrEmpty(p)));
     }
 
+    private static bool ShouldExtractSubtitles(ConversionOptions options) =>
+        options.SubtitleMode is SubtitleMode.ExtractSrt or SubtitleMode.ExtractAss;
+
     private static string Q(string path) => $"\"{path.Replace("\"", "\\\"")}\"";
+
+    private sealed record SubtitleOutputTarget(int SubtitleIndex, string OutputPath);
 }

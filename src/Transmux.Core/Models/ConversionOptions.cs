@@ -3,8 +3,8 @@ namespace Transmux.Core.Models;
 public enum SubtitleMode
 {
     Include,    // embed subtitle tracks in the output container
-    ExtractSrt, // extract first subtitle track to a separate .srt file
-    ExtractAss, // extract first subtitle track to a separate .ass file
+    ExtractSrt, // extract selected subtitle track(s) to .srt file(s)
+    ExtractAss, // extract selected subtitle track(s) to .ass file(s)
     None        // strip all subtitle tracks from the output
 }
 
@@ -66,10 +66,16 @@ public static class OutputFormats
         [Mp4H264, WebM, MkvCopy, Avi, Mov, Mp3, Aac, Flac, Ogg, Wav, Opus];
 }
 
+public sealed record SubtitleExtractionTrack(
+    int SubtitleIndex,
+    int StreamIndex,
+    string FileName);
+
 public sealed record ConversionOptions(
     string InputPath,
     string OutputPath,
     string? SubtitleOutputPath,
+    IReadOnlyList<SubtitleExtractionTrack> SubtitleTracks,
     FormatInfo Format,
     SubtitleMode SubtitleMode,
     TimeSpan InputDuration,

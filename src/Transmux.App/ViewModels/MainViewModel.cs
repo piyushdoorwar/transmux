@@ -10,6 +10,43 @@ namespace Transmux.App.ViewModels;
 
 public sealed record SubtitleModeOption(SubtitleMode Mode, string Label);
 
+public sealed class SubtitleTrackOption : INotifyPropertyChanged
+{
+    private bool _isSelected;
+
+    public SubtitleTrackOption(int subtitleIndex, StreamInfo stream, string label, bool isSelected)
+    {
+        SubtitleIndex = subtitleIndex;
+        StreamIndex = stream.Index;
+        Language = stream.Language;
+        Title = stream.Title;
+        CodecName = stream.CodecName;
+        Label = label;
+        _isSelected = isSelected;
+    }
+
+    public int SubtitleIndex { get; }
+    public int StreamIndex { get; }
+    public string? Language { get; }
+    public string? Title { get; }
+    public string CodecName { get; }
+    public string Label { get; }
+    public event EventHandler? SelectionChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set
+        {
+            if (_isSelected == value) return;
+            _isSelected = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+}
+
 public sealed class MainViewModel : INotifyPropertyChanged
 {
     private readonly FfmpegService _ffmpeg;
@@ -75,13 +112,18 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public IReadOnlyList<FormatInfo> Formats { get; }
     public IReadOnlyList<SubtitleModeOption> SubtitleModes { get; }
+    public List<SubtitleTrackOption> SubtitleTracks { get; } = [];
 
     private SubtitleModeOption? _selectedSubtitleModeOption;
 
     public SubtitleModeOption? SelectedSubtitleModeOption
     {
         get => _selectedSubtitleModeOption;
-        set { SetField(ref _selectedSubtitleModeOption, value); SelectedSubtitleMode = value?.Mode ?? SubtitleMode.None; }
+        set
+        {
+            SetField(ref _selectedSubtitleModeOption, value);
+            SelectedSubtitleMode = value?.Mode ?? SubtitleMode.None;
+        }
     }
 
     public string? InputFilePath
@@ -104,6 +146,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(MediaSummaryAudio));
             OnPropertyChanged(nameof(MediaSummarySubtitles));
             OnPropertyChanged(nameof(ShowSubtitleMode));
+            OnPropertyChanged(nameof(ShowSubtitleTrackSelector));
         }
     }
 
@@ -150,6 +193,10 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public bool ShowSubtitleMode => _detectedMedia?.HasSubtitles == true;
 
+    public bool ShowSubtitleTrackSelector =>
+        _detectedMedia?.SubtitleTrackCount > 1 &&
+        SelectedSubtitleMode is SubtitleMode.ExtractSrt or SubtitleMode.ExtractAss;
+
     public bool IsFastConvert
     {
         get => _isFastConvert;
@@ -181,7 +228,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public SubtitleMode SelectedSubtitleMode
     {
         get => _selectedSubtitleMode;
-        set => SetField(ref _selectedSubtitleMode, value);
+        set
+        {
+            if (SetField(ref _selectedSubtitleMode, value))
+            {
+                OnPropertyChanged(nameof(ShowSubtitleTrackSelector));
+                ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
+            }
+        }
     }
 
     public string? OutputFilePath
@@ -263,8 +317,13 @@ public sealed class MainViewModel : INotifyPropertyChanged
         HasMedia &&
         _selectedFormat is not null &&
         !string.IsNullOrWhiteSpace(_outputFilePath) &&
+        HasRequiredSubtitleSelection &&
         !_isConverting &&
         !_isInspecting;
+
+    private bool HasRequiredSubtitleSelection =>
+        _selectedSubtitleMode is not (SubtitleMode.ExtractSrt or SubtitleMode.ExtractAss) ||
+        SubtitleTracks.Any(t => t.IsSelected);
 
     // ── Commands ──────────────────────────────────────────────────────────────
 
@@ -297,6 +356,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         {
             var info = await _inspector.InspectAsync(filePath);
             DetectedMedia = info;
+            BuildSubtitleTracks(info);
 
             // Default output path: same dir as input, same name, new extension
             var dir = _settings.LastOutputDirectory ?? Path.GetDirectoryName(filePath) ?? "";
@@ -398,14 +458,17 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
         string? subOutputPath = null;
         if (_selectedSubtitleMode == SubtitleMode.ExtractSrt)
-            subOutputPath = Path.ChangeExtension(_outputFilePath, ".srt");
+            subOutputPath = BuildSubtitleOutputPath(".srt");
         else if (_selectedSubtitleMode == SubtitleMode.ExtractAss)
-            subOutputPath = Path.ChangeExtension(_outputFilePath, ".ass");
+            subOutputPath = BuildSubtitleOutputPath(".ass");
+
+        var subtitleTracks = BuildSelectedSubtitleExtractions(subOutputPath).ToList();
 
         var options = new ConversionOptions(
             InputPath: _inputFilePath,
             OutputPath: _outputFilePath,
             SubtitleOutputPath: subOutputPath,
+            SubtitleTracks: subtitleTracks,
             Format: _selectedFormat,
             SubtitleMode: _selectedSubtitleMode,
             InputDuration: _detectedMedia.Duration,
@@ -494,6 +557,75 @@ public sealed class MainViewModel : INotifyPropertyChanged
         return t.TotalHours >= 1
             ? $"{(int)t.TotalHours}:{t.Minutes:D2}:{t.Seconds:D2}"
             : $"{t.Minutes}:{t.Seconds:D2}";
+    }
+
+    private void BuildSubtitleTracks(MediaInfo info)
+    {
+        foreach (var track in SubtitleTracks)
+            track.SelectionChanged -= SubtitleTrack_SelectionChanged;
+
+        SubtitleTracks.Clear();
+
+        var subtitleStreams = info.SubtitleStreams.ToList();
+        for (var i = 0; i < subtitleStreams.Count; i++)
+        {
+            var stream = subtitleStreams[i];
+            var labelParts = new List<string> { $"Track {i + 1}" };
+            if (!string.IsNullOrWhiteSpace(stream.Language))
+                labelParts.Add(stream.Language!);
+            if (!string.IsNullOrWhiteSpace(stream.Title))
+                labelParts.Add(stream.Title!);
+            if (!string.IsNullOrWhiteSpace(stream.CodecName))
+                labelParts.Add(stream.CodecName.ToUpperInvariant());
+
+            var option = new SubtitleTrackOption(i, stream, string.Join(" · ", labelParts), isSelected: i == 0);
+            option.SelectionChanged += SubtitleTrack_SelectionChanged;
+            SubtitleTracks.Add(option);
+        }
+
+        OnPropertyChanged(nameof(SubtitleTracks));
+        OnPropertyChanged(nameof(ShowSubtitleTrackSelector));
+        ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
+    }
+
+    private void SubtitleTrack_SelectionChanged(object? sender, EventArgs e)
+    {
+        ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
+    }
+
+    private string BuildSubtitleOutputPath(string extension)
+    {
+        var selectedCount = SubtitleTracks.Count(t => t.IsSelected);
+        return selectedCount > 1
+            ? Path.ChangeExtension(_outputFilePath!, extension + ".zip")
+            : Path.ChangeExtension(_outputFilePath!, extension);
+    }
+
+    private IEnumerable<SubtitleExtractionTrack> BuildSelectedSubtitleExtractions(string? subtitleOutputPath)
+    {
+        if (subtitleOutputPath is null ||
+            _selectedSubtitleMode is not (SubtitleMode.ExtractSrt or SubtitleMode.ExtractAss))
+        {
+            yield break;
+        }
+
+        var extension = _selectedSubtitleMode == SubtitleMode.ExtractSrt ? ".srt" : ".ass";
+        var baseName = Path.GetFileNameWithoutExtension(_outputFilePath) ?? "subtitles";
+
+        foreach (var track in SubtitleTracks.Where(t => t.IsSelected))
+        {
+            var language = string.IsNullOrWhiteSpace(track.Language) ? "und" : SanitizeFileName(track.Language!);
+            var title = string.IsNullOrWhiteSpace(track.Title) ? "" : "." + SanitizeFileName(track.Title!);
+            var fileName = $"{baseName}.track{track.SubtitleIndex + 1:00}.{language}{title}{extension}";
+            yield return new SubtitleExtractionTrack(track.SubtitleIndex, track.StreamIndex, fileName);
+        }
+    }
+
+    private static string SanitizeFileName(string value)
+    {
+        var invalid = Path.GetInvalidFileNameChars();
+        var chars = value.Trim().Select(c => invalid.Contains(c) ? '_' : c).ToArray();
+        return new string(chars);
     }
 
     // ── INPC ──────────────────────────────────────────────────────────────────
