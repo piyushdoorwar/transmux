@@ -1,6 +1,7 @@
 # Build the Transmux Windows installer.
 # Requires: dotnet-sdk-10.0, Inno Setup (ISCC.exe on PATH or in default install location)
 # ffmpeg is downloaded automatically from BtbN/FFmpeg-Builds (essentials build).
+# Optional: set GITHUB_TOKEN env var to avoid GitHub API rate limits during ffmpeg download.
 param(
     [string]$Configuration = $env:CONFIGURATION,
     [string]$Rid           = $env:RID,

@@ -8,6 +8,15 @@ public enum SubtitleMode
     None        // strip all subtitle tracks from the output
 }
 
+public enum WhisperPreset
+{
+    VeryFast,
+    Fast,
+    Good,
+    Better,
+    Best
+}
+
 public sealed record FormatInfo(
     string Id,
     string DisplayName,
@@ -80,3 +89,59 @@ public sealed record ConversionOptions(
     SubtitleMode SubtitleMode,
     TimeSpan InputDuration,
     bool FastConvert = false);
+
+public sealed record WhisperModelInfo(
+    WhisperPreset Preset,
+    string DisplayName,
+    string WhisperCppModelName,
+    string PythonModelName,
+    string Description);
+
+public static class WhisperModels
+{
+    public static readonly WhisperModelInfo VeryFast = new(
+        WhisperPreset.VeryFast,
+        "Very fast",
+        "tiny",
+        "tiny",
+        "Lowest load, rougher text");
+
+    public static readonly WhisperModelInfo Fast = new(
+        WhisperPreset.Fast,
+        "Fast",
+        "base",
+        "base",
+        "Good for quick drafts");
+
+    public static readonly WhisperModelInfo Good = new(
+        WhisperPreset.Good,
+        "Good",
+        "small",
+        "small",
+        "Balanced local transcription");
+
+    public static readonly WhisperModelInfo Better = new(
+        WhisperPreset.Better,
+        "Better",
+        "medium",
+        "medium",
+        "Slower, more accurate");
+
+    public static readonly WhisperModelInfo Best = new(
+        WhisperPreset.Best,
+        "Best",
+        "large-v3-turbo",
+        "turbo",
+        "Highest quality option for capable machines");
+
+    public static readonly IReadOnlyList<WhisperModelInfo> All =
+        [VeryFast, Fast, Good, Better, Best];
+}
+
+public sealed record SubtitleGenerationOptions(
+    string InputPath,
+    string OutputPath,
+    WhisperModelInfo Model,
+    TimeSpan InputDuration,
+    string Language,
+    int ThreadCount);

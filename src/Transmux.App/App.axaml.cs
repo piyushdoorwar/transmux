@@ -18,10 +18,13 @@ public sealed partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var ffmpeg   = new FfmpegService();
+            var ffmpeg = new FfmpegService();
+            var whisperSetup = new Transmux.Core.Services.WhisperSetupService();
+            var whisperModelDownload = new Transmux.Core.Services.WhisperModelDownloadService();
+            var whisper = new WhisperSubtitleService(whisperSetup, whisperModelDownload);
             var inspector = new MediaInspector();
             var settings = new SettingsService();
-            var vm = new MainViewModel(ffmpeg, inspector, settings);
+            var vm = new MainViewModel(ffmpeg, whisper, inspector, settings);
 
             var window = new MainWindow { DataContext = vm };
             desktop.MainWindow = window;

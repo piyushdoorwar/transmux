@@ -21,7 +21,8 @@
 12. [Versioning & Release](#12-versioning--release)
 13. [Website / Site](#13-website--site)
 14. [Development Setup](#14-development-setup)
-15. [Conventions & Patterns](#15-conventions--patterns)
+15. [Caption / Subtitle Generation (Whisper)](#15-caption--subtitle-generation-whisper)
+16. [Conventions & Patterns](#16-conventions--patterns)
 
 ---
 
@@ -542,7 +543,76 @@ dotnet run --project src/Transmux.App/Transmux.App.csproj
 
 ---
 
-## 15. Conventions & Patterns
+## 15. Caption / Subtitle Generation (Whisper)
+
+### Architecture
+
+Three services form a pipeline: setup → model → generate.
+
+```
+WhisperSetupService         — installs whisper-cli or Python whisper on first run
+WhisperModelDownloadService — downloads ggml-*.bin model from Hugging Face (whisper.cpp only)
+WhisperSubtitleService      — extracts audio (FFmpeg) → runs whisper → moves .srt
+```
+
+Works for **both video and audio files**. `ExtractAudioAsync` always runs FFmpeg first
+(`-vn -ar 16000 -ac 1 -c:a pcm_s16le`) so MP4, MKV, MP3, FLAC, songs/lyrics all use the same path.
+
+### Dual-runner support
+
+`WhisperSetupService.GetAvailableRunner()` returns a `WhisperRunner` enum:
+
+| Value | Binary | Notes |
+|---|---|---|
+| `WhisperCpp` | `whisper-cli` | Uses local `ggml-*.bin` model. Downloaded from Hugging Face. |
+| `PythonWhisper` | `whisper` | `openai-whisper` pip package. Manages its own models in `~/.cache/whisper/`. |
+| `None` | — | Neither found — show error to user. |
+
+`WhisperSubtitleService` checks the runner and routes accordingly:
+- **WhisperCpp**: download ggml model → `whisper-cli -m model.bin -f audio.wav -osrt ...`
+- **PythonWhisper**: skip ggml download → `whisper audio.wav --model base --output_format srt ...`
+
+### Auto-install order (Linux)
+
+1. `snap install whisper-cpp`
+2. `brew install whisper-cpp`
+3. GitHub Releases API → download prebuilt binary → `chmod +x` → `~/.local/share/Transmux/bin/`
+4. Build from source: `git clone` + `cmake -B build` + `cmake --build build`
+5. **`pip3 install openai-whisper`** (most reliable universal fallback)
+
+### Binary locations
+
+After auto-install, `whisper-cli` is placed at:
+- **Linux / macOS**: `~/.local/share/Transmux/bin/whisper-cli`
+- **Windows**: `%LocalAppData%\Transmux\bin\whisper-cli.exe`
+
+`TryResolveWhisperCppBinary()` checks: Transmux bin dir → app base dir → PATH.  
+`TryResolvePythonWhisperBinary()` checks: PATH → `~/.local/bin/whisper` → `/usr/local/bin/whisper`.
+
+### Model storage (whisper.cpp only)
+
+- **Linux / macOS**: `~/.local/share/Transmux/whisper/models/ggml-{name}.bin`
+- **Windows**: `%LocalAppData%\Transmux\whisper\models\ggml-{name}.bin`
+
+Download source: `https://huggingface.co/ggerganov/whisper.cpp/resolve/main/models/`
+
+| Preset | whisper.cpp model | Python model | Size |
+|---|---|---|---|
+| Very fast | `tiny` | `tiny` | ~75 MB |
+| Fast | `base` | `base` | ~142 MB |
+| Good | `small` | `small` | ~466 MB |
+| Better | `medium` | `medium` | ~1.5 GB |
+| Best | `large-v3-turbo` | `turbo` | ~1.6 GB |
+
+### GitHub Releases API (binary download)
+
+`GET https://api.github.com/repos/ggerganov/whisper.cpp/releases/latest`  
+Requires `User-Agent` header. Parse `assets[].{name, browser_download_url}`.  
+Asset selection: must be an archive (`.zip` / `.tar.gz`) containing the platform OS keyword + arch keyword.
+
+---
+
+## 16. Conventions & Patterns
 
 - **MVVM**: Views bind to `MainViewModel` via `DataContext`. No code-behind logic beyond Avalonia event wiring.
 - **RelayCommand**: Standard `ICommand` wrapper used throughout `MainViewModel`.

@@ -13,6 +13,7 @@ public sealed class MediaInfo
     public IEnumerable<StreamInfo> SubtitleStreams => Streams.Where(s => s.CodecType == "subtitle");
 
     public bool HasVideo => VideoStream is not null;
+    public bool HasAudio => AudioStreams.Any();
     public bool HasSubtitles => SubtitleStreams.Any();
     public int SubtitleTrackCount => SubtitleStreams.Count();
 }
