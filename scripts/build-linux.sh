@@ -1,22 +1,8 @@
 #!/usr/bin/env bash
 # Build the Transmux .deb package for Linux.
-# Requires: dotnet-sdk-10.0, dpkg-dev, binutils
+# Requires: dotnet-sdk-10.0, dpkg-deb
 # Runtime dependency: ffmpeg (declared in Depends: — not bundled)
 set -euo pipefail
-
-# ── Dependency check ─────────────────────────────────────────────────────────
-
-check_dep() {
-  if ! command -v "$1" &>/dev/null; then
-    echo "Missing required tool: $1" >&2
-    echo "Install with: sudo apt-get install -y $2" >&2
-    exit 1
-  fi
-}
-
-check_dep dpkg-deb   dpkg-dev
-check_dep ar         binutils
-check_dep dotnet     dotnet-sdk-10.0
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd)"

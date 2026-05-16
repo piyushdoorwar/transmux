@@ -24,14 +24,6 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends \
-            dpkg-dev \
-            binutils \
-            file
-
       - name: Build deb
         run: ./scripts/build-linux.sh
 
@@ -58,8 +50,6 @@ jobs:
 
       - name: Build Windows installer
         shell: pwsh
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./scripts/build-windows.ps1
 
       - name: Upload installer

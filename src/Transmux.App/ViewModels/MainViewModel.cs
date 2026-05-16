@@ -9,8 +9,6 @@ using Transmux.Core.Services;
 namespace Transmux.App.ViewModels;
 
 public sealed record SubtitleModeOption(SubtitleMode Mode, string Label);
-public enum MediaJobMode { Convert, GenerateSubtitles }
-public sealed record JobModeOption(MediaJobMode Mode, string Label);
 
 public sealed class SubtitleTrackOption : INotifyPropertyChanged
 {
@@ -52,7 +50,6 @@ public sealed class SubtitleTrackOption : INotifyPropertyChanged
 public sealed class MainViewModel : INotifyPropertyChanged
 {
     private readonly FfmpegService _ffmpeg;
-    private readonly WhisperSubtitleService _whisper;
     private readonly MediaInspector _inspector;
     private readonly SettingsService _settings;
 
@@ -61,10 +58,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private string? _inputFilePath;
     private MediaInfo? _detectedMedia;
     private FormatInfo? _selectedFormat;
-    private MediaJobMode _selectedJobMode = MediaJobMode.Convert;
     private SubtitleMode _selectedSubtitleMode = SubtitleMode.None;
-    private WhisperModelInfo _selectedWhisperModel = Transmux.Core.Models.WhisperModels.Fast;
-    private string _whisperLanguage = "auto";
     private string? _outputFilePath;
 
     // Conversion mode
@@ -77,29 +71,16 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private double _progressPercent;
     private string _speedText = "";
     private string _etaText = "";
-    private string _jobStatusText = "";
     private string? _errorMessage;
     private CancellationTokenSource? _cts;
 
-    public MainViewModel(
-        FfmpegService ffmpeg,
-        WhisperSubtitleService whisper,
-        MediaInspector inspector,
-        SettingsService settings)
+    public MainViewModel(FfmpegService ffmpeg, MediaInspector inspector, SettingsService settings)
     {
         _ffmpeg = ffmpeg;
-        _whisper = whisper;
         _inspector = inspector;
         _settings = settings;
 
         Formats = OutputFormats.All;
-        WhisperModels = Transmux.Core.Models.WhisperModels.All;
-        JobModes =
-        [
-            new JobModeOption(MediaJobMode.Convert, "Video conversion"),
-            new JobModeOption(MediaJobMode.GenerateSubtitles, "Subs generation"),
-        ];
-        _selectedJobModeOption = JobModes[0];
 
         // Restore last format
         var lastId = settings.LastOutputFormatId;
@@ -125,30 +106,15 @@ public sealed class MainViewModel : INotifyPropertyChanged
         OpenAboutDialogCommand = new RelayCommand(async _ => await OpenAboutDialogAsync());
         SetFastConvertOnCommand = new RelayCommand(_ => IsFastConvert = true, _ => IsInputEnabled);
         SetFullConvertCommand = new RelayCommand(_ => IsFastConvert = false, _ => IsInputEnabled);
-        SetConvertModeCommand = new RelayCommand(_ => SelectedJobMode = MediaJobMode.Convert, _ => IsInputEnabled);
-        SetSubtitlesModeCommand = new RelayCommand(_ => SelectedJobMode = MediaJobMode.GenerateSubtitles, _ => IsInputEnabled);
     }
 
     // ── Bindable properties ───────────────────────────────────────────────────
 
     public IReadOnlyList<FormatInfo> Formats { get; }
     public IReadOnlyList<SubtitleModeOption> SubtitleModes { get; }
-    public IReadOnlyList<WhisperModelInfo> WhisperModels { get; }
-    public IReadOnlyList<JobModeOption> JobModes { get; }
     public List<SubtitleTrackOption> SubtitleTracks { get; } = [];
 
-    private JobModeOption? _selectedJobModeOption;
     private SubtitleModeOption? _selectedSubtitleModeOption;
-
-    public JobModeOption? SelectedJobModeOption
-    {
-        get => _selectedJobModeOption;
-        set
-        {
-            SetField(ref _selectedJobModeOption, value);
-            SelectedJobMode = value?.Mode ?? MediaJobMode.Convert;
-        }
-    }
 
     public SubtitleModeOption? SelectedSubtitleModeOption
     {
@@ -225,9 +191,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
     }
 
-    public bool ShowSubtitleMode => IsConversionMode && _detectedMedia?.HasSubtitles == true;
-    public bool IsConversionMode => _selectedJobMode == MediaJobMode.Convert;
-    public bool IsSubtitleGenerationMode => _selectedJobMode == MediaJobMode.GenerateSubtitles;
+    public bool ShowSubtitleMode => _detectedMedia?.HasSubtitles == true;
 
     public bool ShowSubtitleTrackSelector =>
         _detectedMedia?.SubtitleTrackCount > 1 &&
@@ -245,25 +209,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public bool IsFullConvert => !_isFastConvert;
 
-    public MediaJobMode SelectedJobMode
-    {
-        get => _selectedJobMode;
-        set
-        {
-            if (!SetField(ref _selectedJobMode, value))
-                return;
-
-            OnPropertyChanged(nameof(IsConversionMode));
-            OnPropertyChanged(nameof(IsSubtitleGenerationMode));
-            OnPropertyChanged(nameof(ShowSubtitleMode));
-            OnPropertyChanged(nameof(ShowSubtitleTrackSelector));
-            OnPropertyChanged(nameof(ActionButtonText));
-            OnPropertyChanged(nameof(CompletionText));
-            UpdateOutputPathExtensionForMode();
-            ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
-        }
-    }
-
     public FormatInfo? SelectedFormat
     {
         get => _selectedFormat;
@@ -273,27 +218,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
             {
                 _settings.LastOutputFormatId = value.Id;
                 // Update output path extension if a path is already set
-                if (_outputFilePath is not null && IsConversionMode)
+                if (_outputFilePath is not null)
                     OutputFilePath = Path.ChangeExtension(_outputFilePath, value.Extension);
                 ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
             }
         }
-    }
-
-    public WhisperModelInfo SelectedWhisperModel
-    {
-        get => _selectedWhisperModel;
-        set
-        {
-            if (SetField(ref _selectedWhisperModel, value))
-                ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
-        }
-    }
-
-    public string WhisperLanguage
-    {
-        get => _whisperLanguage;
-        set => SetField(ref _whisperLanguage, value);
     }
 
     public SubtitleMode SelectedSubtitleMode
@@ -328,8 +257,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(IsInputEnabled));
             ((RelayCommand)SetFastConvertOnCommand).RaiseCanExecuteChanged();
             ((RelayCommand)SetFullConvertCommand).RaiseCanExecuteChanged();
-            ((RelayCommand)SetConvertModeCommand).RaiseCanExecuteChanged();
-            ((RelayCommand)SetSubtitlesModeCommand).RaiseCanExecuteChanged();
         }
     }
 
@@ -347,8 +274,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
             ((RelayCommand)BrowseOutputPathCommand).RaiseCanExecuteChanged();
             ((RelayCommand)SetFastConvertOnCommand).RaiseCanExecuteChanged();
             ((RelayCommand)SetFullConvertCommand).RaiseCanExecuteChanged();
-            ((RelayCommand)SetConvertModeCommand).RaiseCanExecuteChanged();
-            ((RelayCommand)SetSubtitlesModeCommand).RaiseCanExecuteChanged();
         }
     }
 
@@ -380,18 +305,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
         private set => SetField(ref _etaText, value);
     }
 
-    public string JobStatusText
-    {
-        get => _jobStatusText;
-        private set => SetField(ref _jobStatusText, value);
-    }
-
-    public string ActionButtonText =>
-        IsSubtitleGenerationMode ? "Generate subtitles" : "Convert";
-
-    public string CompletionText =>
-        IsSubtitleGenerationMode ? "Subtitle file complete" : "Conversion complete";
-
     public string? ErrorMessage
     {
         get => _errorMessage;
@@ -402,10 +315,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public bool CanConvert =>
         HasMedia &&
-        (IsSubtitleGenerationMode || _selectedFormat is not null) &&
-        (!IsSubtitleGenerationMode || _detectedMedia?.HasAudio == true) &&
+        _selectedFormat is not null &&
         !string.IsNullOrWhiteSpace(_outputFilePath) &&
-        (IsSubtitleGenerationMode || HasRequiredSubtitleSelection) &&
+        HasRequiredSubtitleSelection &&
         !_isConverting &&
         !_isInspecting;
 
@@ -423,8 +335,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public ICommand OpenAboutDialogCommand { get; }
     public ICommand SetFastConvertOnCommand { get; }
     public ICommand SetFullConvertCommand { get; }
-    public ICommand SetConvertModeCommand { get; }
-    public ICommand SetSubtitlesModeCommand { get; }
 
     // Injected by the Window after construction
     public IStorageProvider? StorageProvider { get; set; }
@@ -451,7 +361,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             // Default output path: same dir as input, same name, new extension
             var dir = _settings.LastOutputDirectory ?? Path.GetDirectoryName(filePath) ?? "";
             var name = Path.GetFileNameWithoutExtension(filePath);
-            var ext = IsSubtitleGenerationMode ? ".srt" : _selectedFormat?.Extension ?? ".mp4";
+            var ext = _selectedFormat?.Extension ?? ".mp4";
             OutputFilePath = Path.Combine(dir, name + ext);
 
             // Default subtitle mode
@@ -503,29 +413,22 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     private async Task BrowseOutputPathAsync()
     {
-        if (StorageProvider is null) return;
-
-        var extension = IsSubtitleGenerationMode ? ".srt" : _selectedFormat?.Extension;
-        if (string.IsNullOrWhiteSpace(extension)) return;
+        if (StorageProvider is null || _selectedFormat is null) return;
 
         var suggested = _outputFilePath is not null
             ? Path.GetFileName(_outputFilePath)
-            : (Path.GetFileNameWithoutExtension(_inputFilePath) + extension);
-
-        var fileTypeName = IsSubtitleGenerationMode
-            ? "SubRip subtitles"
-            : _selectedFormat?.DisplayName ?? "Output file";
+            : (Path.GetFileNameWithoutExtension(_inputFilePath) + _selectedFormat.Extension);
 
         var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = "Save output file",
             SuggestedFileName = suggested,
-            DefaultExtension = extension.TrimStart('.'),
+            DefaultExtension = _selectedFormat.Extension.TrimStart('.'),
             FileTypeChoices =
             [
-                new FilePickerFileType(fileTypeName)
+                new FilePickerFileType(_selectedFormat.DisplayName)
                 {
-                    Patterns = [$"*{extension}"]
+                    Patterns = [$"*{_selectedFormat.Extension}"]
                 }
             ]
         });
@@ -540,7 +443,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     private async Task StartConversionAsync()
     {
-        if (_inputFilePath is null || _outputFilePath is null || _detectedMedia is null)
+        if (_inputFilePath is null || _outputFilePath is null ||
+            _selectedFormat is null || _detectedMedia is null)
             return;
 
         IsConverting = true;
@@ -549,18 +453,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         ProgressPercent = 0;
         SpeedText = "";
         EtaText = "";
-        JobStatusText = IsSubtitleGenerationMode ? "Preparing subtitles" : "Converting";
 
         _cts = new CancellationTokenSource();
-
-        if (IsSubtitleGenerationMode)
-        {
-            await StartSubtitleGenerationAsync();
-            return;
-        }
-
-        if (_selectedFormat is null)
-            return;
 
         string? subOutputPath = null;
         if (_selectedSubtitleMode == SubtitleMode.ExtractSrt)
@@ -585,7 +479,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
             Dispatcher.UIThread.Post(() =>
             {
                 ProgressPercent = p.Percent;
-                JobStatusText = $"Converting · {p.Percent:F0}%";
                 SpeedText = p.Speed > 0 ? $"{p.Speed:F1}×" : "";
                 EtaText = p.Eta.HasValue
                     ? $"~{(int)p.Eta.Value.TotalMinutes:D2}:{p.Eta.Value.Seconds:D2}"
@@ -619,78 +512,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
             {
                 IsConverting = false;
                 ErrorMessage = ex.Message;
-            });
-        }
-        finally
-        {
-            _cts?.Dispose();
-            _cts = null;
-        }
-    }
-
-    private async Task StartSubtitleGenerationAsync()
-    {
-        if (_inputFilePath is null || _outputFilePath is null || _detectedMedia is null || _cts is null)
-            return;
-
-        var options = new SubtitleGenerationOptions(
-            InputPath: _inputFilePath,
-            OutputPath: _outputFilePath,
-            Model: _selectedWhisperModel,
-            InputDuration: _detectedMedia.Duration,
-            Language: NormalizeWhisperLanguage(_whisperLanguage),
-            ThreadCount: GetWhisperThreadCount());
-
-        var progress = new Progress<ConversionProgress>(p =>
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                ProgressPercent = p.Percent;
-                var phase = p.Percent < 35 ? "Extracting audio" : "Generating subtitles";
-                JobStatusText = $"{phase} · {p.Percent:F0}%";
-                SpeedText = _selectedWhisperModel.DisplayName;
-                EtaText = "";
-            });
-        });
-
-        var setupProgress = new Progress<string>(message =>
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                JobStatusText = message;
-                ProgressPercent = 0;
-            });
-        });
-
-        try
-        {
-            await _whisper.GenerateSrtAsync(options, progress, _cts.Token, setupProgress);
-            Dispatcher.UIThread.Post(() =>
-            {
-                ProgressPercent = 100;
-                IsConverting = false;
-                IsComplete = true;
-                JobStatusText = "";
-            });
-        }
-        catch (OperationCanceledException)
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                IsConverting = false;
-                ProgressPercent = 0;
-                SpeedText = "";
-                EtaText = "";
-                JobStatusText = "";
-            });
-        }
-        catch (Exception ex)
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                IsConverting = false;
-                ErrorMessage = ex.Message;
-                JobStatusText = "";
             });
         }
         finally
@@ -736,31 +557,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
         return t.TotalHours >= 1
             ? $"{(int)t.TotalHours}:{t.Minutes:D2}:{t.Seconds:D2}"
             : $"{t.Minutes}:{t.Seconds:D2}";
-    }
-
-    private void UpdateOutputPathExtensionForMode()
-    {
-        if (_outputFilePath is null)
-            return;
-
-        var extension = IsSubtitleGenerationMode
-            ? ".srt"
-            : _selectedFormat?.Extension;
-
-        if (!string.IsNullOrWhiteSpace(extension))
-            OutputFilePath = Path.ChangeExtension(_outputFilePath, extension);
-    }
-
-    private static string NormalizeWhisperLanguage(string language)
-    {
-        var value = language.Trim();
-        return value.Equals("auto", StringComparison.OrdinalIgnoreCase) ? "" : value;
-    }
-
-    private static int GetWhisperThreadCount()
-    {
-        var processorCount = Environment.ProcessorCount;
-        return Math.Clamp(processorCount / 2, 1, 8);
     }
 
     private void BuildSubtitleTracks(MediaInfo info)
