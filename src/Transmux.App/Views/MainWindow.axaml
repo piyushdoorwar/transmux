@@ -507,31 +507,63 @@
 
         <!-- Progress bar + status -->
         <StackPanel IsVisible="{Binding IsConverting}" Spacing="10">
+          <!-- Enhanced progress bar with glow -->
           <Grid ColumnDefinitions="*,Auto,Auto">
-            <ProgressBar Grid.Column="0"
-                         Value="{Binding ProgressPercent}"
-                         Maximum="100"
-                         Height="8"
-                         CornerRadius="4"
-                         Foreground="#3A6E9B"
-                         Background="#252525"
-                         VerticalAlignment="Center" />
+            <Border Grid.Column="0"
+                    Background="#252525"
+                    CornerRadius="4"
+                    Height="12"
+                    BoxShadow="0 0 12 rgba(58,110,155,0.4)"
+                    VerticalAlignment="Center">
+              <ProgressBar Value="{Binding ProgressPercent}"
+                           Maximum="100"
+                           Height="12"
+                           CornerRadius="4"
+                           Foreground="#3A6E9B"
+                           Background="Transparent"
+                           BorderThickness="0" />
+            </Border>
+            <!-- Live Speed update -->
             <TextBlock Grid.Column="1"
                        Text="{Binding SpeedText}"
-                       FontSize="12" Foreground="#666"
+                       FontSize="12" Foreground="#5DA4D6"
                        VerticalAlignment="Center"
-                       Margin="10,0,0,0" />
+                       Margin="10,0,0,0"
+                       FontWeight="SemiBold"
+                       Name="SpeedIndicator" />
+            <!-- Live ETA update -->
             <TextBlock Grid.Column="2"
                        Text="{Binding EtaText}"
-                       FontSize="12" Foreground="#666"
+                       FontSize="12" Foreground="#5DA4D6"
                        VerticalAlignment="Center"
-                       Margin="8,0,0,0" />
+                       Margin="8,0,0,0"
+                       FontWeight="SemiBold"
+                       Name="EtaIndicator" />
           </Grid>
+          <!-- Status with animated percentage and pulsing indicator -->
           <Grid ColumnDefinitions="*,Auto">
-            <TextBlock Grid.Column="0"
-                       Text="{Binding ProgressPercent, StringFormat={}{0:F0}%}"
-                       FontSize="12" Foreground="#555"
-                       VerticalAlignment="Center" />
+            <StackPanel Grid.Column="0"
+                        Orientation="Horizontal"
+                        Spacing="6">
+              <!-- Animated percentage counter -->
+              <TextBlock FontSize="13"
+                         Foreground="#3A6E9B"
+                         FontWeight="SemiBold"
+                         VerticalAlignment="Center"
+                         Name="ProgressText">
+                <TextBlock.Text>
+                  <MultiBinding StringFormat="Converting… {0:F0}%">
+                    <Binding Path="ProgressPercent" />
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+              <!-- Pulsing activity dot -->
+              <Ellipse Width="6" Height="6"
+                       Fill="#3A6E9B"
+                       VerticalAlignment="Center"
+                       Name="ActivityPulse"
+                       Opacity="0.7" />
+            </StackPanel>
             <Button Grid.Column="1"
                     Command="{Binding CancelConversionCommand}"
                     Background="#2A2A2A"

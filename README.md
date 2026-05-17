@@ -4,14 +4,18 @@ Transmux is a clean desktop audio/video converter powered by Lumyn. Drop in a me
 
 ## Features
 
-- Open audio and video files via file picker or drag and drop.
-- Inspect detected format, video stream, audio streams, and subtitle tracks.
-- Convert to MP4 (H.264), WebM, MKV (stream copy), AVI, MOV, MP3, AAC, FLAC, OGG, WAV, or Opus.
-- Include subtitles in the output, extract them to a separate `.srt` or `.ass` file, or strip them.
-- Live progress bar with speed and ETA.
-- Cancel in-flight conversions.
-- Remembers last output directory and format between sessions.
-- Open output folder directly after conversion completes.
+- **Open files easily** — File picker or drag-and-drop support for quick access.
+- **Smart format detection** — Automatically suggests the best output format based on input codec (e.g., H.264+AAC → MP4, VP9+Opus → WebM).
+- **Auto-skip conversion** — Detects when source already matches target format and confirms before re-encoding.
+- **Wide format support** — Convert to MP4 (H.264), WebM, MKV (stream copy), AVI, MOV, MP3, AAC, FLAC, OGG, WAV, or Opus.
+- **Flexible subtitle handling** — Include subtitles in output, extract to `.srt` or `.ass`, or strip entirely. Select multiple subtitle tracks.
+- **Multi-track audio selection** — Choose which audio tracks to include in the conversion.
+- **Fast & Full re-encode modes** — Stream copy (instant, no re-encoding) or full re-encode (quality control). Toggle with Spacebar.
+- **Live conversion progress** — Real-time speed and ETA feedback. Cancel anytime.
+- **Conversion history** — Track all conversions with timestamps. Quickly open output folders from history.
+- **Keyboard shortcuts** — Power-user shortcuts (Ctrl+O: open, Enter: convert, Spacebar: toggle mode, ?: shortcuts help).
+- **Session persistence** — Remembers last output directory and format between sessions.
+- **Quick folder access** — Open output folder directly after conversion completes.
 
 ## Tech Stack
 

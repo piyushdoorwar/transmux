@@ -1,8 +1,12 @@
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
+using Avalonia.Threading;
 using Transmux.App.ViewModels;
 
 namespace Transmux.App.Views;
@@ -60,6 +64,44 @@ public partial class MainWindow : Window
             dropZone.AddHandler(DragDrop.DragOverEvent, OnDragOver);
             dropZone.AddHandler(DragDrop.DropEvent, OnDrop);
         }
+
+        // Start animation loop for converting state indicators
+        StartProgressAnimations();
+    }
+
+    private void StartProgressAnimations()
+    {
+        var activityPulse = this.FindControl<Ellipse>("ActivityPulse");
+        if (activityPulse is null) return;
+
+        // Start continuous pulsing animation on background thread
+        _ = Task.Run(async () =>
+        {
+            while (true)
+            {
+                // Pulse up
+                for (int i = 0; i <= 10; i++)
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        activityPulse.Opacity = 0.3 + (0.7 * i / 10.0);
+                    });
+                    await Task.Delay(40);
+                }
+
+                // Pulse down
+                for (int i = 10; i >= 0; i--)
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        activityPulse.Opacity = 0.3 + (0.7 * i / 10.0);
+                    });
+                    await Task.Delay(40);
+                }
+
+                await Task.Delay(200);
+            }
+        });
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

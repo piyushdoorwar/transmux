@@ -1,5 +1,4 @@
-<svg fill="#000000" viewBox="0 0 24 24" id="send-alt" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <title>Features</title>
-  <path id="secondary" d="M3.69,8.75,19.61,3.06a1,1,0,0,1,1.33,1.33L15.25,20.31a1,1,0,0,1-1.95,0l-2.51-6.52a1,1,0,0,0-.6-.6L3.67,10.7A1,1,0,0,1,3.69,8.75Z" style="fill: #2ca9bc; stroke-width: 2;"></path>
-  <path id="primary" d="M10.62,13.38l3-3m-9.9.27,6.52,2.51a1,1,0,0,1,.6.6l2.51,6.52a1,1,0,0,0,1.95,0L20.94,4.39a1,1,0,0,0-1.33-1.33L3.69,8.75A1,1,0,0,0,3.67,10.7Z" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path>
+  <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5Z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" fill="rgba(var(--color-rgb),0.1)"/>
 </svg>

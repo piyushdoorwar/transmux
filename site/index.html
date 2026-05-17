@@ -114,10 +114,26 @@
             <p>MP4, WebM, MKV, AVI, MOV, MP3, AAC, FLAC, OGG, WAV, Opus — video and audio in one tool.</p>
           </article>
           <article data-reveal style="--reveal-delay: 0.2s">
-            <h3>Subtitle handling</h3>
-            <p>Embed subtitles in the output, extract tracks to SRT or ASS, or strip them entirely.</p>
+            <h3>Smart format detection</h3>
+            <p>Automatically suggests the best output format based on your input codec — H.264+AAC → MP4, VP9+Opus → WebM.</p>
           </article>
           <article data-reveal style="--reveal-delay: 0.3s">
+            <h3>Flexible subtitles &amp; audio</h3>
+            <p>Choose which audio and subtitle tracks to include, extract to separate files, or skip entirely.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.4s">
+            <h3>Smart conversion modes</h3>
+            <p>Stream copy for instant conversions or full re-encode for quality. Auto-detects when source matches target and skips needless re-encoding.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.5s">
+            <h3>Conversion history</h3>
+            <p>Track all conversions with timestamps. Quickly access output folders and review past operations.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.6s">
+            <h3>Keyboard shortcuts</h3>
+            <p>Power-user shortcuts: Ctrl+O (open), Enter (convert), Spacebar (toggle mode), ? (help) — or use your mouse.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.7s">
             <h3>Live progress</h3>
             <p>Real-time speed and ETA feedback while converting, with cancel support at any point.</p>
           </article>
@@ -195,11 +211,12 @@
     <script src="image-guard.js"></script>
     <script src="app.js"></script>
     <script>
-      // Progress bar animation
+      // Progress bar animation with enhanced visual effects
       function animateProgress() {
         const progBar = document.getElementById("progBar");
         const progPercent = document.getElementById("progPercent");
         const progEta = document.getElementById("progEta");
+        const progSection = document.querySelector(".cvt-progress-section");
         const duration = 22000; // 22 seconds per cycle
         const startTime = Date.now();
 
@@ -216,8 +233,16 @@
           const eta = Math.max(0, 180 - Math.floor(easeProgress * 176)); // 3:00 down to 0:04
 
           progBar.style.width = percent + "%";
-          progPercent.textContent = `Converting… ${percent}%`;
-          
+
+          // Update progress percent with animated text
+          const progPercentText = progPercent.querySelector ? progPercent : document.getElementById("progPercent");
+          progPercentText.textContent = `Converting… ${percent}%`;
+
+          // Animate glow intensity based on progress
+          const glowIntensity = 0.3 + (easeProgress * 0.5); // 0.3 to 0.8
+          const glowColor = `rgba(58, 110, 155, ${glowIntensity})`;
+          progBar.parentElement.style.boxShadow = `0 0 ${8 + easeProgress * 8}px ${glowColor}`;
+
           const mins = Math.floor(eta / 60);
           const secs = eta % 60;
           progEta.textContent = `3.4× · ETA ${mins}:${String(secs).padStart(2, "0")}`;
