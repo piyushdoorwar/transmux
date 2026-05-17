@@ -198,7 +198,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public string MediaSummaryFormat =>
         _detectedMedia is null ? "" :
-        $"{_detectedMedia.FormatLongName}  ·  {FormatDuration(_detectedMedia.Duration)}";
+        $"{_detectedMedia.FormatLongName}  ·  {FormatDuration(_detectedMedia.Duration)}  ·  {FormatFileSize(_detectedMedia.FileSize)}  ·  {FormatBitrate(_detectedMedia.OverallBitRate)}";
 
     public string MediaSummaryVideo
     {
@@ -208,7 +208,10 @@ public sealed class MainViewModel : INotifyPropertyChanged
             if (v is null) return "⊘ No video stream (audio-only)";
             var res = v.Width > 0 ? $"  ·  {v.Width}×{v.Height}" : "";
             var fps = v.FrameRate is not null ? $"  ·  {v.FrameRate} fps" : "";
-            return $"{v.CodecName.ToUpperInvariant()}{res}{fps}";
+            var bitrate = v.BitRate > 0 ? $"  ·  {FormatBitrate(v.BitRate)}" : "";
+            var profile = !string.IsNullOrWhiteSpace(v.Profile) ? $"  ·  {v.Profile}" : "";
+            var aspect = !string.IsNullOrWhiteSpace(v.AspectRatio) ? $"  ·  {v.AspectRatio}" : "";
+            return $"{v.CodecName.ToUpperInvariant()}{res}{fps}{bitrate}{profile}{aspect}";
         }
     }
 
@@ -219,10 +222,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
             var streams = _detectedMedia?.AudioStreams.ToList();
             if (streams is null || streams.Count == 0) return "No audio stream";
             var first = streams[0];
-            var ch = first.Channels switch { 1 => "mono", 2 => "stereo", var n => $"{n}ch" };
+            var ch = FormatChannels(first.Channels);
             var sr = first.SampleRate > 0 ? $"  ·  {first.SampleRate / 1000.0:G3} kHz" : "";
+            var br = first.BitRate > 0 ? $"  ·  {FormatBitrate(first.BitRate)}" : "";
             var extra = streams.Count > 1 ? $"  (+{streams.Count - 1} more)" : "";
-            return $"{first.CodecName.ToUpperInvariant()}  ·  {ch}{sr}{extra}";
+            return $"{first.CodecName.ToUpperInvariant()}  ·  {ch}{sr}{br}{extra}";
         }
     }
 
@@ -616,6 +620,39 @@ public sealed class MainViewModel : INotifyPropertyChanged
         return t.TotalHours >= 1
             ? $"{(int)t.TotalHours}:{t.Minutes:D2}:{t.Seconds:D2}"
             : $"{t.Minutes}:{t.Seconds:D2}";
+    }
+
+    private static string FormatFileSize(long bytes)
+    {
+        if (bytes <= 0) return "0 B";
+        string[] sizes = { "B", "KB", "MB", "GB" };
+        double len = bytes;
+        int order = 0;
+        while (len >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            len = len / 1024;
+        }
+        return $"{len:F1} {sizes[order]}";
+    }
+
+    private static string FormatBitrate(long bps)
+    {
+        if (bps <= 0) return "0 kbps";
+        var kbps = bps / 1000.0;
+        return kbps >= 1000 ? $"{kbps / 1000:F1} Mbps" : $"{kbps:F0} kbps";
+    }
+
+    private static string FormatChannels(int channels)
+    {
+        return channels switch
+        {
+            1 => "mono",
+            2 => "stereo",
+            6 => "5.1",
+            8 => "7.1",
+            _ => $"{channels}ch"
+        };
     }
 
     private void BuildSubtitleTracks(MediaInfo info)

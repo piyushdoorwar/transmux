@@ -55,6 +55,9 @@ public sealed class MediaInspector
             ? TimeSpan.FromSeconds(d)
             : TimeSpan.Zero;
 
+        // File size
+        var fileSize = long.TryParse(fmt?["size"]?.GetValue<string>(), out var sz) ? sz : 0L;
+
         // Streams
         var streams = new List<StreamInfo>();
         if (root["streams"] is JsonArray streamsArray)
@@ -67,6 +70,7 @@ public sealed class MediaInspector
                 var index = s["index"]?.GetValue<int>() ?? 0;
                 var lang = s["tags"]?["language"]?.GetValue<string>();
                 var title = s["tags"]?["title"]?.GetValue<string>();
+                var bitRate = long.TryParse(s["bit_rate"]?.GetValue<string>(), out var br) ? br : 0L;
 
                 var stream = new StreamInfo
                 {
@@ -74,7 +78,8 @@ public sealed class MediaInspector
                     CodecType = codecType,
                     CodecName = codecName,
                     Language = lang,
-                    Title = title
+                    Title = title,
+                    BitRate = bitRate
                 };
 
                 if (codecType == "video")
@@ -82,7 +87,16 @@ public sealed class MediaInspector
                     var width = s["width"]?.GetValue<int>() ?? 0;
                     var height = s["height"]?.GetValue<int>() ?? 0;
                     var fps = s["r_frame_rate"]?.GetValue<string>();
-                    stream = stream with { Width = width, Height = height, FrameRate = FormatFps(fps) };
+                    var profile = s["profile"]?.GetValue<string>();
+                    var aspectRatio = s["display_aspect_ratio"]?.GetValue<string>();
+                    stream = stream with
+                    {
+                        Width = width,
+                        Height = height,
+                        FrameRate = FormatFps(fps),
+                        Profile = profile,
+                        AspectRatio = aspectRatio
+                    };
                 }
                 else if (codecType == "audio")
                 {
@@ -101,6 +115,7 @@ public sealed class MediaInspector
             FormatName = formatName,
             FormatLongName = formatLongName,
             Duration = duration,
+            FileSize = fileSize,
             Streams = streams.AsReadOnly()
         };
     }

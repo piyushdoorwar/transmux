@@ -6,6 +6,7 @@ public sealed class MediaInfo
     public string FormatName { get; init; } = "";
     public string FormatLongName { get; init; } = "";
     public TimeSpan Duration { get; init; }
+    public long FileSize { get; init; }
     public IReadOnlyList<StreamInfo> Streams { get; init; } = [];
 
     public StreamInfo? VideoStream => Streams.FirstOrDefault(s => s.CodecType == "video");
@@ -15,6 +16,7 @@ public sealed class MediaInfo
     public bool HasVideo => VideoStream is not null;
     public bool HasSubtitles => SubtitleStreams.Any();
     public int SubtitleTrackCount => SubtitleStreams.Count();
+    public long OverallBitRate => Streams.Sum(s => s.BitRate);
 }
 
 public sealed record StreamInfo
@@ -23,11 +25,14 @@ public sealed record StreamInfo
     public string CodecType { get; init; } = "";
     public string CodecName { get; init; } = "";
     public string? Language { get; init; }
+    public long BitRate { get; init; }
 
     // Video
     public int Width { get; init; }
     public int Height { get; init; }
     public string? FrameRate { get; init; }
+    public string? Profile { get; init; }
+    public string? AspectRatio { get; init; }
 
     // Audio
     public int Channels { get; init; }
