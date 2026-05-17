@@ -416,7 +416,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             BuildAudioTracks(info);
 
             // Default output path: same dir as input, same name, new extension
-            var dir = _settings.LastOutputDirectory ?? Path.GetDirectoryName(filePath) ?? "";
+            var dir = Path.GetDirectoryName(filePath) ?? "";
             var name = Path.GetFileNameWithoutExtension(filePath);
             var ext = _selectedFormat?.Extension ?? ".mp4";
             OutputFilePath = Path.Combine(dir, name + ext);
