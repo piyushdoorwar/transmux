@@ -28,6 +28,13 @@ public partial class MainWindow : Window
                 var dialog = new AboutDialog();
                 await dialog.ShowDialog(this);
             };
+            vm.ShowHistoryDialog = async () =>
+            {
+                var historyService = new Transmux.App.Services.HistoryService();
+                var historyVm = new Transmux.App.ViewModels.HistoryViewModel(historyService);
+                var historyWindow = new HistoryWindow { DataContext = historyVm };
+                await historyWindow.ShowDialog(this);
+            };
         }
     }
 
@@ -42,6 +49,50 @@ public partial class MainWindow : Window
             dropZone.AddHandler(DragDrop.DragOverEvent, OnDragOver);
             dropZone.AddHandler(DragDrop.DropEvent, OnDrop);
         }
+    }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        if (_vm is null)
+        {
+            base.OnKeyDown(e);
+            return;
+        }
+
+        // Ctrl+O = Open file
+        if (e.Key == Key.O && e.KeyModifiers == KeyModifiers.Control)
+        {
+            _vm.SelectInputFileCommand.Execute(null);
+            e.Handled = true;
+        }
+        // Ctrl+Shift+O = Batch files
+        else if (e.Key == Key.O && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
+        {
+            _vm.AddBatchFilesCommand.Execute(null);
+            e.Handled = true;
+        }
+        // Enter = Convert
+        else if (e.Key == Key.Return)
+        {
+            if (_vm.BatchQueue.Count > 0)
+            {
+                _vm.StartBatchConversionCommand.Execute(null);
+            }
+            else if (_vm.HasMedia)
+            {
+                _vm.StartConversionCommand.Execute(null);
+            }
+            e.Handled = true;
+        }
+        // Spacebar = Toggle Fast/Full mode
+        else if (e.Key == Key.Space && _vm.HasMedia && !_vm.IsConverting)
+        {
+            _vm.IsFastConvert = !_vm.IsFastConvert;
+            e.Handled = true;
+        }
+
+        if (!e.Handled)
+            base.OnKeyDown(e);
     }
 
     // ── Window chrome ─────────────────────────────────────────────────────────

@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Transmux.App.Models;
+using Transmux.App.Services;
 using Transmux.Core.Models;
 using Transmux.Core.Services;
 
@@ -94,6 +95,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private readonly FfmpegService _ffmpeg;
     private readonly MediaInspector _inspector;
     private readonly SettingsService _settings;
+    private readonly HistoryService _history;
 
     // ── State ────────────────────────────────────────────────────────────────
 
@@ -121,11 +123,12 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private int _currentBatchIndex;
     private double _overallProgressPercent;
 
-    public MainViewModel(FfmpegService ffmpeg, MediaInspector inspector, SettingsService settings)
+    public MainViewModel(FfmpegService ffmpeg, MediaInspector inspector, SettingsService settings, HistoryService history)
     {
         _ffmpeg = ffmpeg;
         _inspector = inspector;
         _settings = settings;
+        _history = history;
 
         Formats = OutputFormats.All;
 
@@ -158,6 +161,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         AddBatchFilesCommand = new RelayCommand(async _ => await AddBatchFilesAsync());
         RemoveBatchFileCommand = new RelayCommand(p => RemoveBatchFile(p as BatchConversionJob));
         StartBatchConversionCommand = new RelayCommand(async _ => await StartBatchConversionAsync(), _ => CanStartBatch);
+        ShowHistoryCommand = new RelayCommand(async _ => await OpenHistoryDialogAsync());
     }
 
     // ── Bindable properties ───────────────────────────────────────────────────
@@ -437,10 +441,12 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public ICommand AddBatchFilesCommand { get; }
     public ICommand RemoveBatchFileCommand { get; }
     public ICommand StartBatchConversionCommand { get; }
+    public ICommand ShowHistoryCommand { get; }
 
     // Injected by the Window after construction
     public IStorageProvider? StorageProvider { get; set; }
     public Func<Task>? ShowAboutDialog { get; set; }
+    public Func<Task>? ShowHistoryDialog { get; set; }
 
     // ── Actions ───────────────────────────────────────────────────────────────
 
@@ -599,6 +605,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
                 ProgressPercent = 100;
                 IsConverting = false;
                 IsComplete = true;
+
+                // Record to history
+                _history.AddRecord(
+                    Path.GetFileName(_inputFilePath),
+                    Path.GetFileName(_outputFilePath),
+                    _outputFilePath,
+                    _selectedFormat.Id,
+                    success: true);
             });
         }
         catch (OperationCanceledException)
@@ -652,6 +666,12 @@ public sealed class MainViewModel : INotifyPropertyChanged
     {
         if (ShowAboutDialog is not null)
             await ShowAboutDialog();
+    }
+
+    private async Task OpenHistoryDialogAsync()
+    {
+        if (ShowHistoryDialog is not null)
+            await ShowHistoryDialog();
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -958,6 +978,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
                     {
                         job.Status = "Completed";
                         job.ProgressPercent = 100;
+
+                        // Record to history
+                        _history.AddRecord(
+                            job.InputPath,
+                            Path.GetFileName(outputPath),
+                            outputPath,
+                            _selectedFormat?.Id ?? "unknown",
+                            success: true);
                     });
                 }
                 catch (OperationCanceledException)
@@ -975,6 +1003,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
                     {
                         job.Status = "Failed";
                         ErrorMessage = $"{job.FileName}: {ex.Message}";
+
+                        // Record failure to history
+                        _history.AddRecord(
+                            job.InputPath,
+                            Path.GetFileName(outputPath),
+                            outputPath,
+                            _selectedFormat?.Id ?? "unknown",
+                            success: false);
                     });
                 }
                 finally
@@ -1019,35 +1055,4 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     // ── RelayCommand ──────────────────────────────────────────────────────────
 
-    private sealed class RelayCommand : ICommand
-    {
-        private readonly Func<object?, Task> _executeAsync;
-        private readonly Func<object?, bool>? _canExecute;
-
-        public RelayCommand(Func<object?, Task> executeAsync, Func<object?, bool>? canExecute = null)
-        {
-            _executeAsync = executeAsync;
-            _canExecute = canExecute;
-        }
-
-        public RelayCommand(Action<object?> execute, Func<object?, bool>? canExecute = null)
-            : this(_ => { execute(_); return Task.CompletedTask; }, canExecute) { }
-
-        public event EventHandler? CanExecuteChanged;
-
-        public bool CanExecute(object? parameter) => _canExecute?.Invoke(parameter) ?? true;
-
-        public async void Execute(object? parameter)
-        {
-            try { await _executeAsync(parameter); }
-            catch (OperationCanceledException) { }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[RelayCommand] {ex.Message}");
-            }
-        }
-
-        public void RaiseCanExecuteChanged() =>
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-    }
 }

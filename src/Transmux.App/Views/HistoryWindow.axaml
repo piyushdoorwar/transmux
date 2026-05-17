@@ -1,0 +1,145 @@
+<Window
+    x:Class="Transmux.App.Views.HistoryWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Transmux.App.ViewModels"
+    Title="Conversion History"
+    Width="700"
+    Height="500"
+    MinWidth="500"
+    MinHeight="300"
+    SystemDecorations="BorderOnly"
+    Background="#111111">
+
+  <Grid RowDefinitions="38,*,50">
+
+    <!-- Top bar -->
+    <Border Grid.Row="0" Background="#141414">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <StackPanel Grid.Column="0"
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    VerticalAlignment="Center"
+                    Margin="12,0,0,0">
+          <TextBlock Text="Conversion History"
+                     FontSize="13"
+                     FontWeight="SemiBold"
+                     Foreground="#DEDAD5"
+                     VerticalAlignment="Center" />
+        </StackPanel>
+
+        <Button Grid.Column="2"
+                Name="CloseButton"
+                Click="CloseButton_Click"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Foreground="#888"
+                CornerRadius="4"
+                Padding="8"
+                Margin="0,0,6,0"
+                FontSize="14"
+                ToolTip.Tip="Close (Escape)"
+                Content="✕" />
+      </Grid>
+    </Border>
+
+    <!-- History list -->
+    <ScrollViewer Grid.Row="1"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+      <ItemsControl ItemsSource="{Binding DisplayItems}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Border Background="#1A1A1A"
+                    BorderBrush="#2D2D2D"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="12,10"
+                    Margin="16,8,16,0">
+              <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
+                <!-- File names and format -->
+                <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
+                  <TextBlock Text="{Binding InputFileName, StringFormat='Input: {0}'}"
+                             FontSize="11"
+                             Foreground="#888" />
+                  <TextBlock Text="{Binding OutputFileName, StringFormat='Output: {0}'}"
+                             FontSize="11"
+                             Foreground="#888" />
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Format, StringFormat='Format: {0}'}"
+                               FontSize="11"
+                               Foreground="#666" />
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Timestamp, StringFormat='d'}"
+                               FontSize="10"
+                               Foreground="#555" />
+                  </Grid>
+                </StackPanel>
+
+                <!-- Status badge -->
+                <Border Grid.Row="0" Grid.Column="1"
+                        CornerRadius="4"
+                        Padding="6,3"
+                        VerticalAlignment="Top"
+                        Background="#2D5D3D">
+                  <TextBlock Text="{Binding Status}"
+                             FontSize="10"
+                             Foreground="White"
+                             FontWeight="SemiBold" />
+                </Border>
+
+                <!-- Open folder button -->
+                <Button Grid.Row="1" Grid.Column="0"
+                        Command="{Binding DataContext.OpenFolderCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                        CommandParameter="{Binding}"
+                        Background="Transparent"
+                        BorderBrush="#2D2D2D"
+                        Foreground="#666"
+                        CornerRadius="4"
+                        Padding="8,4"
+                        FontSize="11"
+                        Margin="0,6,0,0"
+                        Content="Open folder"
+                        HorizontalAlignment="Left" />
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+
+    <!-- Empty state -->
+    <TextBlock Grid.Row="1"
+               IsVisible="{Binding !DisplayItems.Count}"
+               Text="No conversion history"
+               FontSize="13"
+               Foreground="#555"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center" />
+
+    <!-- Footer -->
+    <Border Grid.Row="2" Background="#0D0D0D">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0"
+                   Text="{Binding DisplayItems.Count, StringFormat='Total: {0} conversions'}"
+                   FontSize="11"
+                   Foreground="#666"
+                   VerticalAlignment="Center"
+                   Margin="16,0,0,0" />
+        <Button Grid.Column="1"
+                Command="{Binding ClearHistoryCommand}"
+                Background="Transparent"
+                BorderBrush="#3D3D3D"
+                Foreground="#C85050"
+                CornerRadius="4"
+                Padding="12,8"
+                Margin="0,0,16,0"
+                FontSize="11"
+                Content="Clear history" />
+      </Grid>
+    </Border>
+
+  </Grid>
+
+</Window>

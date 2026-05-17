@@ -285,12 +285,29 @@ A segmented **Fast / Full re-encode** toggle appears in the options panel:
 - Files are converted with the same output format and options settings
 - Can remove individual files from queue before conversion starts
 
+### Conversion History
+- Click the history button (⏱ icon) in the top bar to view recent conversions
+- History window shows last 50 conversions (most recent first)
+- Each entry displays: input filename, output filename, format, timestamp, status (Completed/Failed)
+- "Open folder" button opens the output folder in file explorer
+- "Clear history" button removes all history records
+- History is persisted to `~/.config/Transmux/history.json` (Linux) or `%AppData%\Transmux\history.json` (Windows)
+- History is maintained automatically for both single-file and batch conversions
+
 ### UI & Platform
 - Clean dark theme (Transmux palette: `#111111` background, `#DEDAD5` text, `#3A6E9B` accent)
 - Accent/selection colors should be blue throughout the app. Do not allow platform green highlights to leak into ComboBox selected/hover states.
 - Single window, no sidebar — focused workflow
 - Drag-and-drop input file onto the window
 - About dialog (Transmux logo, version + credits, GitHub link, releases link)
+
+### Keyboard Shortcuts
+- **Ctrl+O** — Open/select input file
+- **Ctrl+Shift+O** — Add files to batch queue
+- **Enter** — Convert (single file) or Convert All (batch queue)
+- **Spacebar** — Toggle between Fast (stream copy) and Full re-encode mode
+
+Tooltips in the UI remind users of these shortcuts.
 
 ### Context Menu Integration
 

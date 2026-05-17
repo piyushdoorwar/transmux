@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using Transmux.Core.Services;
 using Transmux.App.ViewModels;
 using Transmux.App.Views;
+using Transmux.App.Services;
 
 namespace Transmux.App;
 
@@ -21,7 +22,8 @@ public sealed partial class App : Application
             var ffmpeg   = new FfmpegService();
             var inspector = new MediaInspector();
             var settings = new SettingsService();
-            var vm = new MainViewModel(ffmpeg, inspector, settings);
+            var history = new HistoryService();
+            var vm = new MainViewModel(ffmpeg, inspector, settings, history);
 
             var window = new MainWindow { DataContext = vm };
             desktop.MainWindow = window;
