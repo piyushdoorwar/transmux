@@ -330,7 +330,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
                 _settings.LastOutputFormatId = value.Id;
                 // Update output path extension if a path is already set
                 if (_outputFilePath is not null)
-                    OutputFilePath = Path.ChangeExtension(_outputFilePath, value.Extension);
+                    OutputFilePath = EnsureDistinctFromInput(Path.ChangeExtension(_outputFilePath, value.Extension));
                 ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
             }
         }
@@ -488,7 +488,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             var dir = Path.GetDirectoryName(filePath) ?? "";
             var name = Path.GetFileNameWithoutExtension(filePath);
             var ext = _selectedFormat?.Extension ?? ".mp4";
-            OutputFilePath = Path.Combine(dir, name + ext);
+            OutputFilePath = EnsureDistinctFromInput(Path.Combine(dir, name + ext));
 
             // Default subtitle mode
             var targetMode = info.HasSubtitles ? SubtitleMode.Include : SubtitleMode.None;
@@ -898,6 +898,21 @@ public sealed class MainViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(AudioCheckState));
         OnPropertyChanged(nameof(AudioTracksDisplayText));
         ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
+    }
+
+    // FFmpeg cannot edit a file in-place. If the chosen output path collides
+    // with the input (e.g. input.mkv → MKV output), append a suffix.
+    private string EnsureDistinctFromInput(string candidate)
+    {
+        if (_inputFilePath is null ||
+            !string.Equals(Path.GetFullPath(candidate), Path.GetFullPath(_inputFilePath),
+                StringComparison.OrdinalIgnoreCase))
+            return candidate;
+
+        var dir = Path.GetDirectoryName(candidate) ?? "";
+        var name = Path.GetFileNameWithoutExtension(candidate);
+        var ext = Path.GetExtension(candidate);
+        return Path.Combine(dir, name + " (converted)" + ext);
     }
 
     private string BuildSubtitleOutputPath(string extension)

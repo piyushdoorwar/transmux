@@ -61,12 +61,19 @@ public sealed class FfmpegService
             process.Start();
 
             var startTime = DateTime.UtcNow;
+            var stderrTail = new System.Collections.Generic.Queue<string>();
 
             _ = Task.Run(async () =>
             {
                 string? line;
                 while ((line = await process.StandardError.ReadLineAsync(cancellationToken)) is not null)
                 {
+                    lock (stderrTail)
+                    {
+                        stderrTail.Enqueue(line);
+                        if (stderrTail.Count > 15) stderrTail.Dequeue();
+                    }
+
                     if (progress is null || options.InputDuration == TimeSpan.Zero)
                         continue;
 
@@ -111,9 +118,12 @@ public sealed class FfmpegService
 
             if (process.ExitCode != 0)
             {
+                string detail;
+                lock (stderrTail)
+                    detail = string.Join("\n", stderrTail);
+
                 throw new InvalidOperationException(
-                    $"FFmpeg exited with code {process.ExitCode}. " +
-                    "Check that the output format is supported by your FFmpeg build.");
+                    $"FFmpeg exited with code {process.ExitCode}.\n\n{detail}");
             }
 
             if (subtitleTempDir is not null && options.SubtitleOutputPath is not null)
@@ -162,9 +172,12 @@ public sealed class FfmpegService
             $"-i {Q(options.InputPath)}"
         };
 
-        // If we have audio track selection, map them; otherwise include all
+        // If we have audio track selection, map them; otherwise include all.
+        // When using -map, we must also explicitly keep the video stream,
+        // otherwise ffmpeg drops video entirely and the output is broken.
         if (options.AudioTracks.Count > 0)
         {
+            parts.Add("-map 0:v?");
             foreach (var audioTrack in options.AudioTracks)
             {
                 parts.Add($"-map 0:a:{audioTrack.AudioIndex}");
