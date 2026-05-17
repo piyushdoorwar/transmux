@@ -262,50 +262,92 @@
 
           <!-- Audio track selector (only if input has multiple audio tracks) -->
           <Grid IsVisible="{Binding ShowAudioTrackSelector}"
-                ColumnDefinitions="130,*">
-            <TextBlock Grid.Column="0"
+                ColumnDefinitions="130,*"
+                RowDefinitions="Auto,Auto">
+            <TextBlock Grid.Row="0" Grid.Column="0"
                        Text="Audio"
                        FontSize="13" Foreground="#888"
-                       VerticalAlignment="Top"
-                       Margin="0,7,0,0" />
-            <Border Grid.Column="1"
-                    Background="#1A1A1A"
+                       VerticalAlignment="Center" />
+            <Button Grid.Row="0" Grid.Column="1"
+                    Name="AudioTracksButton"
+                    IsEnabled="{Binding IsInputEnabled}"
+                    Command="{Binding ToggleAudioTracksDropdownCommand}"
+                    Background="#1E1E1E"
                     BorderBrush="#303030"
-                    BorderThickness="1"
+                    Foreground="#DEDAD5"
                     CornerRadius="5"
                     Padding="10,6"
-                    MaxHeight="150">
-              <StackPanel Spacing="8">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled">
-                  <StackPanel Spacing="3">
-                    <CheckBox IsChecked="{Binding AudioCheckState}"
-                              Command="{Binding ToggleAllAudioCommand}"
-                              IsEnabled="{Binding IsInputEnabled}"
-                              Margin="0,3"
-                              Foreground="#DEDAD5"
-                              FontSize="13"
-                              FontWeight="SemiBold">
-                      All
-                    </CheckBox>
-                    <ItemsControl ItemsSource="{Binding AudioTracks}">
-                      <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                          <CheckBox IsChecked="{Binding IsSelected}"
-                                    IsEnabled="{Binding $parent[Window].DataContext.IsInputEnabled}"
-                                    Margin="12,3,0,3"
-                                    Foreground="#DEDAD5">
-                            <TextBlock Text="{Binding Label}"
-                                       FontSize="13"
-                                       TextWrapping="Wrap" />
-                          </CheckBox>
-                        </DataTemplate>
-                      </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                  </StackPanel>
-                </ScrollViewer>
-              </StackPanel>
-            </Border>
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
+                    FontSize="13">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0"
+                           Text="{Binding AudioTracksDisplayText}"
+                           TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Text="▼" Margin="8,0,0,0" Opacity="0.6" />
+              </Grid>
+            </Button>
+
+            <!-- Dropdown popup with audio tracks -->
+            <Popup Grid.Row="1" Grid.Column="1"
+                   Name="AudioTracksPopup"
+                   IsOpen="{Binding ShowAudioTracksDropdown}"
+                   PlacementTarget="{Binding #AudioTracksButton}"
+                   Placement="Bottom">
+              <Border Background="#1A1A1A"
+                      BorderBrush="#303030"
+                      BorderThickness="1"
+                      CornerRadius="5"
+                      MinWidth="300"
+                      MaxWidth="400">
+                <Grid RowDefinitions="*,Auto">
+                  <Border Grid.Row="0" Padding="10,6,10,0">
+                    <StackPanel Spacing="8">
+                      <CheckBox IsChecked="{Binding AudioCheckState}"
+                                Command="{Binding ToggleAllAudioCommand}"
+                                IsEnabled="{Binding IsInputEnabled}"
+                                Margin="0,3"
+                                Foreground="#DEDAD5"
+                                FontSize="13"
+                                FontWeight="SemiBold">
+                        All
+                      </CheckBox>
+                      <ScrollViewer MaxHeight="250"
+                                    VerticalScrollBarVisibility="Auto"
+                                    HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding AudioTracks}">
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                              <CheckBox IsChecked="{Binding IsSelected}"
+                                        IsEnabled="{Binding $parent[Window].DataContext.IsInputEnabled}"
+                                        Margin="12,3,0,3"
+                                        Foreground="#DEDAD5">
+                                <TextBlock Text="{Binding Label}"
+                                           FontSize="13"
+                                           TextWrapping="Wrap" />
+                              </CheckBox>
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                      </ScrollViewer>
+                    </StackPanel>
+                  </Border>
+                  <Border Grid.Row="1"
+                          Background="#0D0D0D"
+                          Padding="10,8">
+                    <Button HorizontalAlignment="Right"
+                            Command="{Binding ToggleAudioTracksDropdownCommand}"
+                            Background="Transparent"
+                            BorderBrush="#3D3D3D"
+                            Foreground="#888"
+                            CornerRadius="4"
+                            Padding="14,5"
+                            FontSize="12"
+                            Content="Done" />
+                  </Border>
+                </Grid>
+              </Border>
+            </Popup>
           </Grid>
 
           <!-- Subtitle mode (only if input has subtitles) -->
@@ -335,50 +377,92 @@
 
           <!-- Subtitle track selector (only if extracting subtitles) -->
           <Grid IsVisible="{Binding ShowSubtitleTrackSelector}"
-                ColumnDefinitions="130,*">
-            <TextBlock Grid.Column="0"
+                ColumnDefinitions="130,*"
+                RowDefinitions="Auto,Auto">
+            <TextBlock Grid.Row="0" Grid.Column="0"
                        Text="Tracks"
                        FontSize="13" Foreground="#888"
-                       VerticalAlignment="Top"
-                       Margin="0,7,0,0" />
-            <Border Grid.Column="1"
-                    Background="#1A1A1A"
+                       VerticalAlignment="Center" />
+            <Button Grid.Row="0" Grid.Column="1"
+                    Name="SubtitleTracksButton"
+                    IsEnabled="{Binding IsInputEnabled}"
+                    Command="{Binding ToggleSubtitleTracksDropdownCommand}"
+                    Background="#1E1E1E"
                     BorderBrush="#303030"
-                    BorderThickness="1"
+                    Foreground="#DEDAD5"
                     CornerRadius="5"
                     Padding="10,6"
-                    MaxHeight="150">
-              <StackPanel Spacing="8">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled">
-                  <StackPanel Spacing="3">
-                    <CheckBox IsChecked="{Binding SubtitleCheckState}"
-                              Command="{Binding ToggleAllSubtitlesCommand}"
-                              IsEnabled="{Binding IsInputEnabled}"
-                              Margin="0,3"
-                              Foreground="#DEDAD5"
-                              FontSize="13"
-                              FontWeight="SemiBold">
-                      All
-                    </CheckBox>
-                    <ItemsControl ItemsSource="{Binding SubtitleTracks}">
-                      <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                          <CheckBox IsChecked="{Binding IsSelected}"
-                                    IsEnabled="{Binding $parent[Window].DataContext.IsInputEnabled}"
-                                    Margin="12,3,0,3"
-                                    Foreground="#DEDAD5">
-                            <TextBlock Text="{Binding Label}"
-                                       FontSize="13"
-                                       TextWrapping="Wrap" />
-                          </CheckBox>
-                        </DataTemplate>
-                      </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                  </StackPanel>
-                </ScrollViewer>
-              </StackPanel>
-            </Border>
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
+                    FontSize="13">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0"
+                           Text="{Binding SubtitleTracksDisplayText}"
+                           TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Text="▼" Margin="8,0,0,0" Opacity="0.6" />
+              </Grid>
+            </Button>
+
+            <!-- Dropdown popup with subtitle tracks -->
+            <Popup Grid.Row="1" Grid.Column="1"
+                   Name="SubtitleTracksPopup"
+                   IsOpen="{Binding ShowSubtitleTracksDropdown}"
+                   PlacementTarget="{Binding #SubtitleTracksButton}"
+                   Placement="Bottom">
+              <Border Background="#1A1A1A"
+                      BorderBrush="#303030"
+                      BorderThickness="1"
+                      CornerRadius="5"
+                      MinWidth="300"
+                      MaxWidth="400">
+                <Grid RowDefinitions="*,Auto">
+                  <Border Grid.Row="0" Padding="10,6,10,0">
+                    <StackPanel Spacing="8">
+                      <CheckBox IsChecked="{Binding SubtitleCheckState}"
+                                Command="{Binding ToggleAllSubtitlesCommand}"
+                                IsEnabled="{Binding IsInputEnabled}"
+                                Margin="0,3"
+                                Foreground="#DEDAD5"
+                                FontSize="13"
+                                FontWeight="SemiBold">
+                        All
+                      </CheckBox>
+                      <ScrollViewer MaxHeight="250"
+                                    VerticalScrollBarVisibility="Auto"
+                                    HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding SubtitleTracks}">
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                              <CheckBox IsChecked="{Binding IsSelected}"
+                                        IsEnabled="{Binding $parent[Window].DataContext.IsInputEnabled}"
+                                        Margin="12,3,0,3"
+                                        Foreground="#DEDAD5">
+                                <TextBlock Text="{Binding Label}"
+                                           FontSize="13"
+                                           TextWrapping="Wrap" />
+                              </CheckBox>
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                      </ScrollViewer>
+                    </StackPanel>
+                  </Border>
+                  <Border Grid.Row="1"
+                          Background="#0D0D0D"
+                          Padding="10,8">
+                    <Button HorizontalAlignment="Right"
+                            Command="{Binding ToggleSubtitleTracksDropdownCommand}"
+                            Background="Transparent"
+                            BorderBrush="#3D3D3D"
+                            Foreground="#888"
+                            CornerRadius="4"
+                            Padding="14,5"
+                            FontSize="12"
+                            Content="Done" />
+                  </Border>
+                </Grid>
+              </Border>
+            </Popup>
           </Grid>
 
           <!-- Output path -->

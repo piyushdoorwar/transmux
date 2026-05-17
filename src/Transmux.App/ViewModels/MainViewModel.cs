@@ -153,6 +153,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         SetFullConvertCommand = new RelayCommand(_ => IsFastConvert = false, _ => IsInputEnabled);
         ToggleAllSubtitlesCommand = new RelayCommand(_ => ToggleAllSubtitles());
         ToggleAllAudioCommand = new RelayCommand(_ => ToggleAllAudio());
+        ToggleSubtitleTracksDropdownCommand = new RelayCommand(_ => ShowSubtitleTracksDropdown = !ShowSubtitleTracksDropdown);
+        ToggleAudioTracksDropdownCommand = new RelayCommand(_ => ShowAudioTracksDropdown = !ShowAudioTracksDropdown);
         ShowHistoryCommand = new RelayCommand(async _ => await OpenHistoryDialogAsync());
         ShowKeyboardShortcutsCommand = new RelayCommand(async _ => await OpenKeyboardShortcutsDialogAsync());
     }
@@ -259,6 +261,52 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public bool AllSubtitlesSelected => SubtitleTracks.Count > 0 && SubtitleTracks.All(t => t.IsSelected);
 
     public bool? SubtitleCheckState => SubtitleTracks.Count == 0 ? false : (AllSubtitlesSelected ? true : (SubtitleTracks.Any(t => t.IsSelected) ? null : false));
+
+    private bool _showSubtitleTracksDropdown;
+    public bool ShowSubtitleTracksDropdown
+    {
+        get => _showSubtitleTracksDropdown;
+        set => SetField(ref _showSubtitleTracksDropdown, value);
+    }
+
+    public string SubtitleTracksDisplayText
+    {
+        get
+        {
+            var selected = SubtitleTracks.Count(t => t.IsSelected);
+            if (selected == 0) return "None selected";
+            if (selected == SubtitleTracks.Count) return "All subtitles";
+            if (selected == 1)
+            {
+                var track = SubtitleTracks.First(t => t.IsSelected);
+                return track.Label;
+            }
+            return $"{selected} subtitles";
+        }
+    }
+
+    private bool _showAudioTracksDropdown;
+    public bool ShowAudioTracksDropdown
+    {
+        get => _showAudioTracksDropdown;
+        set => SetField(ref _showAudioTracksDropdown, value);
+    }
+
+    public string AudioTracksDisplayText
+    {
+        get
+        {
+            var selected = AudioTracks.Count(t => t.IsSelected);
+            if (selected == 0) return "None selected";
+            if (selected == AudioTracks.Count) return "All audio tracks";
+            if (selected == 1)
+            {
+                var track = AudioTracks.First(t => t.IsSelected);
+                return track.Label;
+            }
+            return $"{selected} audio tracks";
+        }
+    }
 
     public bool IsFastConvert
     {
@@ -400,6 +448,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public ICommand SetFullConvertCommand { get; }
     public ICommand ToggleAllSubtitlesCommand { get; }
     public ICommand ToggleAllAudioCommand { get; }
+    public ICommand ToggleSubtitleTracksDropdownCommand { get; }
+    public ICommand ToggleAudioTracksDropdownCommand { get; }
     public ICommand ShowHistoryCommand { get; }
     public ICommand ShowKeyboardShortcutsCommand { get; }
 
@@ -776,6 +826,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
 
         OnPropertyChanged(nameof(SubtitleTracks));
+        OnPropertyChanged(nameof(SubtitleTracksDisplayText));
         OnPropertyChanged(nameof(ShowSubtitleTrackSelector));
         ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
     }
@@ -783,6 +834,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private void SubtitleTrack_SelectionChanged(object? sender, EventArgs e)
     {
         OnPropertyChanged(nameof(SubtitleCheckState));
+        OnPropertyChanged(nameof(SubtitleTracksDisplayText));
         ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
     }
 
@@ -814,6 +866,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
 
         OnPropertyChanged(nameof(AudioTracks));
+        OnPropertyChanged(nameof(AudioTracksDisplayText));
         OnPropertyChanged(nameof(ShowAudioTrackSelector));
         ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
     }
@@ -821,6 +874,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private void AudioTrack_SelectionChanged(object? sender, EventArgs e)
     {
         OnPropertyChanged(nameof(AudioCheckState));
+        OnPropertyChanged(nameof(AudioTracksDisplayText));
         ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
     }
 
@@ -831,6 +885,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             track.IsSelected = !allSelected;
         OnPropertyChanged(nameof(AllSubtitlesSelected));
         OnPropertyChanged(nameof(SubtitleCheckState));
+        OnPropertyChanged(nameof(SubtitleTracksDisplayText));
         ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
     }
 
@@ -841,6 +896,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             track.IsSelected = !allSelected;
         OnPropertyChanged(nameof(AllAudioSelected));
         OnPropertyChanged(nameof(AudioCheckState));
+        OnPropertyChanged(nameof(AudioTracksDisplayText));
         ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
     }
 
