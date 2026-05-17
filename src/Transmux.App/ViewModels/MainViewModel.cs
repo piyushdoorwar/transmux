@@ -47,6 +47,47 @@ public sealed class SubtitleTrackOption : INotifyPropertyChanged
     }
 }
 
+public sealed class AudioTrackOption : INotifyPropertyChanged
+{
+    private bool _isSelected;
+
+    public AudioTrackOption(int audioIndex, StreamInfo stream, string label, bool isSelected)
+    {
+        AudioIndex = audioIndex;
+        StreamIndex = stream.Index;
+        Language = stream.Language;
+        Title = stream.Title;
+        CodecName = stream.CodecName;
+        Channels = stream.Channels;
+        SampleRate = stream.SampleRate;
+        Label = label;
+        _isSelected = isSelected;
+    }
+
+    public int AudioIndex { get; }
+    public int StreamIndex { get; }
+    public string? Language { get; }
+    public string? Title { get; }
+    public string CodecName { get; }
+    public int Channels { get; }
+    public int SampleRate { get; }
+    public string Label { get; }
+    public event EventHandler? SelectionChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set
+        {
+            if (_isSelected == value) return;
+            _isSelected = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+}
+
 public sealed class MainViewModel : INotifyPropertyChanged
 {
     private readonly FfmpegService _ffmpeg;
@@ -106,6 +147,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         OpenAboutDialogCommand = new RelayCommand(async _ => await OpenAboutDialogAsync());
         SetFastConvertOnCommand = new RelayCommand(_ => IsFastConvert = true, _ => IsInputEnabled);
         SetFullConvertCommand = new RelayCommand(_ => IsFastConvert = false, _ => IsInputEnabled);
+        ToggleAllSubtitlesCommand = new RelayCommand(_ => ToggleAllSubtitles());
+        ToggleAllAudioCommand = new RelayCommand(_ => ToggleAllAudio());
     }
 
     // ── Bindable properties ───────────────────────────────────────────────────
@@ -113,6 +156,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public IReadOnlyList<FormatInfo> Formats { get; }
     public IReadOnlyList<SubtitleModeOption> SubtitleModes { get; }
     public List<SubtitleTrackOption> SubtitleTracks { get; } = [];
+    public List<AudioTrackOption> AudioTracks { get; } = [];
 
     private SubtitleModeOption? _selectedSubtitleModeOption;
 
@@ -196,6 +240,16 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public bool ShowSubtitleTrackSelector =>
         _detectedMedia?.SubtitleTrackCount > 1 &&
         SelectedSubtitleMode is SubtitleMode.ExtractSrt or SubtitleMode.ExtractAss;
+
+    public bool ShowAudioTrackSelector => _detectedMedia is not null && _detectedMedia.AudioStreams.Count() > 1;
+
+    public bool AllAudioSelected => AudioTracks.Count > 0 && AudioTracks.All(t => t.IsSelected);
+
+    public string AudioToggleButtonText => AllAudioSelected ? "None" : "All";
+
+    public bool AllSubtitlesSelected => SubtitleTracks.Count > 0 && SubtitleTracks.All(t => t.IsSelected);
+
+    public string SubtitleToggleButtonText => AllSubtitlesSelected ? "None" : "All";
 
     public bool IsFastConvert
     {
@@ -335,6 +389,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public ICommand OpenAboutDialogCommand { get; }
     public ICommand SetFastConvertOnCommand { get; }
     public ICommand SetFullConvertCommand { get; }
+    public ICommand ToggleAllSubtitlesCommand { get; }
+    public ICommand ToggleAllAudioCommand { get; }
 
     // Injected by the Window after construction
     public IStorageProvider? StorageProvider { get; set; }
@@ -357,6 +413,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             var info = await _inspector.InspectAsync(filePath);
             DetectedMedia = info;
             BuildSubtitleTracks(info);
+            BuildAudioTracks(info);
 
             // Default output path: same dir as input, same name, new extension
             var dir = _settings.LastOutputDirectory ?? Path.GetDirectoryName(filePath) ?? "";
@@ -463,12 +520,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
             subOutputPath = BuildSubtitleOutputPath(".ass");
 
         var subtitleTracks = BuildSelectedSubtitleExtractions(subOutputPath).ToList();
+        var audioTracks = BuildSelectedAudioTracks().ToList();
 
         var options = new ConversionOptions(
             InputPath: _inputFilePath,
             OutputPath: _outputFilePath,
             SubtitleOutputPath: subOutputPath,
             SubtitleTracks: subtitleTracks,
+            AudioTracks: audioTracks,
             Format: _selectedFormat,
             SubtitleMode: _selectedSubtitleMode,
             InputDuration: _detectedMedia.Duration,
@@ -593,6 +652,61 @@ public sealed class MainViewModel : INotifyPropertyChanged
         ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
     }
 
+    private void BuildAudioTracks(MediaInfo info)
+    {
+        foreach (var track in AudioTracks)
+            track.SelectionChanged -= AudioTrack_SelectionChanged;
+
+        AudioTracks.Clear();
+
+        var audioStreams = info.AudioStreams.ToList();
+        for (var i = 0; i < audioStreams.Count; i++)
+        {
+            var stream = audioStreams[i];
+            var labelParts = new List<string> { $"Track {i + 1}" };
+            if (!string.IsNullOrWhiteSpace(stream.Language))
+                labelParts.Add(stream.Language!);
+            if (!string.IsNullOrWhiteSpace(stream.Title))
+                labelParts.Add(stream.Title!);
+            var ch = stream.Channels switch { 1 => "mono", 2 => "stereo", var n => $"{n}ch" };
+            if (!string.IsNullOrWhiteSpace(ch))
+                labelParts.Add(ch);
+            if (!string.IsNullOrWhiteSpace(stream.CodecName))
+                labelParts.Add(stream.CodecName.ToUpperInvariant());
+
+            var option = new AudioTrackOption(i, stream, string.Join(" · ", labelParts), isSelected: i == 0);
+            option.SelectionChanged += AudioTrack_SelectionChanged;
+            AudioTracks.Add(option);
+        }
+
+        OnPropertyChanged(nameof(AudioTracks));
+        OnPropertyChanged(nameof(ShowAudioTrackSelector));
+        ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
+    }
+
+    private void AudioTrack_SelectionChanged(object? sender, EventArgs e)
+    {
+        ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
+    }
+
+    private void ToggleAllSubtitles()
+    {
+        var allSelected = AllSubtitlesSelected;
+        foreach (var track in SubtitleTracks)
+            track.IsSelected = !allSelected;
+        OnPropertyChanged(nameof(AllSubtitlesSelected));
+        OnPropertyChanged(nameof(SubtitleToggleButtonText));
+    }
+
+    private void ToggleAllAudio()
+    {
+        var allSelected = AllAudioSelected;
+        foreach (var track in AudioTracks)
+            track.IsSelected = !allSelected;
+        OnPropertyChanged(nameof(AllAudioSelected));
+        OnPropertyChanged(nameof(AudioToggleButtonText));
+    }
+
     private string BuildSubtitleOutputPath(string extension)
     {
         var selectedCount = SubtitleTracks.Count(t => t.IsSelected);
@@ -618,6 +732,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
             var title = string.IsNullOrWhiteSpace(track.Title) ? "" : "." + SanitizeFileName(track.Title!);
             var fileName = $"{baseName}.track{track.SubtitleIndex + 1:00}.{language}{title}{extension}";
             yield return new SubtitleExtractionTrack(track.SubtitleIndex, track.StreamIndex, fileName);
+        }
+    }
+
+    private IEnumerable<AudioTrackSelection> BuildSelectedAudioTracks()
+    {
+        foreach (var track in AudioTracks.Where(t => t.IsSelected))
+        {
+            yield return new AudioTrackSelection(track.AudioIndex, track.StreamIndex);
         }
     }
 

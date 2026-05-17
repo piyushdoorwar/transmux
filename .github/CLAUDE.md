@@ -201,9 +201,9 @@ Pattern: **MVVM + Service Layer**, single process, single window.
 | `src/Transmux.Core/Services/MediaInspector.cs` | Runs ffprobe, parses JSON into MediaInfo |
 | `src/Transmux.Core/Services/SettingsService.cs` | JSON persistence: last output format, preferences |
 | `src/Transmux.Core/Models/MediaInfo.cs` | Detected container, duration, stream list |
-| `src/Transmux.Core/Models/ConversionOptions.cs` | Input/output paths, target format, codec, subtitle mode |
+| `src/Transmux.Core/Models/ConversionOptions.cs` | Input/output paths, target format, codec, subtitle mode, audio/subtitle track selections |
 | `src/Transmux.Core/Models/ConversionProgress.cs` | Progress report (percent, elapsed, ETA, speed) |
-| `src/Transmux.App/ViewModels/MainViewModel.cs` | MVVM hub: commands, UI state, job lifecycle |
+| `src/Transmux.App/ViewModels/MainViewModel.cs` | MVVM hub: commands, UI state, job lifecycle, track selection |
 | `src/Transmux.App/Views/MainWindow.axaml` | Full single-window UI layout |
 | `src/Transmux.App/Models/ConversionJob.cs` | UI-layer job descriptor |
 
@@ -228,12 +228,28 @@ A segmented **Fast / Full re-encode** toggle appears in the options panel:
 - **Full re-encode** (default): uses the format's `VideoArgs`/`AudioArgs` (e.g. `-c:v libx264 -crf 23 -preset fast`).
 - Stored in `ConversionOptions.FastConvert`; handled in `FfmpegService.BuildArguments`.
 
+### Audio Track Selection
+- If the input file contains multiple audio tracks:
+  - User can select which audio tracks to include in the output via checkboxes
+  - Each track displays: track number, language, title (if present), channels, and codec
+  - First audio track is selected by default
+  - **Toggle button**: single "All" / "None" button at bottom of selection box:
+    - Shows "All" when not all tracks are selected → clicking selects all
+    - Shows "None" when all tracks are selected → clicking deselects all
+  - Selected tracks are mapped to output via `-map 0:a:INDEX` arguments
+
 ### Subtitle Handling
 - If the input file contains subtitle tracks:
   - **Include subtitles**: embed them in the output (for containers that support it, e.g. MKV, MP4)
   - **Extract subtitles**: save subtitle tracks to a separate `.srt` or `.ass` file alongside the output
   - **No subtitles**: strip all subtitle tracks
 - Subtitle mode selector is shown/hidden based on whether the input has subtitle tracks
+- If extracting subtitles and multiple subtitle tracks exist:
+  - User can select which subtitle tracks to extract via checkboxes
+  - Each track displays: track number, language, title (if present), and codec
+  - First subtitle track is selected by default
+  - **Toggle button**: single "All" / "None" button at bottom of selection box (same pattern as audio)
+  - Selected tracks are extracted to individual files (or zipped if multiple)
 
 ### Output Path
 - User selects output directory and filename before starting conversion
@@ -264,8 +280,12 @@ All FFmpeg and FFprobe interaction is via `System.Diagnostics.Process` — no na
 Builds the ffmpeg command from `ConversionOptions`:
 
 ```
-ffmpeg -y -i "{inputPath}" [{encodingArgs}] [{subtitleArgs}] "{outputPath}"
+ffmpeg -y -i "{inputPath}" [{audioMapArgs}] [{encodingArgs}] [{subtitleArgs}] "{outputPath}"
 ```
+
+**Audio mapping:**
+- If `ConversionOptions.AudioTracks` is not empty, maps selected audio tracks: `-map 0:a:0 -map 0:a:1 ...`
+- If empty, includes all audio tracks by default
 
 **Encoding argument mapping:**
 
@@ -346,6 +366,7 @@ CancellationTokenSource? _cts
 
 ### MainWindow
 - **Default size**: 850×700; **Minimum**: 625×538
+- **Content area**: max-width 786px, centered when window is wider (e.g., in maximize mode)
 - **Decorations**: `BorderOnly` (custom title bar, Lumyn style)
 - **Background**: `#111111`; **Foreground**: `#DEDAD5`
 - **Theme**: Fluent dark + `Lumyn.axaml` overrides. `App.axaml` sets Fluent dark/light palette accents to `#3A6E9B`; `Lumyn.axaml` also overrides `SystemAccentColor*` resources and ComboBox item selected/hover backgrounds so dropdown highlights stay blue.
@@ -359,10 +380,20 @@ CancellationTokenSource? _cts
 │  └───────────────────────────────────────┘  │
 │                                             │
 │  Detected:  MKV · H.264 · 1920×1080        │  ← MediaInfo panel (hidden until file loaded)
-│             AAC 2ch · Subtitles: 2 tracks  │
+│             AAC 2ch (+1 more) · Subs: 2    │
 │                                             │
 │  Output format:  [ MP4 (H.264) ▾ ]         │  ← Format selector
-│  Subtitles:      [ Extract to SRT ▾ ]      │  ← Subtitle mode (shown if input has subs)
+│  Mode:           [ Fast ] [ Full re-enc ]  │  ← Conversion mode toggle
+│  Audio:          ☑ Track 1 · tur · stereo  │  ← Audio tracks (shown if multiple)
+│                  ☐ Track 2 · eng · 6ch     │
+│                  [ All ]                   │  ← Toggle button
+│                                             │
+│  Subtitles:      [ Include in output ▾ ]   │  ← Subtitle mode (shown if input has subs)
+│                                             │
+│  Tracks:         ☑ Track 1 · tur · SUBRIP  │  ← Subtitle tracks (shown if extracting)
+│                  ☐ Track 2 · eng · SUBRIP  │
+│                  [ All ]                   │  ← Toggle button
+│                                             │
 │  Save to:        [ /home/user/output.mp4 ] │  ← Output path picker
 │                                             │
 │  [ Convert ]                               │  ← Primary action
@@ -372,7 +403,7 @@ CancellationTokenSource? _cts
 │                                             │
 │  ✓ Done — output.mp4        [ Open folder ]│  ← Completion state
 └─────────────────────────────────────────────┘
-│  status bar                                 │  ← Footer (32px)
+│  Powered by Lumyn                           │  ← Footer (32px)
 ```
 
 ### Visual States

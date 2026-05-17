@@ -162,6 +162,15 @@ public sealed class FfmpegService
             $"-i {Q(options.InputPath)}"
         };
 
+        // If we have audio track selection, map them; otherwise include all
+        if (options.AudioTracks.Count > 0)
+        {
+            foreach (var audioTrack in options.AudioTracks)
+            {
+                parts.Add($"-map 0:a:{audioTrack.AudioIndex}");
+            }
+        }
+
         if (options.FastConvert)
         {
             // Stream copy — no re-encoding; very fast but container must be compatible

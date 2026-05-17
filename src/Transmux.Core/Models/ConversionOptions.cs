@@ -71,11 +71,16 @@ public sealed record SubtitleExtractionTrack(
     int StreamIndex,
     string FileName);
 
+public sealed record AudioTrackSelection(
+    int AudioIndex,
+    int StreamIndex);
+
 public sealed record ConversionOptions(
     string InputPath,
     string OutputPath,
     string? SubtitleOutputPath,
     IReadOnlyList<SubtitleExtractionTrack> SubtitleTracks,
+    IReadOnlyList<AudioTrackSelection> AudioTracks,
     FormatInfo Format,
     SubtitleMode SubtitleMode,
     TimeSpan InputDuration,
