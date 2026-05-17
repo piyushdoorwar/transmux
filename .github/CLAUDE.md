@@ -174,11 +174,14 @@ Pattern: **MVVM + Service Layer**, single process, single window.
 
 ### Startup Sequence
 
-1. `Program.cs` → configures Avalonia with X11/Wayland options
+1. `Program.cs` → configures Avalonia with X11/Wayland options, passes command-line args
 2. `App.axaml.cs` → creates `FfmpegService`, `MediaInspector`, `SettingsService`
 3. Creates `MainViewModel` injecting all services
 4. Creates `MainWindow` with `ViewModel` as `DataContext`
-5. Optional: command-line file argument pre-fills the input file
+5. `TryGetStartupFiles()` → parses command-line arguments for file paths:
+   - Single file → loads as current input file via `LoadFileAsync()`
+   - Multiple files → all files added to batch queue via `AddFileToBatchQueue()`
+   - Files are loaded once window is opened (`MainWindow.Opened` event)
 
 ### Conversion Flow
 
@@ -212,7 +215,17 @@ Pattern: **MVVM + Service Layer**, single process, single window.
 ## 6. Features
 
 ### Input
-- Open audio or video file via file picker or drag-and-drop
+- Open audio or video file via file picker, drag-and-drop, or command-line argument
+  - **File picker**: Click the drop zone or press "Add Files" (for batch) → select single or multiple files
+    - On Windows/Linux: Hold `Ctrl` while clicking to select multiple files
+    - On macOS: Hold `Cmd` while clicking to select multiple files
+  - **Drag-and-drop**:
+    - Single file without modifiers: loads as current file
+    - Multiple files OR single file with Ctrl/Shift: added to batch queue
+  - **Command-line**: Pass file paths as arguments when launching Transmux
+    - Single file: loads as current file
+    - Multiple files: all added to batch queue
+  - **Right-click context menu**: See [Context Menu Integration](#context-menu-integration) below
 - Detected format displayed: container, duration, video stream (codec, resolution, fps), audio stream(s) (codec, channel count, sample rate), subtitle tracks
 - Supports all formats that FFmpeg can demux (MKV, MP4, AVI, MOV, WebM, FLV, TS, MP3, AAC, FLAC, OGG, WAV, OPUS, M4A, etc.)
 
@@ -262,12 +275,102 @@ A segmented **Fast / Full re-encode** toggle appears in the options panel:
 - Cancel button aborts the ffmpeg process immediately
 - On completion: brief success state with "Open folder" shortcut
 
+### Batch Conversion
+- Queue multiple files for sequential conversion
+- Click "Add Files" button (appears when batch queue is active) to select multiple files
+- Drag and drop multiple files to add them to the queue
+- Each queued file shows: filename, conversion status (Pending/Converting/Completed/Failed), individual progress bar
+- "Convert All" button starts sequential conversion of all queued files
+- Overall progress bar tracks total completion percentage
+- Files are converted with the same output format and options settings
+- Can remove individual files from queue before conversion starts
+
 ### UI & Platform
 - Clean dark theme (Transmux palette: `#111111` background, `#DEDAD5` text, `#3A6E9B` accent)
 - Accent/selection colors should be blue throughout the app. Do not allow platform green highlights to leak into ComboBox selected/hover states.
 - Single window, no sidebar — focused workflow
 - Drag-and-drop input file onto the window
 - About dialog (Transmux logo, version + credits, GitHub link, releases link)
+
+### Context Menu Integration
+
+Transmux can be launched with file paths as command-line arguments, enabling right-click "Convert with Transmux" context menu integration on all platforms.
+
+#### Windows — Registry Setup
+
+1. Save this as `transmux-context-menu.reg`:
+   ```registry
+   Windows Registry Editor Version 5.00
+
+   [HKEY_CLASSES_ROOT\*\shell\TransmuxConvert]
+   @="Convert with Transmux"
+   "Icon"="C:\\Program Files\\Transmux\\Transmux.exe,0"
+
+   [HKEY_CLASSES_ROOT\*\shell\TransmuxConvert\command]
+   @="\"C:\\Program Files\\Transmux\\Transmux.exe\" \"%1\""
+   ```
+   (Adjust the path if Transmux is installed elsewhere)
+
+2. Double-click the `.reg` file to import it
+
+3. Right-click any file → "Convert with Transmux" will appear
+
+Alternatively, use PowerShell (elevated):
+```powershell
+$exePath = "C:\Program Files\Transmux\Transmux.exe"
+New-Item -Path "HKCU:\Software\Classes\*\shell\TransmuxConvert" -Force | Out-Null
+New-ItemProperty -Path "HKCU:\Software\Classes\*\shell\TransmuxConvert" -Name "(Default)" -Value "Convert with Transmux" -Force | Out-Null
+New-Item -Path "HKCU:\Software\Classes\*\shell\TransmuxConvert\command" -Force | Out-Null
+New-ItemProperty -Path "HKCU:\Software\Classes\*\shell\TransmuxConvert\command" -Name "(Default)" -Value "`"$exePath`" `"%1`"" -Force | Out-Null
+```
+
+#### macOS — Using Launch Services
+
+Transmux can be set as the default handler for audio/video files via System Preferences:
+1. Right-click a media file → "Get Info"
+2. Under "Open with", select Transmux and click "Change All"
+
+Or use the command line:
+```bash
+duti com.transmux.app com.apple.quicktime-movie all
+```
+(Requires `duti` package from Homebrew)
+
+Alternatively, launch directly with files:
+```bash
+/Applications/Transmux.app/Contents/MacOS/Transmux /path/to/video.mp4
+```
+
+#### Linux — Desktop Entry & `.desktop` File
+
+The `.deb` package includes a `.desktop` file at `/usr/share/applications/transmux.desktop` that allows right-click context menu integration via file manager.
+
+For manual setup:
+1. Create `~/.local/share/applications/transmux.desktop`:
+   ```ini
+   [Desktop Entry]
+   Type=Application
+   Name=Transmux
+   Exec=transmux %U
+   Icon=transmux
+   Categories=AudioVideo;Utility;
+   MimeType=audio/mpeg;audio/flac;audio/ogg;audio/wav;video/mp4;video/x-matroska;video/quicktime;video/x-msvideo;
+   ```
+
+2. Update MIME type associations:
+   ```bash
+   xdg-mime default transmux.desktop audio/mpeg
+   xdg-mime default transmux.desktop video/mp4
+   # ... etc for other types
+   ```
+
+3. Right-click media files → "Open with..." → "Transmux"
+
+Or directly from terminal:
+```bash
+transmux /path/to/video.mp4
+transmux /path/to/file1.mp4 /path/to/file2.mkv  # Multiple files queued
+```
 
 ---
 

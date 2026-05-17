@@ -26,21 +26,34 @@ public sealed partial class App : Application
             var window = new MainWindow { DataContext = vm };
             desktop.MainWindow = window;
 
-            // Optional: pre-load a file passed on the command line
-            var filePath = TryGetStartupFilePath(desktop.Args);
-            if (!string.IsNullOrWhiteSpace(filePath))
+            // Handle files passed via command line (from right-click context menu or file associations)
+            var files = TryGetStartupFiles(desktop.Args);
+            if (files.Count > 0)
             {
-                desktop.MainWindow.Opened += async (_, _) =>
-                    await vm.LoadFileAsync(filePath);
+                desktop.MainWindow.Opened += (_, _) =>
+                {
+                    if (files.Count == 1)
+                    {
+                        // Single file: load as current file
+                        _ = vm.LoadFileAsync(files[0]);
+                    }
+                    else
+                    {
+                        // Multiple files: add to batch queue
+                        foreach (var file in files)
+                            vm.AddFileToBatchQueue(file);
+                    }
+                };
             }
         }
 
         base.OnFrameworkInitializationCompleted();
     }
 
-    private static string? TryGetStartupFilePath(string[]? args)
+    private static List<string> TryGetStartupFiles(string[]? args)
     {
-        if (args is null) return null;
+        var files = new List<string>();
+        if (args is null) return files;
 
         foreach (var arg in args)
         {
@@ -52,9 +65,9 @@ public sealed partial class App : Application
                 path = uri.LocalPath;
 
             if (File.Exists(path))
-                return path;
+                files.Add(path);
         }
 
-        return null;
+        return files;
     }
 }
