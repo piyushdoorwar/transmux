@@ -35,6 +35,17 @@ public partial class MainWindow : Window
                 var historyWindow = new HistoryWindow { DataContext = historyVm };
                 await historyWindow.ShowDialog(this);
             };
+            vm.ShowKeyboardShortcutsDialog = async () =>
+            {
+                var shortcutsDialog = new KeyboardShortcutsDialog();
+                await shortcutsDialog.ShowDialog(this);
+            };
+            vm.ShowSkipConversionDialog = async () =>
+            {
+                var skipDialog = new SkipConversionDialog();
+                await skipDialog.ShowDialog(this);
+                return skipDialog.SkipConversion;
+            };
         }
     }
 
@@ -65,23 +76,11 @@ public partial class MainWindow : Window
             _vm.SelectInputFileCommand.Execute(null);
             e.Handled = true;
         }
-        // Ctrl+Shift+O = Batch files
-        else if (e.Key == Key.O && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
-        {
-            _vm.AddBatchFilesCommand.Execute(null);
-            e.Handled = true;
-        }
         // Enter = Convert
         else if (e.Key == Key.Return)
         {
-            if (_vm.BatchQueue.Count > 0)
-            {
-                _vm.StartBatchConversionCommand.Execute(null);
-            }
-            else if (_vm.HasMedia)
-            {
+            if (_vm.HasMedia)
                 _vm.StartConversionCommand.Execute(null);
-            }
             e.Handled = true;
         }
         // Spacebar = Toggle Fast/Full mode
@@ -158,24 +157,10 @@ public partial class MainWindow : Window
         var files = e.Data.GetFiles()?.ToList();
         if (files is null || files.Count == 0) return;
 
-        // If dropping multiple files or Ctrl/Shift is held, add to batch queue
-        if (files.Count > 1 || (e.KeyModifiers & KeyModifiers.Control) != 0 ||
-            (e.KeyModifiers & KeyModifiers.Shift) != 0)
-        {
-            foreach (var file in files)
-            {
-                var path = file.Path.LocalPath;
-                if (File.Exists(path))
-                    _vm.AddFileToBatchQueue(path);
-            }
-        }
-        else
-        {
-            // Single file without modifiers: load as current file
-            var path = files[0].Path.LocalPath;
-            if (File.Exists(path))
-                await _vm.LoadFileAsync(path);
-        }
+        // Load the first file
+        var path = files[0].Path.LocalPath;
+        if (File.Exists(path))
+            await _vm.LoadFileAsync(path);
 
         e.Handled = true;
     }

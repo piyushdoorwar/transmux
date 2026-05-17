@@ -1,0 +1,64 @@
+<Window
+    x:Class="Transmux.App.Views.SkipConversionDialog"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="File Already Compatible"
+    Width="450"
+    Height="220"
+    MinWidth="400"
+    MinHeight="200"
+    SystemDecorations="BorderOnly"
+    Background="#111111"
+    CanResize="False"
+    WindowStartupLocation="CenterOwner">
+
+  <Grid RowDefinitions="Auto,*,50">
+
+    <!-- Content -->
+    <StackPanel Grid.Row="1" Spacing="16" Margin="24,24,24,0">
+      <TextBlock Text="Your file is already compatible with the selected format!"
+                 FontSize="13"
+                 FontWeight="SemiBold"
+                 Foreground="#5DA4D6"
+                 TextWrapping="Wrap" />
+
+      <TextBlock Text="The input file's codec(s) already match the target format. Converting would not improve quality and would just waste time and disk space."
+                 FontSize="11"
+                 Foreground="#AAA"
+                 TextWrapping="Wrap"
+                 LineHeight="1.5" />
+
+      <TextBlock Text="You can:" FontSize="11" Foreground="#888" FontWeight="SemiBold" />
+
+      <StackPanel Spacing="4" Margin="0,0,0,8">
+        <TextBlock Text="• Skip conversion - copy the file as-is (recommended)" FontSize="11" Foreground="#AAA" />
+        <TextBlock Text="• Convert anyway - re-encode with quality settings" FontSize="11" Foreground="#AAA" />
+      </StackPanel>
+    </StackPanel>
+
+    <!-- Buttons -->
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto" Margin="24,0,24,0">
+      <Button Grid.Column="1"
+              Name="SkipButton"
+              Click="SkipButton_Click"
+              Background="Transparent"
+              BorderBrush="#3D3D3D"
+              Foreground="#5DA4D6"
+              CornerRadius="4"
+              Padding="16,8"
+              Margin="0,0,8,0"
+              FontSize="12"
+              Content="Skip" />
+      <Button Grid.Column="2"
+              Name="ConvertButton"
+              Click="ConvertButton_Click"
+              Classes="accent"
+              CornerRadius="4"
+              Padding="16,8"
+              FontSize="12"
+              Content="Convert Anyway" />
+    </Grid>
+
+  </Grid>
+
+</Window>

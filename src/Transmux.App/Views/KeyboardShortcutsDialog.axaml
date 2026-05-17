@@ -1,0 +1,133 @@
+<Window
+    x:Class="Transmux.App.Views.KeyboardShortcutsDialog"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Keyboard Shortcuts"
+    Width="450"
+    Height="400"
+    MinWidth="400"
+    MinHeight="350"
+    SystemDecorations="BorderOnly"
+    Background="#111111"
+    CanResize="True">
+
+  <Grid RowDefinitions="38,*,40">
+
+    <!-- Top bar -->
+    <Border Grid.Row="0" Background="#141414">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0"
+                   Text="Keyboard Shortcuts"
+                   FontSize="13"
+                   FontWeight="SemiBold"
+                   Foreground="#DEDAD5"
+                   VerticalAlignment="Center"
+                   Margin="12,0,0,0" />
+        <Button Grid.Column="1"
+                Name="CloseButton"
+                Click="CloseButton_Click"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Foreground="#888"
+                CornerRadius="4"
+                Padding="8"
+                Margin="0,0,6,0"
+                FontSize="14"
+                ToolTip.Tip="Close (Escape)"
+                Content="✕" />
+      </Grid>
+    </Border>
+
+    <!-- Shortcuts list -->
+    <ScrollViewer Grid.Row="1"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Spacing="12" Margin="16,12,16,12">
+
+        <!-- File operations -->
+        <StackPanel Spacing="6">
+          <TextBlock Text="File Operations"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     Foreground="#3A6E9B" />
+          <Grid ColumnDefinitions="120,*">
+            <TextBlock Grid.Column="0" Text="Ctrl+O" FontSize="11" Foreground="#888" />
+            <TextBlock Grid.Column="1" Text="Open/select input file" FontSize="11" Foreground="#AAA" />
+          </Grid>
+        </StackPanel>
+
+        <Border Background="#1A1A1A" Height="1" />
+
+        <!-- Conversion -->
+        <StackPanel Spacing="6">
+          <TextBlock Text="Conversion"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     Foreground="#3A6E9B" />
+          <Grid ColumnDefinitions="120,*">
+            <TextBlock Grid.Column="0" Text="Enter" FontSize="11" Foreground="#888" />
+            <TextBlock Grid.Column="1" Text="Convert the current file" FontSize="11" Foreground="#AAA" />
+          </Grid>
+          <Grid ColumnDefinitions="120,*">
+            <TextBlock Grid.Column="0" Text="Spacebar" FontSize="11" Foreground="#888" />
+            <TextBlock Grid.Column="1" Text="Toggle Fast/Full re-encode mode" FontSize="11" Foreground="#AAA" />
+          </Grid>
+        </StackPanel>
+
+        <Border Background="#1A1A1A" Height="1" />
+
+        <!-- Dialogs -->
+        <StackPanel Spacing="6">
+          <TextBlock Text="Dialogs"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     Foreground="#3A6E9B" />
+          <Grid ColumnDefinitions="120,*">
+            <TextBlock Grid.Column="0" Text="Escape" FontSize="11" Foreground="#888" />
+            <TextBlock Grid.Column="1" Text="Close any open dialog or window" FontSize="11" Foreground="#AAA" />
+          </Grid>
+        </StackPanel>
+
+        <Border Background="#1A1A1A" Height="1" />
+
+        <!-- Drag &amp; Drop -->
+        <StackPanel Spacing="6">
+          <TextBlock Text="Drag &amp; Drop"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     Foreground="#3A6E9B" />
+          <StackPanel Spacing="4">
+            <TextBlock Text="Drag a file onto the window to load it" FontSize="11" Foreground="#AAA" />
+          </StackPanel>
+        </StackPanel>
+
+        <Border Background="#1A1A1A" Height="1" />
+
+        <!-- Tips -->
+        <StackPanel Spacing="6">
+          <TextBlock Text="Tips"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     Foreground="#3A6E9B" />
+          <StackPanel Spacing="4">
+            <TextBlock Text="• Hover over buttons for tooltips" FontSize="11" Foreground="#AAA" />
+            <TextBlock Text="• Right-click files in file explorer with Transmux" FontSize="11" Foreground="#AAA" />
+            <TextBlock Text="• Command-line: transmux file1.mp4 file2.mkv" FontSize="11" Foreground="#AAA" />
+          </StackPanel>
+        </StackPanel>
+
+      </StackPanel>
+    </ScrollViewer>
+
+    <!-- Footer -->
+    <Border Grid.Row="2" Background="#0D0D0D">
+      <TextBlock Text="Keyboard Shortcuts • Press keys quickly to navigate and convert"
+                 FontSize="10"
+                 Foreground="#555"
+                 VerticalAlignment="Center"
+                 Margin="16,0,0,0" />
+    </Border>
+
+  </Grid>
+
+</Window>

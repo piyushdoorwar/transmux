@@ -34,17 +34,8 @@ public sealed partial class App : Application
             {
                 desktop.MainWindow.Opened += (_, _) =>
                 {
-                    if (files.Count == 1)
-                    {
-                        // Single file: load as current file
-                        _ = vm.LoadFileAsync(files[0]);
-                    }
-                    else
-                    {
-                        // Multiple files: add to batch queue
-                        foreach (var file in files)
-                            vm.AddFileToBatchQueue(file);
-                    }
+                    // Load the first file as current file
+                    _ = vm.LoadFileAsync(files[0]);
                 };
             }
         }

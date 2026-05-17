@@ -234,6 +234,19 @@ Pattern: **MVVM + Service Layer**, single process, single window.
   - **Video**: MP4 (H.264+AAC), WebM (VP9+Opus), MKV (copy), AVI, MOV
   - **Audio-only**: MP3, AAC, FLAC, OGG, WAV, OPUS, M4A
 - Format list is aware of the input: audio-only formats are promoted when input has no video stream
+- **Smart format auto-selection**: When a file is loaded, the best format is automatically suggested:
+  - H.264 video + AAC audio → MP4 (no re-encode needed)
+  - VP9 video + Opus audio → WebM (no re-encode needed)
+  - Any other codec combination → MKV (copy mode, no re-encode)
+  - Audio-only files are matched to their codec (AAC→M4A, Opus→OPUS, etc.)
+  - User can override the suggestion by selecting a different format
+
+### Skip Conversion for Compatible Files
+- **Auto-detection**: When conversion is about to start, Transmux checks if the source file already matches the target format
+- **Smart prompt**: If the file is already compatible (e.g., "MP4 with H.264+AAC for MP4 target"), a dialog offers:
+  - **Skip** (recommended): Copy the file as-is without re-encoding
+  - **Convert anyway**: Proceed with re-encoding using selected quality settings
+- Prevents unnecessary processing, saves time and disk space
 
 ### Conversion Mode
 A segmented **Fast / Full re-encode** toggle appears in the options panel:

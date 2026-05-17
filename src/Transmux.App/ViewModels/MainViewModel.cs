@@ -118,11 +118,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private string? _errorMessage;
     private CancellationTokenSource? _cts;
 
-    // Batch conversion
-    private bool _isBatchMode;
-    private int _currentBatchIndex;
-    private double _overallProgressPercent;
-
     public MainViewModel(FfmpegService ffmpeg, MediaInspector inspector, SettingsService settings, HistoryService history)
     {
         _ffmpeg = ffmpeg;
@@ -158,10 +153,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         SetFullConvertCommand = new RelayCommand(_ => IsFastConvert = false, _ => IsInputEnabled);
         ToggleAllSubtitlesCommand = new RelayCommand(_ => ToggleAllSubtitles());
         ToggleAllAudioCommand = new RelayCommand(_ => ToggleAllAudio());
-        AddBatchFilesCommand = new RelayCommand(async _ => await AddBatchFilesAsync());
-        RemoveBatchFileCommand = new RelayCommand(p => RemoveBatchFile(p as BatchConversionJob));
-        StartBatchConversionCommand = new RelayCommand(async _ => await StartBatchConversionAsync(), _ => CanStartBatch);
         ShowHistoryCommand = new RelayCommand(async _ => await OpenHistoryDialogAsync());
+        ShowKeyboardShortcutsCommand = new RelayCommand(async _ => await OpenKeyboardShortcutsDialogAsync());
     }
 
     // ── Bindable properties ───────────────────────────────────────────────────
@@ -170,8 +163,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public IReadOnlyList<SubtitleModeOption> SubtitleModes { get; }
     public List<SubtitleTrackOption> SubtitleTracks { get; } = [];
     public List<AudioTrackOption> AudioTracks { get; } = [];
-    public List<BatchConversionJob> BatchQueue { get; } = [];
-
     private SubtitleModeOption? _selectedSubtitleModeOption;
 
     public SubtitleModeOption? SelectedSubtitleModeOption
@@ -385,40 +376,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public bool HasError => _errorMessage is not null;
 
-    public bool IsBatchMode
-    {
-        get => _isBatchMode;
-        private set { SetField(ref _isBatchMode, value); }
-    }
-
-    public double OverallProgressPercent
-    {
-        get => _overallProgressPercent;
-        private set => SetField(ref _overallProgressPercent, value);
-    }
-
-    public string BatchStatusText
-    {
-        get
-        {
-            if (BatchQueue.Count == 0) return "";
-            var completed = BatchQueue.Count(j => j.Status == "Completed");
-            var failed = BatchQueue.Count(j => j.Status == "Failed");
-            return $"{completed + failed}/{BatchQueue.Count} files";
-        }
-    }
-
     public bool CanConvert =>
         HasMedia &&
         _selectedFormat is not null &&
         !string.IsNullOrWhiteSpace(_outputFilePath) &&
         HasRequiredSubtitleSelection &&
-        !_isConverting &&
-        !_isInspecting;
-
-    public bool CanStartBatch =>
-        BatchQueue.Count > 0 &&
-        _selectedFormat is not null &&
         !_isConverting &&
         !_isInspecting;
 
@@ -438,15 +400,15 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public ICommand SetFullConvertCommand { get; }
     public ICommand ToggleAllSubtitlesCommand { get; }
     public ICommand ToggleAllAudioCommand { get; }
-    public ICommand AddBatchFilesCommand { get; }
-    public ICommand RemoveBatchFileCommand { get; }
-    public ICommand StartBatchConversionCommand { get; }
     public ICommand ShowHistoryCommand { get; }
+    public ICommand ShowKeyboardShortcutsCommand { get; }
 
     // Injected by the Window after construction
     public IStorageProvider? StorageProvider { get; set; }
     public Func<Task>? ShowAboutDialog { get; set; }
     public Func<Task>? ShowHistoryDialog { get; set; }
+    public Func<Task>? ShowKeyboardShortcutsDialog { get; set; }
+    public Func<Task<bool>>? ShowSkipConversionDialog { get; set; } // Returns true to skip, false to convert anyway
 
     // ── Actions ───────────────────────────────────────────────────────────────
 
@@ -467,6 +429,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
             BuildSubtitleTracks(info);
             BuildAudioTracks(info);
 
+            // Smart format selection based on input codec
+            var suggestedFormat = SuggestBestFormat(info);
+            if (suggestedFormat is not null)
+                SelectedFormat = suggestedFormat;
+
             // Default output path: same dir as input, same name, new extension
             var dir = Path.GetDirectoryName(filePath) ?? "";
             var name = Path.GetFileNameWithoutExtension(filePath);
@@ -476,10 +443,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
             // Default subtitle mode
             var targetMode = info.HasSubtitles ? SubtitleMode.Include : SubtitleMode.None;
             SelectedSubtitleModeOption = SubtitleModes.FirstOrDefault(m => m.Mode == targetMode) ?? SubtitleModes[0];
-
-            // If input is audio-only, default to MP3
-            if (!info.HasVideo && _selectedFormat?.IsAudioOnly == false)
-                SelectedFormat = OutputFormats.Mp3;
 
             ((RelayCommand)BrowseOutputPathCommand).RaiseCanExecuteChanged();
             ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
@@ -556,6 +519,17 @@ public sealed class MainViewModel : INotifyPropertyChanged
             _selectedFormat is null || _detectedMedia is null)
             return;
 
+        // Check if source already matches target format
+        if (DoesSourceMatchTarget(_detectedMedia, _selectedFormat))
+        {
+            if (ShowSkipConversionDialog is not null)
+            {
+                var skip = await ShowSkipConversionDialog();
+                if (skip)
+                    return;
+            }
+        }
+
         IsConverting = true;
         IsComplete = false;
         ErrorMessage = null;
@@ -605,14 +579,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
                 ProgressPercent = 100;
                 IsConverting = false;
                 IsComplete = true;
-
-                // Record to history
-                _history.AddRecord(
-                    Path.GetFileName(_inputFilePath),
-                    Path.GetFileName(_outputFilePath),
-                    _outputFilePath,
-                    _selectedFormat.Id,
-                    success: true);
             });
         }
         catch (OperationCanceledException)
@@ -674,6 +640,12 @@ public sealed class MainViewModel : INotifyPropertyChanged
             await ShowHistoryDialog();
     }
 
+    private async Task OpenKeyboardShortcutsDialogAsync()
+    {
+        if (ShowKeyboardShortcutsDialog is not null)
+            await ShowKeyboardShortcutsDialog();
+    }
+
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private static string FormatDuration(TimeSpan t)
@@ -715,6 +687,68 @@ public sealed class MainViewModel : INotifyPropertyChanged
             8 => "7.1",
             _ => $"{channels}ch"
         };
+    }
+
+    // Suggest the best output format based on input codec
+    private FormatInfo? SuggestBestFormat(MediaInfo info)
+    {
+        if (!info.HasVideo)
+        {
+            // Audio-only: match the codec
+            var audioCodec = info.AudioStreams.FirstOrDefault()?.CodecName ?? "";
+            return audioCodec.ToLower() switch
+            {
+                var c when c.Contains("aac") => OutputFormats.Aac,
+                var c when c.Contains("opus") => OutputFormats.Opus,
+                var c when c.Contains("vorbis") => OutputFormats.Ogg,
+                var c when c.Contains("flac") => OutputFormats.Flac,
+                var c when c.Contains("wav") => OutputFormats.Wav,
+                _ => OutputFormats.Mp3
+            };
+        }
+
+        // Video: check codec compatibility
+        var videoCodec = info.VideoStream?.CodecName ?? "";
+        var audioCodec2 = info.AudioStreams.FirstOrDefault()?.CodecName ?? "";
+
+        return (videoCodec.ToLower(), audioCodec2.ToLower()) switch
+        {
+            // H.264 + AAC → MP4
+            (var v, var a) when v.Contains("h264") && a.Contains("aac") => OutputFormats.Mp4H264,
+
+            // VP9 + Opus → WebM
+            (var v, var a) when v.Contains("vp9") && a.Contains("opus") => OutputFormats.WebM,
+
+            // Any combination → MKV (copy, no re-encode needed)
+            _ => OutputFormats.MkvCopy
+        };
+    }
+
+    // Check if source format already matches target
+    private bool DoesSourceMatchTarget(MediaInfo info, FormatInfo targetFormat)
+    {
+        if (!info.HasVideo || _inputFilePath is null)
+            return false; // Audio-only files need conversion for now
+
+        var videoCodec = info.VideoStream?.CodecName ?? "";
+        var audioCodec = info.AudioStreams.FirstOrDefault()?.CodecName ?? "";
+        var containerExt = Path.GetExtension(_inputFilePath).ToLower();
+
+        // Check if it's MP4 with H.264 + AAC
+        if (targetFormat == OutputFormats.Mp4H264 &&
+            containerExt == ".mp4" &&
+            videoCodec.Contains("h264") &&
+            audioCodec.Contains("aac"))
+            return true;
+
+        // Check if it's WebM with VP9 + Opus
+        if (targetFormat == OutputFormats.WebM &&
+            containerExt == ".webm" &&
+            videoCodec.Contains("vp9") &&
+            audioCodec.Contains("opus"))
+            return true;
+
+        return false;
     }
 
     private void BuildSubtitleTracks(MediaInfo info)
@@ -851,191 +885,6 @@ public sealed class MainViewModel : INotifyPropertyChanged
         var invalid = Path.GetInvalidFileNameChars();
         var chars = value.Trim().Select(c => invalid.Contains(c) ? '_' : c).ToArray();
         return new string(chars);
-    }
-
-    // ── Batch Conversion ──────────────────────────────────────────────────────
-
-    private async Task AddBatchFilesAsync()
-    {
-        if (StorageProvider is null) return;
-
-        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-        {
-            Title = "Add files to batch conversion",
-            AllowMultiple = true,
-            FileTypeFilter =
-            [
-                new FilePickerFileType("Audio / Video")
-                {
-                    Patterns = ["*.mp4", "*.mkv", "*.avi", "*.mov", "*.webm", "*.flv", "*.ts",
-                                "*.m2ts", "*.wmv", "*.mpg", "*.mpeg", "*.3gp",
-                                "*.mp3", "*.aac", "*.flac", "*.ogg", "*.wav", "*.opus",
-                                "*.m4a", "*.m4b", "*.wma", "*.aiff", "*.alac"]
-                },
-                new FilePickerFileType("All files") { Patterns = ["*"] }
-            ]
-        });
-
-        foreach (var file in files)
-        {
-            BatchQueue.Add(new BatchConversionJob(file.Path.LocalPath));
-        }
-
-        OnPropertyChanged(nameof(BatchQueue));
-        OnPropertyChanged(nameof(BatchStatusText));
-        ((RelayCommand)StartBatchConversionCommand).RaiseCanExecuteChanged();
-    }
-
-    public void AddFileToBatchQueue(string filePath)
-    {
-        if (!File.Exists(filePath)) return;
-        BatchQueue.Add(new BatchConversionJob(filePath));
-        OnPropertyChanged(nameof(BatchQueue));
-        OnPropertyChanged(nameof(BatchStatusText));
-        ((RelayCommand)StartBatchConversionCommand).RaiseCanExecuteChanged();
-    }
-
-    private void RemoveBatchFile(BatchConversionJob? job)
-    {
-        if (job is null) return;
-        BatchQueue.Remove(job);
-        OnPropertyChanged(nameof(BatchQueue));
-        OnPropertyChanged(nameof(BatchStatusText));
-        ((RelayCommand)StartBatchConversionCommand).RaiseCanExecuteChanged();
-    }
-
-    private async Task StartBatchConversionAsync()
-    {
-        if (BatchQueue.Count == 0 || _selectedFormat is null)
-            return;
-
-        IsBatchMode = true;
-        _currentBatchIndex = 0;
-        ErrorMessage = null;
-
-        foreach (var job in BatchQueue)
-        {
-            job.Status = "Pending";
-            job.ProgressPercent = 0;
-        }
-
-        try
-        {
-            for (int i = 0; i < BatchQueue.Count; i++)
-            {
-                var job = BatchQueue[i];
-                _currentBatchIndex = i;
-
-                job.Status = "Converting...";
-
-                // Build output path: same dir as input, same name, new extension
-                var outputDir = Path.GetDirectoryName(job.InputPath) ?? "";
-                var outputName = Path.GetFileNameWithoutExtension(job.InputPath);
-                var outputExt = _selectedFormat.Extension;
-                var outputPath = Path.Combine(outputDir, outputName + outputExt);
-
-                string? subOutputPath = null;
-                if (_selectedSubtitleMode == SubtitleMode.ExtractSrt)
-                    subOutputPath = Path.ChangeExtension(outputPath, ".srt");
-                else if (_selectedSubtitleMode == SubtitleMode.ExtractAss)
-                    subOutputPath = Path.ChangeExtension(outputPath, ".ass");
-
-                var subtitleTracks = BuildSelectedSubtitleExtractions(subOutputPath).ToList();
-                var audioTracks = BuildSelectedAudioTracks().ToList();
-
-                var options = new ConversionOptions(
-                    InputPath: job.InputPath,
-                    OutputPath: outputPath,
-                    SubtitleOutputPath: subOutputPath,
-                    SubtitleTracks: subtitleTracks,
-                    AudioTracks: audioTracks,
-                    Format: _selectedFormat,
-                    SubtitleMode: _selectedSubtitleMode,
-                    InputDuration: TimeSpan.Zero,
-                    FastConvert: _isFastConvert);
-
-                _isConverting = true;
-                _cts = new CancellationTokenSource();
-                ProgressPercent = 0;
-
-                var progress = new Progress<ConversionProgress>(p =>
-                {
-                    Dispatcher.UIThread.Post(() =>
-                    {
-                        job.ProgressPercent = p.Percent;
-                        ProgressPercent = p.Percent;
-                        SpeedText = p.Speed > 0 ? $"{p.Speed:F1}×" : "";
-                        EtaText = p.Eta.HasValue
-                            ? $"~{(int)p.Eta.Value.TotalMinutes:D2}:{p.Eta.Value.Seconds:D2}"
-                            : "";
-                    });
-                });
-
-                try
-                {
-                    await _ffmpeg.ConvertAsync(options, progress, _cts.Token);
-                    Dispatcher.UIThread.Post(() =>
-                    {
-                        job.Status = "Completed";
-                        job.ProgressPercent = 100;
-
-                        // Record to history
-                        _history.AddRecord(
-                            job.InputPath,
-                            Path.GetFileName(outputPath),
-                            outputPath,
-                            _selectedFormat?.Id ?? "unknown",
-                            success: true);
-                    });
-                }
-                catch (OperationCanceledException)
-                {
-                    Dispatcher.UIThread.Post(() =>
-                    {
-                        job.Status = "Cancelled";
-                        _isConverting = false;
-                    });
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Dispatcher.UIThread.Post(() =>
-                    {
-                        job.Status = "Failed";
-                        ErrorMessage = $"{job.FileName}: {ex.Message}";
-
-                        // Record failure to history
-                        _history.AddRecord(
-                            job.InputPath,
-                            Path.GetFileName(outputPath),
-                            outputPath,
-                            _selectedFormat?.Id ?? "unknown",
-                            success: false);
-                    });
-                }
-                finally
-                {
-                    _cts?.Dispose();
-                    _cts = null;
-                    _isConverting = false;
-                }
-
-                // Update overall progress
-                var completed = BatchQueue.Count(j => j.Status == "Completed" || j.Status == "Failed");
-                OverallProgressPercent = (completed / (double)BatchQueue.Count) * 100;
-                OnPropertyChanged(nameof(BatchStatusText));
-            }
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                IsBatchMode = false;
-                IsComplete = true;
-            });
-        }
-        finally
-        {
-            _isConverting = false;
-        }
     }
 
     // ── INPC ──────────────────────────────────────────────────────────────────
