@@ -205,7 +205,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         get
         {
             var v = _detectedMedia?.VideoStream;
-            if (v is null) return "No video stream";
+            if (v is null) return "⊘ No video stream (audio-only)";
             var res = v.Width > 0 ? $"  ·  {v.Width}×{v.Height}" : "";
             var fps = v.FrameRate is not null ? $"  ·  {v.FrameRate} fps" : "";
             return $"{v.CodecName.ToUpperInvariant()}{res}{fps}";
@@ -245,11 +245,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public bool AllAudioSelected => AudioTracks.Count > 0 && AudioTracks.All(t => t.IsSelected);
 
-    public string AudioToggleButtonText => AllAudioSelected ? "None" : "All";
+    public bool? AudioCheckState => AudioTracks.Count == 0 ? false : (AllAudioSelected ? true : (AudioTracks.Any(t => t.IsSelected) ? null : false));
 
     public bool AllSubtitlesSelected => SubtitleTracks.Count > 0 && SubtitleTracks.All(t => t.IsSelected);
 
-    public string SubtitleToggleButtonText => AllSubtitlesSelected ? "None" : "All";
+    public bool? SubtitleCheckState => SubtitleTracks.Count == 0 ? false : (AllSubtitlesSelected ? true : (SubtitleTracks.Any(t => t.IsSelected) ? null : false));
 
     public bool IsFastConvert
     {
@@ -649,6 +649,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     private void SubtitleTrack_SelectionChanged(object? sender, EventArgs e)
     {
+        OnPropertyChanged(nameof(SubtitleCheckState));
         ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
     }
 
@@ -686,6 +687,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     private void AudioTrack_SelectionChanged(object? sender, EventArgs e)
     {
+        OnPropertyChanged(nameof(AudioCheckState));
         ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
     }
 
@@ -695,7 +697,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         foreach (var track in SubtitleTracks)
             track.IsSelected = !allSelected;
         OnPropertyChanged(nameof(AllSubtitlesSelected));
-        OnPropertyChanged(nameof(SubtitleToggleButtonText));
+        OnPropertyChanged(nameof(SubtitleCheckState));
+        ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
     }
 
     private void ToggleAllAudio()
@@ -704,7 +707,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         foreach (var track in AudioTracks)
             track.IsSelected = !allSelected;
         OnPropertyChanged(nameof(AllAudioSelected));
-        OnPropertyChanged(nameof(AudioToggleButtonText));
+        OnPropertyChanged(nameof(AudioCheckState));
+        ((RelayCommand)StartConversionCommand).RaiseCanExecuteChanged();
     }
 
     private string BuildSubtitleOutputPath(string extension)

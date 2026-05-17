@@ -163,7 +163,9 @@
                        FontSize="12" Foreground="#555" Margin="0,0,0,7" />
             <TextBlock Grid.Row="1" Grid.Column="1"
                        Text="{Binding MediaSummaryVideo}"
-                       FontSize="12" Foreground="#C0BBB8" Margin="0,0,0,7" />
+                       FontSize="12"
+                       Foreground="#C0BBB8"
+                       Margin="0,0,0,7" />
 
             <TextBlock Grid.Row="2" Grid.Column="0"
                        Text="Audio"
@@ -266,7 +268,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled">
                   <StackPanel Spacing="3">
-                    <CheckBox IsChecked="{Binding AllAudioSelected}"
+                    <CheckBox IsChecked="{Binding AudioCheckState}"
                               Command="{Binding ToggleAllAudioCommand}"
                               IsEnabled="{Binding IsInputEnabled}"
                               Margin="0,3"
@@ -339,7 +341,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled">
                   <StackPanel Spacing="3">
-                    <CheckBox IsChecked="{Binding AllSubtitlesSelected}"
+                    <CheckBox IsChecked="{Binding SubtitleCheckState}"
                               Command="{Binding ToggleAllSubtitlesCommand}"
                               IsEnabled="{Binding IsInputEnabled}"
                               Margin="0,3"
