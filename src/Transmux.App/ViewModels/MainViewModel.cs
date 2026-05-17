@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using Transmux.App.Models;
 using Transmux.Core.Models;
 using Transmux.Core.Services;
 
@@ -115,6 +116,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private string? _errorMessage;
     private CancellationTokenSource? _cts;
 
+    // Batch conversion
+    private bool _isBatchMode;
+    private int _currentBatchIndex;
+    private double _overallProgressPercent;
+
     public MainViewModel(FfmpegService ffmpeg, MediaInspector inspector, SettingsService settings)
     {
         _ffmpeg = ffmpeg;
@@ -149,6 +155,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
         SetFullConvertCommand = new RelayCommand(_ => IsFastConvert = false, _ => IsInputEnabled);
         ToggleAllSubtitlesCommand = new RelayCommand(_ => ToggleAllSubtitles());
         ToggleAllAudioCommand = new RelayCommand(_ => ToggleAllAudio());
+        AddBatchFilesCommand = new RelayCommand(async _ => await AddBatchFilesAsync());
+        RemoveBatchFileCommand = new RelayCommand(p => RemoveBatchFile(p as BatchConversionJob));
+        StartBatchConversionCommand = new RelayCommand(async _ => await StartBatchConversionAsync(), _ => CanStartBatch);
     }
 
     // ── Bindable properties ───────────────────────────────────────────────────
@@ -157,6 +166,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public IReadOnlyList<SubtitleModeOption> SubtitleModes { get; }
     public List<SubtitleTrackOption> SubtitleTracks { get; } = [];
     public List<AudioTrackOption> AudioTracks { get; } = [];
+    public List<BatchConversionJob> BatchQueue { get; } = [];
 
     private SubtitleModeOption? _selectedSubtitleModeOption;
 
@@ -371,11 +381,40 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public bool HasError => _errorMessage is not null;
 
+    public bool IsBatchMode
+    {
+        get => _isBatchMode;
+        private set { SetField(ref _isBatchMode, value); }
+    }
+
+    public double OverallProgressPercent
+    {
+        get => _overallProgressPercent;
+        private set => SetField(ref _overallProgressPercent, value);
+    }
+
+    public string BatchStatusText
+    {
+        get
+        {
+            if (BatchQueue.Count == 0) return "";
+            var completed = BatchQueue.Count(j => j.Status == "Completed");
+            var failed = BatchQueue.Count(j => j.Status == "Failed");
+            return $"{completed + failed}/{BatchQueue.Count} files";
+        }
+    }
+
     public bool CanConvert =>
         HasMedia &&
         _selectedFormat is not null &&
         !string.IsNullOrWhiteSpace(_outputFilePath) &&
         HasRequiredSubtitleSelection &&
+        !_isConverting &&
+        !_isInspecting;
+
+    public bool CanStartBatch =>
+        BatchQueue.Count > 0 &&
+        _selectedFormat is not null &&
         !_isConverting &&
         !_isInspecting;
 
@@ -395,6 +434,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public ICommand SetFullConvertCommand { get; }
     public ICommand ToggleAllSubtitlesCommand { get; }
     public ICommand ToggleAllAudioCommand { get; }
+    public ICommand AddBatchFilesCommand { get; }
+    public ICommand RemoveBatchFileCommand { get; }
+    public ICommand StartBatchConversionCommand { get; }
 
     // Injected by the Window after construction
     public IStorageProvider? StorageProvider { get; set; }
@@ -789,6 +831,175 @@ public sealed class MainViewModel : INotifyPropertyChanged
         var invalid = Path.GetInvalidFileNameChars();
         var chars = value.Trim().Select(c => invalid.Contains(c) ? '_' : c).ToArray();
         return new string(chars);
+    }
+
+    // ── Batch Conversion ──────────────────────────────────────────────────────
+
+    private async Task AddBatchFilesAsync()
+    {
+        if (StorageProvider is null) return;
+
+        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = "Add files to batch conversion",
+            AllowMultiple = true,
+            FileTypeFilter =
+            [
+                new FilePickerFileType("Audio / Video")
+                {
+                    Patterns = ["*.mp4", "*.mkv", "*.avi", "*.mov", "*.webm", "*.flv", "*.ts",
+                                "*.m2ts", "*.wmv", "*.mpg", "*.mpeg", "*.3gp",
+                                "*.mp3", "*.aac", "*.flac", "*.ogg", "*.wav", "*.opus",
+                                "*.m4a", "*.m4b", "*.wma", "*.aiff", "*.alac"]
+                },
+                new FilePickerFileType("All files") { Patterns = ["*"] }
+            ]
+        });
+
+        foreach (var file in files)
+        {
+            BatchQueue.Add(new BatchConversionJob(file.Path.LocalPath));
+        }
+
+        OnPropertyChanged(nameof(BatchQueue));
+        OnPropertyChanged(nameof(BatchStatusText));
+        ((RelayCommand)StartBatchConversionCommand).RaiseCanExecuteChanged();
+    }
+
+    public void AddFileToBatchQueue(string filePath)
+    {
+        if (!File.Exists(filePath)) return;
+        BatchQueue.Add(new BatchConversionJob(filePath));
+        OnPropertyChanged(nameof(BatchQueue));
+        OnPropertyChanged(nameof(BatchStatusText));
+        ((RelayCommand)StartBatchConversionCommand).RaiseCanExecuteChanged();
+    }
+
+    private void RemoveBatchFile(BatchConversionJob? job)
+    {
+        if (job is null) return;
+        BatchQueue.Remove(job);
+        OnPropertyChanged(nameof(BatchQueue));
+        OnPropertyChanged(nameof(BatchStatusText));
+        ((RelayCommand)StartBatchConversionCommand).RaiseCanExecuteChanged();
+    }
+
+    private async Task StartBatchConversionAsync()
+    {
+        if (BatchQueue.Count == 0 || _selectedFormat is null)
+            return;
+
+        IsBatchMode = true;
+        _currentBatchIndex = 0;
+        ErrorMessage = null;
+
+        foreach (var job in BatchQueue)
+        {
+            job.Status = "Pending";
+            job.ProgressPercent = 0;
+        }
+
+        try
+        {
+            for (int i = 0; i < BatchQueue.Count; i++)
+            {
+                var job = BatchQueue[i];
+                _currentBatchIndex = i;
+
+                job.Status = "Converting...";
+
+                // Build output path: same dir as input, same name, new extension
+                var outputDir = Path.GetDirectoryName(job.InputPath) ?? "";
+                var outputName = Path.GetFileNameWithoutExtension(job.InputPath);
+                var outputExt = _selectedFormat.Extension;
+                var outputPath = Path.Combine(outputDir, outputName + outputExt);
+
+                string? subOutputPath = null;
+                if (_selectedSubtitleMode == SubtitleMode.ExtractSrt)
+                    subOutputPath = Path.ChangeExtension(outputPath, ".srt");
+                else if (_selectedSubtitleMode == SubtitleMode.ExtractAss)
+                    subOutputPath = Path.ChangeExtension(outputPath, ".ass");
+
+                var subtitleTracks = BuildSelectedSubtitleExtractions(subOutputPath).ToList();
+                var audioTracks = BuildSelectedAudioTracks().ToList();
+
+                var options = new ConversionOptions(
+                    InputPath: job.InputPath,
+                    OutputPath: outputPath,
+                    SubtitleOutputPath: subOutputPath,
+                    SubtitleTracks: subtitleTracks,
+                    AudioTracks: audioTracks,
+                    Format: _selectedFormat,
+                    SubtitleMode: _selectedSubtitleMode,
+                    InputDuration: TimeSpan.Zero,
+                    FastConvert: _isFastConvert);
+
+                _isConverting = true;
+                _cts = new CancellationTokenSource();
+                ProgressPercent = 0;
+
+                var progress = new Progress<ConversionProgress>(p =>
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        job.ProgressPercent = p.Percent;
+                        ProgressPercent = p.Percent;
+                        SpeedText = p.Speed > 0 ? $"{p.Speed:F1}×" : "";
+                        EtaText = p.Eta.HasValue
+                            ? $"~{(int)p.Eta.Value.TotalMinutes:D2}:{p.Eta.Value.Seconds:D2}"
+                            : "";
+                    });
+                });
+
+                try
+                {
+                    await _ffmpeg.ConvertAsync(options, progress, _cts.Token);
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        job.Status = "Completed";
+                        job.ProgressPercent = 100;
+                    });
+                }
+                catch (OperationCanceledException)
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        job.Status = "Cancelled";
+                        _isConverting = false;
+                    });
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        job.Status = "Failed";
+                        ErrorMessage = $"{job.FileName}: {ex.Message}";
+                    });
+                }
+                finally
+                {
+                    _cts?.Dispose();
+                    _cts = null;
+                    _isConverting = false;
+                }
+
+                // Update overall progress
+                var completed = BatchQueue.Count(j => j.Status == "Completed" || j.Status == "Failed");
+                OverallProgressPercent = (completed / (double)BatchQueue.Count) * 100;
+                OnPropertyChanged(nameof(BatchStatusText));
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                IsBatchMode = false;
+                IsComplete = true;
+            });
+        }
+        finally
+        {
+            _isConverting = false;
+        }
     }
 
     // ── INPC ──────────────────────────────────────────────────────────────────

@@ -105,11 +105,27 @@ public partial class MainWindow : Window
     {
         if (_vm is null) return;
         var files = e.Data.GetFiles()?.ToList();
-        if (files is [var file, ..])
+        if (files is null || files.Count == 0) return;
+
+        // If dropping multiple files or Ctrl/Shift is held, add to batch queue
+        if (files.Count > 1 || (e.KeyModifiers & KeyModifiers.Control) != 0 ||
+            (e.KeyModifiers & KeyModifiers.Shift) != 0)
         {
-            var path = file.Path.LocalPath;
+            foreach (var file in files)
+            {
+                var path = file.Path.LocalPath;
+                if (File.Exists(path))
+                    _vm.AddFileToBatchQueue(path);
+            }
+        }
+        else
+        {
+            // Single file without modifiers: load as current file
+            var path = files[0].Path.LocalPath;
             if (File.Exists(path))
                 await _vm.LoadFileAsync(path);
         }
+
+        e.Handled = true;
     }
 }

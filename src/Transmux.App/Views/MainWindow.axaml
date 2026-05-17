@@ -398,15 +398,127 @@
 
         </StackPanel>
 
-        <!-- Convert button -->
+        <!-- Single file convert button -->
         <Button Classes="accent"
                 IsVisible="{Binding !IsConverting}"
+                IsEnabled="{Binding HasMedia}"
                 Command="{Binding StartConversionCommand}"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Center"
                 FontSize="14"
                 Padding="0,10"
                 Content="Convert" />
+
+        <!-- Batch conversion section -->
+        <StackPanel IsVisible="{Binding BatchQueue.Count}" Spacing="10">
+          <!-- Batch queue header -->
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0"
+                       Text="{Binding BatchStatusText}"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="#DEDAD5" />
+            <Button Grid.Column="1"
+                    Command="{Binding AddBatchFilesCommand}"
+                    Background="#1A1A1A"
+                    BorderBrush="#2D2D2D"
+                    Foreground="#888"
+                    CornerRadius="4"
+                    Padding="8,4"
+                    FontSize="11"
+                    Content="+ Add files" />
+          </Grid>
+
+          <!-- Batch queue list -->
+          <ItemsControl ItemsSource="{Binding BatchQueue}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border Background="#1A1A1A"
+                        BorderBrush="#2D2D2D"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="12,10"
+                        Margin="0,0,0,6">
+                  <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                    <!-- File name and status -->
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                      <TextBlock Grid.Column="0"
+                                 Text="{Binding FileName}"
+                                 FontSize="12"
+                                 FontWeight="SemiBold"
+                                 Foreground="#DEDAD5"
+                                 TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="1"
+                                 Text="{Binding Status}"
+                                 FontSize="11"
+                                 Foreground="#666"
+                                 Margin="8,0,0,0" />
+                    </Grid>
+
+                    <!-- Progress bar -->
+                    <ProgressBar Grid.Row="1"
+                                 Value="{Binding ProgressPercent}"
+                                 Maximum="100"
+                                 Height="6"
+                                 CornerRadius="3"
+                                 Foreground="#3A6E9B"
+                                 Background="#252525"
+                                 Margin="0,6,0,0" />
+
+                    <!-- Remove button -->
+                    <Button Grid.Row="0" Grid.Column="1"
+                            Command="{Binding DataContext.RemoveBatchFileCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                            CommandParameter="{Binding}"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            Foreground="#666"
+                            CornerRadius="4"
+                            Padding="6"
+                            FontSize="11"
+                            Content="✕"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center" />
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- Overall progress -->
+          <StackPanel IsVisible="{Binding IsBatchMode}" Spacing="6">
+            <ProgressBar Value="{Binding OverallProgressPercent}"
+                         Maximum="100"
+                         Height="8"
+                         CornerRadius="4"
+                         Foreground="#3A6E9B"
+                         Background="#252525" />
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0"
+                         Text="{Binding OverallProgressPercent, StringFormat={}{0:F0}% complete}"
+                         FontSize="11"
+                         Foreground="#666" />
+              <Button Grid.Column="1"
+                      Command="{Binding CancelConversionCommand}"
+                      Background="#2A2A2A"
+                      BorderBrush="#3D3D3D"
+                      Foreground="#C8C3C2"
+                      CornerRadius="4"
+                      Padding="10,4"
+                      FontSize="11"
+                      Content="Cancel" />
+            </Grid>
+          </StackPanel>
+
+          <!-- Convert All button -->
+          <Button Classes="accent"
+                  IsVisible="{Binding !IsBatchMode}"
+                  Command="{Binding StartBatchConversionCommand}"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  FontSize="14"
+                  Padding="0,10"
+                  Content="Convert All" />
+        </StackPanel>
 
         <!-- Progress bar + status -->
         <StackPanel IsVisible="{Binding IsConverting}" Spacing="10">
