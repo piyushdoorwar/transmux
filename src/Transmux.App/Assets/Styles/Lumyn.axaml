@@ -1,32 +1,27 @@
+<!--
+  Control styles. Colours come from Theme.axaml through DynamicResource, so every
+  style here follows the current light or dark variant.
+-->
 <Styles
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Styles.Resources>
-    <Color x:Key="SystemAccentColor">#3A6E9B</Color>
-    <Color x:Key="SystemAccentColorLight1">#4B8FBE</Color>
-    <Color x:Key="SystemAccentColorLight2">#5A9FCE</Color>
-    <Color x:Key="SystemAccentColorLight3">#7AB7DC</Color>
-    <Color x:Key="SystemAccentColorDark1">#2F587D</Color>
-    <Color x:Key="SystemAccentColorDark2">#24445F</Color>
-    <Color x:Key="SystemAccentColorDark3">#193044</Color>
-
-    <SolidColorBrush x:Key="SystemAccentColorBrush" Color="{StaticResource SystemAccentColor}" />
-    <SolidColorBrush x:Key="SystemAccentColorLight1Brush" Color="{StaticResource SystemAccentColorLight1}" />
-    <SolidColorBrush x:Key="SystemAccentColorLight2Brush" Color="{StaticResource SystemAccentColorLight2}" />
-    <SolidColorBrush x:Key="SystemAccentColorLight3Brush" Color="{StaticResource SystemAccentColorLight3}" />
-    <SolidColorBrush x:Key="SystemAccentColorDark1Brush" Color="{StaticResource SystemAccentColorDark1}" />
-    <SolidColorBrush x:Key="SystemAccentColorDark2Brush" Color="{StaticResource SystemAccentColorDark2}" />
-    <SolidColorBrush x:Key="SystemAccentColorDark3Brush" Color="{StaticResource SystemAccentColorDark3}" />
-  </Styles.Resources>
 
   <Style Selector="Window">
-    <Setter Property="FontFamily" Value="Cantarell, Ubuntu, Inter, Segoe UI, sans-serif" />
+    <Setter Property="FontFamily" Value="{DynamicResource UiFont}" />
+    <Setter Property="Background" Value="{DynamicResource CanvasBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource BodyBrush}" />
+  </Style>
+
+  <!-- Monospace text: file paths, codec details, timings, key names -->
+  <Style Selector="TextBlock.mono">
+    <Setter Property="FontFamily" Value="{DynamicResource MonoFont}" />
+  </Style>
+
+  <Style Selector="TextBox.mono">
+    <Setter Property="FontFamily" Value="{DynamicResource MonoFont}" />
   </Style>
 
   <Style Selector="Button">
-    <Setter Property="Background" Value="#3D3846" />
-    <Setter Property="Foreground" Value="#F7F5F3" />
-    <Setter Property="BorderBrush" Value="#5E5968" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="5" />
     <Setter Property="Padding" Value="12,6" />
@@ -36,28 +31,6 @@
     <Setter Property="Transitions">
       <Transitions />
     </Setter>
-  </Style>
-
-  <Style Selector="Button:pointerover">
-    <Setter Property="Background" Value="#4D4658" />
-  </Style>
-
-  <Style Selector="Button:pressed">
-    <Setter Property="Background" Value="#2D2834" />
-  </Style>
-
-  <Style Selector="Button.accent">
-    <Setter Property="Background" Value="#3A6E9B" />
-    <Setter Property="BorderBrush" Value="#4B8FBE" />
-    <Setter Property="Foreground" Value="#FFFFFF" />
-  </Style>
-
-  <Style Selector="Button.accent:pointerover">
-    <Setter Property="Background" Value="#4382AD" />
-  </Style>
-
-  <Style Selector="Button.accent:pressed">
-    <Setter Property="Background" Value="#2F587D" />
   </Style>
 
   <Style Selector="Button.icon">
@@ -70,17 +43,13 @@
     <Setter Property="VerticalContentAlignment" Value="Center" />
   </Style>
 
-  <Style Selector="Button.icon:pointerover">
+  <Style Selector="Button.icon:pointerover /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background" Value="Transparent" />
   </Style>
 
   <Style Selector="Slider">
-    <Setter Property="Foreground" Value="#3A6E9B" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
     <Setter Property="Focusable" Value="False" />
-  </Style>
-
-  <Style Selector="PathIcon">
-    <Setter Property="Foreground" Value="#F7F5F3" />
   </Style>
 
   <!-- Window chrome buttons (minimize / close) -->
@@ -88,7 +57,7 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="Foreground" Value="#AAAAAA" />
+    <Setter Property="Foreground" Value="{DynamicResource MutedBrush}" />
     <Setter Property="CornerRadius" Value="0" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="Width" Value="42" />
@@ -100,20 +69,25 @@
     <Setter Property="Focusable" Value="False" />
   </Style>
 
-  <Style Selector="Button.wchrome:pointerover">
-    <Setter Property="Background" Value="Transparent" />
+  <Style Selector="Button.wchrome:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource LineSoftBrush}" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
   </Style>
 
-  <Style Selector="Button.wchrome:pressed">
-    <Setter Property="Background" Value="#333333" />
+  <Style Selector="Button.wchrome:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource LineBrush}" />
+    <Setter Property="BorderBrush" Value="Transparent" />
   </Style>
 
-  <Style Selector="Button.wchrome.close:pointerover">
-    <Setter Property="Background" Value="Transparent" />
+  <Style Selector="Button.wchrome.close:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource DangerFillBrush}" />
+    <Setter Property="Foreground" Value="#FFFFFF" />
   </Style>
 
-  <Style Selector="Button.wchrome.close:pressed">
-    <Setter Property="Background" Value="#A01E12" />
+  <Style Selector="Button.wchrome.close:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource DangerFillBrush}" />
+    <Setter Property="Foreground" Value="#FFFFFF" />
   </Style>
 
   <!-- Link-style text buttons (About dialog footer) -->
@@ -121,46 +95,48 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="Foreground" Value="#3A6E9B" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="MinHeight" Value="0" />
     <Setter Property="FontSize" Value="12" />
     <Setter Property="Cursor" Value="Hand" />
   </Style>
 
-  <Style Selector="Button.link:pointerover">
+  <Style Selector="Button.link:pointerover /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background" Value="Transparent" />
-    <Setter Property="Foreground" Value="#5A9FCE" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentTextHoverBrush}" />
+  </Style>
+
+  <Style Selector="Button.link:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
   </Style>
 
   <!-- ProgressBar blue fill -->
   <Style Selector="ProgressBar /template/ Border#PART_Indicator">
-    <Setter Property="Background" Value="#3A6E9B" />
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
     <Setter Property="CornerRadius" Value="4" />
   </Style>
 
-  <Style Selector="TextBlock">
-    <Setter Property="Foreground" Value="#F7F5F3" />
-  </Style>
-
   <Style Selector="ComboBoxItem:selected /template/ ContentPresenter">
-    <Setter Property="Background" Value="#3A6E9B" />
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}" />
   </Style>
 
   <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter">
-    <Setter Property="Background" Value="#1D2C36" />
+    <Setter Property="Background" Value="{DynamicResource LineSoftBrush}" />
   </Style>
 
   <Style Selector="ComboBoxItem:selected:pointerover /template/ ContentPresenter">
-    <Setter Property="Background" Value="#4382AD" />
+    <Setter Property="Background" Value="{DynamicResource AccentSoftHoverBrush}" />
   </Style>
 
   <!-- Segmented mode toggle (Fast / Full) -->
   <Style Selector="Button.seg">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="Foreground" Value="#555" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Foreground" Value="{DynamicResource MutedBrush}" />
     <Setter Property="FontSize" Value="12" />
     <Setter Property="FontWeight" Value="Medium" />
     <Setter Property="Padding" Value="12,5" />
@@ -168,20 +144,61 @@
     <Setter Property="CornerRadius" Value="4" />
   </Style>
 
-  <Style Selector="Button.seg:pointerover">
-    <Setter Property="Background" Value="#2A2A2A" />
-    <Setter Property="Foreground" Value="#AAAAAA" />
+  <Style Selector="Button.seg:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource LineSoftBrush}" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource BodyBrush}" />
+  </Style>
+
+  <Style Selector="Button.seg:disabled /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
   </Style>
 
   <Style Selector="Button.seg-on">
-    <Setter Property="Background" Value="#1D2C36" />
-    <Setter Property="Foreground" Value="#5AA8D8" />
-    <Setter Property="BorderBrush" Value="#2A4150" />
-    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentLineBrush}" />
   </Style>
 
-  <Style Selector="Button.seg-on:pointerover">
-    <Setter Property="Background" Value="#243847" />
-    <Setter Property="Foreground" Value="#5DA4D6" />
+  <Style Selector="Button.seg-on:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftHoverBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentLineBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+  </Style>
+
+  <Style Selector="Button.seg:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftHoverBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentLineBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+  </Style>
+
+  <!-- Outline icons: stroked lucide geometry in a 24x24 canvas -->
+  <Style Selector="Path.stroke-icon">
+    <Setter Property="StrokeThickness" Value="2" />
+    <Setter Property="StrokeLineCap" Value="Round" />
+    <Setter Property="StrokeJoin" Value="Round" />
+  </Style>
+
+  <!-- List bullets -->
+  <Style Selector="Ellipse.bullet">
+    <Setter Property="Width" Value="4" />
+    <Setter Property="Height" Value="4" />
+    <Setter Property="Fill" Value="{DynamicResource MutedBrush}" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <!-- History status badge: success by default, danger when failed -->
+  <Style Selector="Border.status-badge">
+    <Setter Property="Background" Value="{DynamicResource SuccessSoftBrush}" />
+  </Style>
+  <Style Selector="Border.status-badge > TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
+  </Style>
+  <Style Selector="Border.status-badge.failed">
+    <Setter Property="Background" Value="{DynamicResource DangerSoftBrush}" />
+  </Style>
+  <Style Selector="Border.status-badge.failed > TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
   </Style>
 </Styles>

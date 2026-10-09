@@ -8,12 +8,16 @@
       content="Transmux privacy policy - local-first desktop media converter, no app telemetry, clear third-party disclosures."
     />
     <meta name="author" content="Piyush Doorwar" />
+    <meta name="application-name" content="Transmux" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta name="theme-color" content="#111111" />
+    <meta name="theme-color" content="#FCFCFC" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#161719" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
     <link rel="canonical" href="https://piyushdoorwar.github.io/transmux/policy/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Transmux" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Privacy Policy — Transmux" />
     <meta property="og:description" content="Learn how the local-first Transmux desktop app and website handle privacy and third-party services." />
     <meta property="og:url" content="https://piyushdoorwar.github.io/transmux/policy/" />
@@ -28,6 +32,13 @@
 
     <title>Privacy Policy — Transmux</title>
     <link rel="icon" href="../assets/transmux.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="../styles.css" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -42,570 +53,188 @@
         }
       }
     </script>
-    <style>
-      :root {
-        color-scheme: dark;
-        --bg: #111111;
-        --panel: #161616;
-        --panel-2: #1e1e1e;
-        --line: #333333;
-        --muted: #9d9b98;
-        --text: #f7f5f3;
-        --soft: #dedad5;
-        --blue: #3A6E9B;
-        --blue-bright: #4B8FBE;
-        --blue-glow: rgba(58, 110, 155, 0.12);
-        --warn: #d6a84f;
-        --warn-glow: rgba(214, 168, 79, 0.12);
-        --restrict: #e27b7b;
-        --restrict-glow: rgba(226, 123, 123, 0.1);
-      }
-
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-
-      body {
-        margin: 0;
-        min-width: 320px;
-        background: var(--bg);
-        color: var(--text);
-        font-family: Cantarell, Ubuntu, Inter, "Segoe UI", sans-serif;
-        line-height: 1.6;
-      }
-
-      a {
-        color: var(--blue-bright);
-        text-decoration: none;
-      }
-
-      a:hover { color: var(--text); }
-      h1, h2, h3, p { margin-top: 0; }
-
-      .topbar {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 24px;
-        min-height: 64px;
-        padding: 0 clamp(18px, 5vw, 64px);
-        background: rgba(20, 20, 20, 0.92);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(16px);
-      }
-
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--text);
-        font-weight: 800;
-      }
-
-      .brand img {
-        width: 30px;
-        height: 30px;
-      }
-
-      .topbar-link {
-        color: var(--soft);
-        font-size: 14px;
-      }
-
-      .topbar-link:hover { color: var(--text); }
-
-      .topbar nav,
-      .icon-link {
-        display: inline-flex;
-        align-items: center;
-      }
-
-      .topbar nav {
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        gap: clamp(12px, 3vw, 28px);
-      }
-
-      .icon-link {
-        gap: 7px;
-      }
-
-      .icon-link img {
-        width: 16px;
-        height: 16px;
-        flex: 0 0 auto;
-        filter: brightness(0) invert(1);
-        opacity: 0.9;
-      }
-
-      .icon-link .ic {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        flex: 0 0 auto;
-        color: #fff;
-        opacity: 0.9;
-      }
-
-      .page-inner {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: clamp(40px, 7vw, 80px) clamp(18px, 5vw, 48px) 80px;
-      }
-
-      .page-hero {
-        margin-bottom: clamp(32px, 5vw, 56px);
-        padding-bottom: clamp(24px, 4vw, 40px);
-        border-bottom: 1px solid var(--line);
-      }
-
-      .eyebrow {
-        margin: 0 0 10px;
-        color: var(--blue-bright);
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 0;
-        text-transform: uppercase;
-      }
-
-      .page-title {
-        margin-bottom: 16px;
-        font-size: clamp(34px, 6vw, 58px);
-        line-height: 1;
-      }
-
-      .page-lede {
-        max-width: 640px;
-        margin-bottom: 20px;
-        color: var(--soft);
-        font-size: clamp(15px, 2vw, 18px);
-      }
-
-      .meta-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .meta-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 5px 12px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        background: var(--panel-2);
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--blue-bright);
-        flex: 0 0 auto;
-      }
-
-      .dot.warn { background: var(--warn); }
-
-      .policy-section {
-        display: grid;
-        grid-template-columns: 52px 1fr;
-        gap: clamp(14px, 3vw, 24px);
-        padding: clamp(18px, 3vw, 28px) 0;
-        border-top: 1px solid var(--line);
-      }
-
-      .section-num {
-        padding-top: 3px;
-        color: var(--blue-bright);
-        font-size: 13px;
-        font-weight: 800;
-        opacity: 0.75;
-      }
-
-      .section-body h2 {
-        margin-bottom: 8px;
-        font-size: clamp(15px, 2vw, 18px);
-        font-weight: 800;
-      }
-
-      .section-body p {
-        margin-bottom: 10px;
-        color: var(--soft);
-        font-size: 14.5px;
-      }
-
-      .section-body p:last-child,
-      .section-body ul:last-child { margin-bottom: 0; }
-
-      .section-body ul {
-        display: grid;
-        gap: 8px;
-        margin: 8px 0 12px;
-        padding: 0;
-        list-style: none;
-      }
-
-      .section-body li {
-        position: relative;
-        padding-left: 16px;
-        color: var(--soft);
-        font-size: 14.5px;
-      }
-
-      .section-body li::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0.68em;
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        background: var(--blue);
-        transform: translateY(-50%);
-      }
-
-      .section-body strong { color: var(--text); }
-
-      code {
-        color: var(--soft);
-        font-family: "Ubuntu Mono", "Cascadia Code", monospace;
-        font-size: 0.9em;
-      }
-
-      .callout {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 6px;
-        padding: 7px 13px;
-        border: 1px solid rgba(58, 110, 155, 0.26);
-        border-radius: 6px;
-        background: var(--blue-glow);
-        color: #a7d4ec;
-        font-size: 13px;
-        font-weight: 700;
-      }
-
-      .callout.warn {
-        border-color: rgba(214, 168, 79, 0.32);
-        background: var(--warn-glow);
-        color: #e8c980;
-      }
-
-      .callout.restrict {
-        border-color: rgba(226, 123, 123, 0.3);
-        background: var(--restrict-glow);
-        color: #f0a2a2;
-      }
-
-      footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 16px;
-        padding: 24px clamp(18px, 5vw, 64px);
-        border-top: 1px solid var(--line);
-        color: var(--muted);
-        font-size: 14px;
-      }
-
-      .footer-links {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-      }
-
-      footer a,
-      .footer-links a { color: var(--soft); }
-
-      footer a:hover,
-      .footer-links a:hover { color: var(--text); }
-
-      @media (max-width: 640px) {
-        .topbar {
-          align-items: flex-start;
-          flex-direction: column;
-          justify-content: center;
-          gap: 4px;
-          padding-top: 12px;
-          padding-bottom: 12px;
-        }
-
-        .topbar nav {
-          justify-content: flex-start;
-          gap: 12px 18px;
-        }
-
-        .policy-section {
-          grid-template-columns: 1fr;
-          gap: 6px;
-        }
-
-        .section-num {
-          padding-top: 0;
-          font-size: 11px;
-        }
-      }
-    </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <header class="topbar">
-      <a class="brand" href="../">
-        <img src="../assets/transmux.svg" alt="" />
-        <span>Transmux</span>
-      </a>
-      <nav aria-label="Primary navigation">
-        <a class="topbar-link icon-link" href="../#features">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-features" /></svg>
-          <span>Features</span>
+      <div class="wrap">
+        <a class="brand" href="../" aria-label="Transmux home">
+          <img src="../assets/transmux.svg" alt="" width="30" height="30" />
+          <span>Transmux</span>
         </a>
-        <a class="topbar-link icon-link" href="../#download">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-download" /></svg>
-          <span>Download</span>
-        </a>
-        <a class="topbar-link icon-link" href="../releases/">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-releases" /></svg>
-          <span>Releases</span>
-        </a>
-        <a class="topbar-link icon-link" href="./" aria-current="page">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-policy" /></svg>
-          <span>Policy</span>
-        </a>
-        <a class="topbar-link icon-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
-          <span>GitHub</span>
-        </a>
-      </nav>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg class="ic i-menu" aria-hidden="true"><use href="../assets/icons.svg#i-menu" /></svg>
+          <svg class="ic i-close" aria-hidden="true"><use href="../assets/icons.svg#i-close" /></svg>
+        </button>
+        <nav class="nav" id="site-nav" aria-label="Primary">
+          <a href="../#features">Features</a>
+          <a href="../#how">How it works</a>
+          <a href="../#download">Download</a>
+          <a href="../releases/">Releases</a>
+          <a href="./" aria-current="page">Privacy</a>
+          <a class="nav-gh" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
+            <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
+            <span>GitHub</span>
+          </a>
+        </nav>
+      </div>
     </header>
 
-    <main>
-      <div class="page-inner">
-        <div class="page-hero">
-          <p class="eyebrow">Transmux</p>
-          <h1 class="page-title">Privacy Policy</h1>
-          <p class="page-lede">
-            Transmux is built as a local-first desktop media converter. The app does not have developer-run accounts, a backend service, advertising, or hidden telemetry.
-          </p>
-          <div class="meta-row">
-            <span class="meta-pill"><span class="dot"></span>Last updated: May 5, 2026</span>
-            <span class="meta-pill"><span class="dot"></span>App telemetry: None</span>
-            <span class="meta-pill"><span class="dot warn"></span>Third-party services: Optional</span>
-          </div>
+    <main id="main">
+      <section class="page-hero">
+        <div class="wrap narrow">
+          <span class="eyebrow">Privacy</span>
+          <h1>Privacy policy</h1>
+          <p>Transmux is built as a local-first desktop media converter. The app does not have developer-run accounts, a backend service, advertising, or hidden telemetry.</p>
+          <p class="updated">Last updated 5 May 2026 · App telemetry: none · Third-party services: optional</p>
         </div>
+      </section>
 
-        <div>
-          <div class="policy-section">
-            <p class="section-num">01</p>
-            <div class="section-body">
-              <h2>Scope</h2>
-              <p>This Privacy Policy applies to the Transmux desktop application, the Transmux website, release downloads, and related support channels operated by Piyush Doorwar (the "Developer"). By using Transmux or the Transmux website, you agree to this policy.</p>
-            </div>
-          </div>
+      <div class="page-body">
+        <div class="wrap narrow">
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-file" /></svg>Scope</h2>
+            <p>This Privacy Policy applies to the Transmux desktop application, the Transmux website, release downloads, and related support channels operated by Piyush Doorwar (the "Developer"). By using Transmux or the Transmux website, you agree to this policy.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">02</p>
-            <div class="section-body">
-              <h2>Plain-English Summary</h2>
-              <p>Transmux converts local media files on your device. The Developer does <strong>not</strong> collect your media files, conversion history, subtitle files, settings, or activity from the app.</p>
-              <span class="callout">No app accounts. No developer backend. No hidden app telemetry.</span>
-            </div>
-          </div>
+          <section class="prose-card callout">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-shield" /></svg>Plain-English Summary</h2>
+            <p>Transmux converts local media files on your device. The Developer does <strong>not</strong> collect your media files, conversion history, subtitle files, settings, or activity from the app.</p>
+            <p class="aside">No app accounts. No developer backend. No hidden app telemetry.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">03</p>
-            <div class="section-body">
-              <h2>Data the App Stores Locally</h2>
-              <p>Transmux stores limited data on your device to preserve your preferences between sessions:</p>
-              <ul>
-                <li>Your last selected output format.</li>
-              </ul>
-              <p>On supported desktop systems this data is stored in the operating system's application data area, including a Transmux <code>settings.json</code> file. It remains on your device unless you share it, back it up, sync it, or delete it through your system.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-folder" /></svg>Data the App Stores Locally</h2>
+            <p>Transmux stores limited data on your device to preserve your preferences between sessions:</p>
+            <ul>
+              <li>Your last selected output format.</li>
+            </ul>
+            <p>On supported desktop systems this data is stored in the operating system's application data area, including a Transmux <code>settings.json</code> file. It remains on your device unless you share it, back it up, sync it, or delete it through your system.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">04</p>
-            <div class="section-body">
-              <h2>Media Files and Local Conversion</h2>
-              <p>Transmux opens input files you choose through the file picker or drag and drop, and writes output files to a path you specify. Conversion is entirely local. The app does not upload your audio, video, subtitle files, or converted output to the Developer.</p>
-              <p>If you use operating-system integrations, installers, file associations, sandbox permissions, or Flatpak portals, your operating system may process file paths and permissions according to its own behavior.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-film" /></svg>Media Files and Local Conversion</h2>
+            <p>Transmux opens input files you choose through the file picker or drag and drop, and writes output files to a path you specify. Conversion is entirely local. The app does not upload your audio, video, subtitle files, or converted output to the Developer.</p>
+            <p>If you use operating-system integrations, installers, file associations, sandbox permissions, or Flatpak portals, your operating system may process file paths and permissions according to its own behavior.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">05</p>
-            <div class="section-body">
-              <h2>Update Checks</h2>
-              <p>The About dialog includes a manual "Check for Updates" action. When you use it, Transmux contacts the GitHub releases API to check the latest published version. GitHub may receive your IP address, user agent, request time, and other standard request metadata.</p>
-              <p>The update check is not routed through a Developer-controlled server. Transmux does not send your media files, settings, or personal files as part of the update check.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-history" /></svg>Update Checks</h2>
+            <p>The About dialog includes a manual "Check for Updates" action. When you use it, Transmux contacts the GitHub releases API to check the latest published version. GitHub may receive your IP address, user agent, request time, and other standard request metadata.</p>
+            <p>The update check is not routed through a Developer-controlled server. Transmux does not send your media files, settings, or personal files as part of the update check.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">06</p>
-            <div class="section-body">
-              <h2>Website and Release Downloads</h2>
-              <p>The Transmux website fetches public release information from GitHub so it can show download links. When you visit the website, download releases, open GitHub links, or report issues on GitHub, GitHub and your browser/network providers may receive standard web request data.</p>
-              <p>The Transmux website currently uses Cloudflare Web Analytics. Cloudflare may process limited website analytics data such as page views, referrers, device/browser information, approximate location derived from IP address, and similar request metadata. The Developer does not use the Transmux desktop app to send analytics events.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-globe" /></svg>Website and Release Downloads</h2>
+            <p>The Transmux website fetches public release information from GitHub so it can show download links. When you visit the website, download releases, open GitHub links, or report issues on GitHub, GitHub and your browser/network providers may receive standard web request data.</p>
+            <p>The Transmux website currently uses Cloudflare Web Analytics. Cloudflare may process limited website analytics data such as page views, referrers, device/browser information, approximate location derived from IP address, and similar request metadata. The Developer does not use the Transmux desktop app to send analytics events.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">07</p>
-            <div class="section-body">
-              <h2>Support, Email, and Issues</h2>
-              <p>If you email support, open a GitHub issue, submit a pull request, or otherwise contact the Developer, you choose what information to provide. That may include your name, email address, GitHub username, operating system, logs, screenshots, media filenames, file paths, or other diagnostic details.</p>
-              <p>Please avoid sending private media files, sensitive screenshots, secrets, passwords, API keys, or personal information that is not needed to handle your request.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-mail" /></svg>Support, Email, and Issues</h2>
+            <p>If you email support, open a GitHub issue, submit a pull request, or otherwise contact the Developer, you choose what information to provide. That may include your name, email address, GitHub username, operating system, logs, screenshots, media filenames, file paths, or other diagnostic details.</p>
+            <p>Please avoid sending private media files, sensitive screenshots, secrets, passwords, API keys, or personal information that is not needed to handle your request.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">08</p>
-            <div class="section-body">
-              <h2>What the Developer Does Not Do</h2>
-              <ul>
-                <li>The Developer does not sell your personal data.</li>
-                <li>The Developer does not operate Transmux user accounts.</li>
-                <li>The Developer does not collect your media files from the app.</li>
-                <li>The Developer does not track your conversions or file activity from the app.</li>
-                <li>The Developer does not receive your local media files, subtitle files, or conversion output from the app.</li>
-                <li>The Developer does not use the desktop app for advertising, profiling, or hidden telemetry.</li>
-              </ul>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-eye-off" /></svg>What the Developer Does Not Do</h2>
+            <ul>
+              <li>The Developer does not sell your personal data.</li>
+              <li>The Developer does not operate Transmux user accounts.</li>
+              <li>The Developer does not collect your media files from the app.</li>
+              <li>The Developer does not track your conversions or file activity from the app.</li>
+              <li>The Developer does not receive your local media files, subtitle files, or conversion output from the app.</li>
+              <li>The Developer does not use the desktop app for advertising, profiling, or hidden telemetry.</li>
+            </ul>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">09</p>
-            <div class="section-body">
-              <h2>Third-Party Software and Services</h2>
-              <p>Transmux uses third-party software and services, including Avalonia, .NET, FFmpeg, GitHub, and Cloudflare Web Analytics on the website. Third-party software and services are governed by their own license terms, privacy policies, and operational practices.</p>
-              <p>The Developer is not responsible for third-party services, content, service availability, security incidents, policy changes, or data practices outside the Developer's control.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-layers" /></svg>Third-Party Software and Services</h2>
+            <p>Transmux uses third-party software and services, including Avalonia, .NET, FFmpeg, GitHub, and Cloudflare Web Analytics on the website. Third-party software and services are governed by their own license terms, privacy policies, and operational practices.</p>
+            <p>The Developer is not responsible for third-party services, content, service availability, security incidents, policy changes, or data practices outside the Developer's control.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">10</p>
-            <div class="section-body">
-              <h2>Security</h2>
-              <p>Transmux is designed to keep app data local by default, but no software, operating system, network, storage medium, or third-party service can be guaranteed completely secure. You are responsible for securing your device, backups, synced folders, user account, downloads, and files.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-lock" /></svg>Security</h2>
+            <p>Transmux is designed to keep app data local by default, but no software, operating system, network, storage medium, or third-party service can be guaranteed completely secure. You are responsible for securing your device, backups, synced folders, user account, downloads, and files.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">11</p>
-            <div class="section-body">
-              <h2>Children's Privacy</h2>
-              <p>Transmux is a general-purpose desktop media converter and is not directed to children. The Developer does not knowingly collect personal data from children through the Transmux app.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-info" /></svg>Children's Privacy</h2>
+            <p>Transmux is a general-purpose desktop media converter and is not directed to children. The Developer does not knowingly collect personal data from children through the Transmux app.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">12</p>
-            <div class="section-body">
-              <h2>License and Usage Terms</h2>
-              <p>Transmux source code is publicly viewable but is <strong>not open source</strong> under any OSI-approved license. The following apply:</p>
-              <ul>
-                <li><strong>Permitted:</strong> view the source, download/install/use official releases for personal non-commercial purposes, build from the official source repository for personal evaluation/testing/contribution, and contribute through the official repository.</li>
-                <li><strong>Prohibited:</strong> copying, mirroring, redistribution, republishing, modification for distribution, forks or derivative works for distribution, repackaging, resale, sublicensing, hosting as a service, or commercial use without explicit written permission.</li>
-              </ul>
-              <span class="callout restrict">Commercial use, redistribution, and modification for distribution are not permitted without explicit written permission from the copyright holder.</span>
-              <p style="margin-top: 10px;">Full license: <a href="https://github.com/piyushdoorwar/transmux/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">github.com/piyushdoorwar/transmux</a></p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-tag" /></svg>License and Usage Terms</h2>
+            <p>Transmux source code is publicly viewable but is <strong>not open source</strong> under any OSI-approved license. The following apply:</p>
+            <ul>
+              <li><strong>Permitted:</strong> view the source, download/install/use official releases for personal non-commercial purposes, build from the official source repository for personal evaluation/testing/contribution, and contribute through the official repository.</li>
+              <li><strong>Prohibited:</strong> copying, mirroring, redistribution, republishing, modification for distribution, forks or derivative works for distribution, repackaging, resale, sublicensing, hosting as a service, or commercial use without explicit written permission.</li>
+            </ul>
+            <p class="aside">Commercial use, redistribution, and modification for distribution are not permitted without explicit written permission from the copyright holder.</p>
+            <p>Full license: <a href="https://github.com/piyushdoorwar/transmux/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">github.com/piyushdoorwar/transmux</a></p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">13</p>
-            <div class="section-body">
-              <h2>User Responsibility</h2>
-              <p>You are responsible for how you use Transmux, including the media files you convert, subtitle files you process, output files you save, third-party services you contact, and compliance with laws, copyright rules, platform terms, and third-party rights that apply to you.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-support" /></svg>User Responsibility</h2>
+            <p>You are responsible for how you use Transmux, including the media files you convert, subtitle files you process, output files you save, third-party services you contact, and compliance with laws, copyright rules, platform terms, and third-party rights that apply to you.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">14</p>
-            <div class="section-body">
-              <h2>No Warranty</h2>
-              <p>Transmux, the website, release downloads, update checks, documentation, and support channels are provided on an <strong>"as is"</strong> and <strong>"as available"</strong> basis, without warranties of any kind, whether express, implied, statutory, or otherwise.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-info" /></svg>No Warranty</h2>
+            <p>Transmux, the website, release downloads, update checks, documentation, and support channels are provided on an <strong>"as is"</strong> and <strong>"as available"</strong> basis, without warranties of any kind, whether express, implied, statutory, or otherwise.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">15</p>
-            <div class="section-body">
-              <h2>Limitation of Liability</h2>
-              <p>To the maximum extent permitted by applicable law, the Developer shall not be liable for any direct, indirect, incidental, consequential, special, exemplary, or punitive damages, including loss of data, loss of files, conversion failures, device issues, security incidents, business interruption, loss of profits, or reputational harm arising out of or related to Transmux.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-shield" /></svg>Limitation of Liability</h2>
+            <p>To the maximum extent permitted by applicable law, the Developer shall not be liable for any direct, indirect, incidental, consequential, special, exemplary, or punitive damages, including loss of data, loss of files, conversion failures, device issues, security incidents, business interruption, loss of profits, or reputational harm arising out of or related to Transmux.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">16</p>
-            <div class="section-body">
-              <h2>Indemnification</h2>
-              <p>You agree to indemnify, defend, and hold harmless the Developer from any claims, damages, liabilities, losses, and expenses, including legal fees, arising out of or related to:</p>
-              <ul>
-                <li>Your use or misuse of Transmux, the website, release downloads, or support channels.</li>
-                <li>Your media files, subtitle files, converted output, downloads, or other content.</li>
-                <li>Your violation of laws, license terms, platform rules, or third-party rights.</li>
-                <li>Your use of third-party software, FFmpeg, GitHub, Cloudflare, operating-system integrations, or distribution platforms.</li>
-              </ul>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-file" /></svg>Indemnification</h2>
+            <p>You agree to indemnify, defend, and hold harmless the Developer from any claims, damages, liabilities, losses, and expenses, including legal fees, arising out of or related to:</p>
+            <ul>
+              <li>Your use or misuse of Transmux, the website, release downloads, or support channels.</li>
+              <li>Your media files, subtitle files, converted output, downloads, or other content.</li>
+              <li>Your violation of laws, license terms, platform rules, or third-party rights.</li>
+              <li>Your use of third-party software, FFmpeg, GitHub, Cloudflare, operating-system integrations, or distribution platforms.</li>
+            </ul>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">17</p>
-            <div class="section-body">
-              <h2>Changes to This Policy</h2>
-              <p>This policy may be updated from time to time. Continued use of Transmux or the Transmux website after updates indicates acceptance of the revised policy. The "Last updated" date above identifies the current version.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-history" /></svg>Changes to This Policy</h2>
+            <p>This policy may be updated from time to time. Continued use of Transmux or the Transmux website after updates indicates acceptance of the revised policy. The "Last updated" date above identifies the current version.</p>
+          </section>
 
-          <div class="policy-section">
-            <p class="section-num">18</p>
-            <div class="section-body">
-              <h2>Contact</h2>
-              <p>Questions about this policy? Email <a href="mailto:piyushdoorwar+transmux@gmail.com">piyushdoorwar+transmux@gmail.com</a>.</p>
-            </div>
-          </div>
+          <section class="prose-card">
+            <h2><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-mail" /></svg>Contact</h2>
+            <p>Questions about this policy? Email <a href="mailto:piyushdoorwar+transmux@gmail.com">piyushdoorwar+transmux@gmail.com</a>.</p>
+          </section>
         </div>
       </div>
     </main>
 
-    <footer>
-      <span>&copy; <span id="yr"></span> Piyush Doorwar. Transmux.</span>
-      <div class="footer-links">
-        <a class="icon-link" href="../">
-          <img src="../assets/transmux.svg" alt="" />
-          <span>Home</span>
-        </a>
-        <a class="icon-link" href="../releases/">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-releases" /></svg>
-          <span>Releases</span>
-        </a>
-        <a class="icon-link" href="./" aria-current="page">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-policy" /></svg>
-          <span>Policy</span>
-        </a>
-        <a class="icon-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
-          <span>GitHub</span>
-        </a>
-        <a class="icon-link" href="mailto:piyushdoorwar+transmux@gmail.com">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-mail" /></svg>
-          <span>Contact</span>
-        </a>
+    <footer class="footer">
+      <div class="wrap">
+        <div>
+          <a class="brand" href="../">
+            <img src="../assets/transmux.svg" alt="" width="26" height="26" />
+            <span>Transmux</span>
+          </a>
+          <p>A clean desktop media converter for Ubuntu and Windows, powered by FFmpeg and Lumyn.</p>
+        </div>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="../releases/"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-tag" /></svg>Releases</a>
+          <a href="./"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-shield" /></svg>Privacy</a>
+          <a href="https://github.com/piyushdoorwar/transmux" rel="noreferrer"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>GitHub</a>
+          <a href="mailto:piyushdoorwar+transmux@gmail.com"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-mail" /></svg>Support</a>
+        </nav>
       </div>
     </footer>
 
     <script src="../image-guard.js"></script>
-    <script>
-      document.getElementById("yr").textContent = new Date().getFullYear();
-    </script>
+    <script src="../app.js"></script>
     <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7bf02e12b7eb4bcfb147fbf33e347cd9"}'></script><!-- End Cloudflare Web Analytics -->
   </body>
 </html>

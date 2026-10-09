@@ -212,7 +212,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         get
         {
             var v = _detectedMedia?.VideoStream;
-            if (v is null) return "⊘ No video stream (audio-only)";
+            if (v is null) return "No video stream (audio-only)";
             var res = v.Width > 0 ? $"  ·  {v.Width}×{v.Height}" : "";
             var fps = v.FrameRate is not null ? $"  ·  {v.FrameRate} fps" : "";
             var bitrate = v.BitRate > 0 ? $"  ·  {FormatBitrate(v.BitRate)}" : "";

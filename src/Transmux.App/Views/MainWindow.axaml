@@ -9,13 +9,15 @@
     MinWidth="625"
     MinHeight="538"
     SystemDecorations="BorderOnly"
-    Background="#111111"
     ExtendClientAreaToDecorationsHint="True">
 
   <Grid RowDefinitions="38,*,32">
 
     <!-- ── Top bar ──────────────────────────────────────────────────────── -->
-    <Border Grid.Row="0" Background="#141414">
+    <Border Grid.Row="0"
+            Background="{DynamicResource ChromeBrush}"
+            BorderBrush="{DynamicResource LineBrush}"
+            BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="Auto,*,Auto">
 
         <!-- Logo + title -->
@@ -30,7 +32,7 @@
           <TextBlock Text="Transmux"
                      FontSize="13"
                      FontWeight="SemiBold"
-                     Foreground="#DEDAD5"
+                     Foreground="{DynamicResource InkBrush}"
                      VerticalAlignment="Center" />
         </StackPanel>
 
@@ -45,26 +47,34 @@
           <Button Classes="wchrome"
                   Command="{Binding ShowKeyboardShortcutsCommand}"
                   ToolTip.Tip="Keyboard shortcuts (?)">
-            <TextBlock Text="⌨" FontSize="14" Foreground="#888" />
+            <Viewbox Width="16" Height="16" VerticalAlignment="Center">
+              <Canvas Width="24" Height="24">
+                <Path Classes="stroke-icon" Data="{StaticResource Icon.Keyboard}" Stroke="{DynamicResource MutedBrush}" />
+              </Canvas>
+            </Viewbox>
           </Button>
           <Button Classes="wchrome"
                   Command="{Binding ShowHistoryCommand}"
                   ToolTip.Tip="Conversion history">
-            <TextBlock Text="⏱" FontSize="14" Foreground="#888" />
+            <Viewbox Width="15" Height="15" VerticalAlignment="Center">
+              <Canvas Width="24" Height="24">
+                <Path Classes="stroke-icon" Data="{StaticResource Icon.Timer}" Stroke="{DynamicResource MutedBrush}" />
+              </Canvas>
+            </Viewbox>
           </Button>
           <Button Classes="wchrome"
                   Command="{Binding OpenAboutDialogCommand}"
                   ToolTip.Tip="About">
             <PathIcon Width="14" Height="14"
                       Data="{StaticResource Icon.Info}"
-                      Foreground="#888" />
+                      Foreground="{DynamicResource MutedBrush}" />
           </Button>
           <Button Classes="wchrome"
                   Name="MinimizeButton"
                   Click="MinimizeButton_Click">
             <PathIcon Width="12" Height="12"
                       Data="{StaticResource Icon.Minimize}"
-                      Foreground="#888" />
+                      Foreground="{DynamicResource MutedBrush}" />
           </Button>
           <Button Classes="wchrome"
                   Name="MaximizeButton"
@@ -72,14 +82,14 @@
             <PathIcon Name="MaximizeIcon"
                       Width="11" Height="11"
                       Data="{StaticResource Icon.Maximize}"
-                      Foreground="#888" />
+                      Foreground="{DynamicResource MutedBrush}" />
           </Button>
           <Button Classes="wchrome close"
                   Name="CloseButton"
                   Click="CloseButton_Click">
             <PathIcon Width="11" Height="11"
                       Data="{StaticResource Icon.Close}"
-                      Foreground="#888" />
+                      Foreground="{DynamicResource MutedBrush}" />
           </Button>
         </StackPanel>
       </Grid>
@@ -93,8 +103,8 @@
 
         <!-- Drop zone -->
         <Border Name="DropZone"
-                Background="#1A1A1A"
-                BorderBrush="#2D2D2D"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource LineBrush}"
                 BorderThickness="1"
                 CornerRadius="8"
                 MinHeight="100"
@@ -112,14 +122,14 @@
               <PathIcon Width="28" Height="28"
                         HorizontalAlignment="Center"
                         Data="{StaticResource Icon.Open}"
-                        Foreground="#3D3D3D" />
+                        Foreground="{DynamicResource ControlLineBrush}" />
               <TextBlock Text="Drop a file here, or click to browse"
                          FontSize="14"
-                         Foreground="#555"
+                         Foreground="{DynamicResource GreyBrush}"
                          HorizontalAlignment="Center" />
               <TextBlock Text="Audio and video formats supported"
                          FontSize="12"
-                         Foreground="#3A3A3A"
+                         Foreground="{DynamicResource MutedBrush}"
                          HorizontalAlignment="Center" />
             </StackPanel>
 
@@ -132,21 +142,21 @@
               <TextBlock Text="{Binding InputFileName}"
                          FontSize="14"
                          FontWeight="SemiBold"
-                         Foreground="#DEDAD5"
+                         Foreground="{DynamicResource InkBrush}"
                          HorizontalAlignment="Center" />
               <TextBlock Text="Click to change file"
                          FontSize="11"
-                         Foreground="#444"
+                         Foreground="{DynamicResource MutedBrush}"
                          HorizontalAlignment="Center" />
             </StackPanel>
 
             <!-- Inspecting overlay -->
             <Border IsVisible="{Binding IsInspecting}"
-                    Background="#1A1A1A"
+                    Background="{DynamicResource SurfaceBrush}"
                     CornerRadius="8">
               <TextBlock Text="Inspecting file…"
                          FontSize="13"
-                         Foreground="#555"
+                         Foreground="{DynamicResource GreyBrush}"
                          HorizontalAlignment="Center"
                          VerticalAlignment="Center"
                          Margin="0,32" />
@@ -156,41 +166,42 @@
 
         <!-- Media info panel -->
         <Border IsVisible="{Binding HasMedia}"
-                Background="#161616"
-                BorderBrush="#242424"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource LineBrush}"
                 BorderThickness="1"
                 CornerRadius="6"
                 Padding="16,12">
           <Grid ColumnDefinitions="80,*" RowDefinitions="Auto,Auto,Auto,Auto" >
             <TextBlock Grid.Row="0" Grid.Column="0"
                        Text="Format"
-                       FontSize="12" Foreground="#555" Margin="0,0,0,7" />
+                       FontSize="12" Foreground="{DynamicResource GreyBrush}" Margin="0,0,0,7" />
             <TextBlock Grid.Row="0" Grid.Column="1"
                        Text="{Binding MediaSummaryFormat}"
-                       FontSize="12" Foreground="#C0BBB8" Margin="0,0,0,7" />
+                       Classes="mono" FontSize="12" Foreground="{DynamicResource BodyBrush}" Margin="0,0,0,7" />
 
             <TextBlock Grid.Row="1" Grid.Column="0"
                        Text="Video"
-                       FontSize="12" Foreground="#555" Margin="0,0,0,7" />
+                       FontSize="12" Foreground="{DynamicResource GreyBrush}" Margin="0,0,0,7" />
             <TextBlock Grid.Row="1" Grid.Column="1"
                        Text="{Binding MediaSummaryVideo}"
+                       Classes="mono"
                        FontSize="12"
-                       Foreground="#C0BBB8"
+                       Foreground="{DynamicResource BodyBrush}"
                        Margin="0,0,0,7" />
 
             <TextBlock Grid.Row="2" Grid.Column="0"
                        Text="Audio"
-                       FontSize="12" Foreground="#555" Margin="0,0,0,7" />
+                       FontSize="12" Foreground="{DynamicResource GreyBrush}" Margin="0,0,0,7" />
             <TextBlock Grid.Row="2" Grid.Column="1"
                        Text="{Binding MediaSummaryAudio}"
-                       FontSize="12" Foreground="#C0BBB8" Margin="0,0,0,7" />
+                       Classes="mono" FontSize="12" Foreground="{DynamicResource BodyBrush}" Margin="0,0,0,7" />
 
             <TextBlock Grid.Row="3" Grid.Column="0"
                        Text="Subtitles"
-                       FontSize="12" Foreground="#555" />
+                       FontSize="12" Foreground="{DynamicResource GreyBrush}" />
             <TextBlock Grid.Row="3" Grid.Column="1"
                        Text="{Binding MediaSummarySubtitles}"
-                       FontSize="12" Foreground="#C0BBB8" />
+                       Classes="mono" FontSize="12" Foreground="{DynamicResource BodyBrush}" />
           </Grid>
         </Border>
 
@@ -201,16 +212,16 @@
           <Grid ColumnDefinitions="130,*">
             <TextBlock Grid.Column="0"
                        Text="Output format"
-                       FontSize="13" Foreground="#888"
+                       FontSize="13" Foreground="{DynamicResource GreyBrush}"
                        VerticalAlignment="Center" />
             <ComboBox Grid.Column="1"
                       IsEnabled="{Binding IsInputEnabled}"
                       ItemsSource="{Binding Formats}"
                       SelectedItem="{Binding SelectedFormat}"
                       HorizontalAlignment="Stretch"
-                      Background="#1E1E1E"
-                      BorderBrush="#303030"
-                      Foreground="#DEDAD5"
+                      Background="{DynamicResource SurfaceBrush}"
+                      BorderBrush="{DynamicResource ControlLineBrush}"
+                      Foreground="{DynamicResource BodyBrush}"
                       CornerRadius="5"
                       Padding="10,6">
               <ComboBox.ItemTemplate>
@@ -225,11 +236,11 @@
           <Grid ColumnDefinitions="130,*">
             <TextBlock Grid.Column="0"
                        Text="Mode"
-                       FontSize="13" Foreground="#888"
+                       FontSize="13" Foreground="{DynamicResource GreyBrush}"
                        VerticalAlignment="Center" />
             <Border Grid.Column="1"
-                    Background="#1A1A1A"
-                    BorderBrush="#2D2D2D"
+                    Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource LineBrush}"
                     BorderThickness="1"
                     CornerRadius="5"
                     Padding="3">
@@ -266,15 +277,15 @@
                 RowDefinitions="Auto,Auto">
             <TextBlock Grid.Row="0" Grid.Column="0"
                        Text="Audio"
-                       FontSize="13" Foreground="#888"
+                       FontSize="13" Foreground="{DynamicResource GreyBrush}"
                        VerticalAlignment="Center" />
             <Button Grid.Row="0" Grid.Column="1"
                     Name="AudioTracksButton"
                     IsEnabled="{Binding IsInputEnabled}"
                     Command="{Binding ToggleAudioTracksDropdownCommand}"
-                    Background="#1E1E1E"
-                    BorderBrush="#303030"
-                    Foreground="#DEDAD5"
+                    Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource ControlLineBrush}"
+                    Foreground="{DynamicResource BodyBrush}"
                     CornerRadius="5"
                     Padding="10,6"
                     HorizontalAlignment="Stretch"
@@ -284,7 +295,11 @@
                 <TextBlock Grid.Column="0"
                            Text="{Binding AudioTracksDisplayText}"
                            TextTrimming="CharacterEllipsis" />
-                <TextBlock Grid.Column="1" Text="▼" Margin="8,0,0,0" Opacity="0.6" />
+                <Viewbox Grid.Column="1" Width="14" Height="14" Margin="8,0,0,0" VerticalAlignment="Center">
+                  <Canvas Width="24" Height="24">
+                    <Path Classes="stroke-icon" Data="{StaticResource Icon.ChevronDown}" Stroke="{DynamicResource MutedBrush}" />
+                  </Canvas>
+                </Viewbox>
               </Grid>
             </Button>
 
@@ -294,8 +309,8 @@
                    IsOpen="{Binding ShowAudioTracksDropdown}"
                    PlacementTarget="{Binding #AudioTracksButton}"
                    Placement="Bottom">
-              <Border Background="#1A1A1A"
-                      BorderBrush="#303030"
+              <Border Background="{DynamicResource SurfaceBrush}"
+                      BorderBrush="{DynamicResource LineBrush}"
                       BorderThickness="1"
                       CornerRadius="5"
                       MinWidth="300"
@@ -307,7 +322,7 @@
                                 Command="{Binding ToggleAllAudioCommand}"
                                 IsEnabled="{Binding IsInputEnabled}"
                                 Margin="0,3"
-                                Foreground="#DEDAD5"
+                                Foreground="{DynamicResource BodyBrush}"
                                 FontSize="13"
                                 FontWeight="SemiBold">
                         All
@@ -321,7 +336,7 @@
                               <CheckBox IsChecked="{Binding IsSelected}"
                                         IsEnabled="{Binding $parent[Window].DataContext.IsInputEnabled}"
                                         Margin="12,3,0,3"
-                                        Foreground="#DEDAD5">
+                                        Foreground="{DynamicResource BodyBrush}">
                                 <TextBlock Text="{Binding Label}"
                                            FontSize="13"
                                            TextWrapping="Wrap" />
@@ -333,13 +348,13 @@
                     </StackPanel>
                   </Border>
                   <Border Grid.Row="1"
-                          Background="#0D0D0D"
+                          Background="{DynamicResource ChromeBrush}"
                           Padding="10,8">
                     <Button HorizontalAlignment="Right"
                             Command="{Binding ToggleAudioTracksDropdownCommand}"
                             Background="Transparent"
-                            BorderBrush="#3D3D3D"
-                            Foreground="#888"
+                            BorderBrush="{DynamicResource ControlLineBrush}"
+                            Foreground="{DynamicResource GreyBrush}"
                             CornerRadius="4"
                             Padding="14,5"
                             FontSize="12"
@@ -355,16 +370,16 @@
                 ColumnDefinitions="130,*">
             <TextBlock Grid.Column="0"
                        Text="Subtitles"
-                       FontSize="13" Foreground="#888"
+                       FontSize="13" Foreground="{DynamicResource GreyBrush}"
                        VerticalAlignment="Center" />
             <ComboBox Grid.Column="1"
                       IsEnabled="{Binding IsInputEnabled}"
                       ItemsSource="{Binding SubtitleModes}"
                       SelectedItem="{Binding SelectedSubtitleModeOption}"
                       HorizontalAlignment="Stretch"
-                      Background="#1E1E1E"
-                      BorderBrush="#303030"
-                      Foreground="#DEDAD5"
+                      Background="{DynamicResource SurfaceBrush}"
+                      BorderBrush="{DynamicResource ControlLineBrush}"
+                      Foreground="{DynamicResource BodyBrush}"
                       CornerRadius="5"
                       Padding="10,6">
               <ComboBox.ItemTemplate>
@@ -381,15 +396,15 @@
                 RowDefinitions="Auto,Auto">
             <TextBlock Grid.Row="0" Grid.Column="0"
                        Text="Tracks"
-                       FontSize="13" Foreground="#888"
+                       FontSize="13" Foreground="{DynamicResource GreyBrush}"
                        VerticalAlignment="Center" />
             <Button Grid.Row="0" Grid.Column="1"
                     Name="SubtitleTracksButton"
                     IsEnabled="{Binding IsInputEnabled}"
                     Command="{Binding ToggleSubtitleTracksDropdownCommand}"
-                    Background="#1E1E1E"
-                    BorderBrush="#303030"
-                    Foreground="#DEDAD5"
+                    Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource ControlLineBrush}"
+                    Foreground="{DynamicResource BodyBrush}"
                     CornerRadius="5"
                     Padding="10,6"
                     HorizontalAlignment="Stretch"
@@ -399,7 +414,11 @@
                 <TextBlock Grid.Column="0"
                            Text="{Binding SubtitleTracksDisplayText}"
                            TextTrimming="CharacterEllipsis" />
-                <TextBlock Grid.Column="1" Text="▼" Margin="8,0,0,0" Opacity="0.6" />
+                <Viewbox Grid.Column="1" Width="14" Height="14" Margin="8,0,0,0" VerticalAlignment="Center">
+                  <Canvas Width="24" Height="24">
+                    <Path Classes="stroke-icon" Data="{StaticResource Icon.ChevronDown}" Stroke="{DynamicResource MutedBrush}" />
+                  </Canvas>
+                </Viewbox>
               </Grid>
             </Button>
 
@@ -409,8 +428,8 @@
                    IsOpen="{Binding ShowSubtitleTracksDropdown}"
                    PlacementTarget="{Binding #SubtitleTracksButton}"
                    Placement="Bottom">
-              <Border Background="#1A1A1A"
-                      BorderBrush="#303030"
+              <Border Background="{DynamicResource SurfaceBrush}"
+                      BorderBrush="{DynamicResource LineBrush}"
                       BorderThickness="1"
                       CornerRadius="5"
                       MinWidth="300"
@@ -422,7 +441,7 @@
                                 Command="{Binding ToggleAllSubtitlesCommand}"
                                 IsEnabled="{Binding IsInputEnabled}"
                                 Margin="0,3"
-                                Foreground="#DEDAD5"
+                                Foreground="{DynamicResource BodyBrush}"
                                 FontSize="13"
                                 FontWeight="SemiBold">
                         All
@@ -436,7 +455,7 @@
                               <CheckBox IsChecked="{Binding IsSelected}"
                                         IsEnabled="{Binding $parent[Window].DataContext.IsInputEnabled}"
                                         Margin="12,3,0,3"
-                                        Foreground="#DEDAD5">
+                                        Foreground="{DynamicResource BodyBrush}">
                                 <TextBlock Text="{Binding Label}"
                                            FontSize="13"
                                            TextWrapping="Wrap" />
@@ -448,13 +467,13 @@
                     </StackPanel>
                   </Border>
                   <Border Grid.Row="1"
-                          Background="#0D0D0D"
+                          Background="{DynamicResource ChromeBrush}"
                           Padding="10,8">
                     <Button HorizontalAlignment="Right"
                             Command="{Binding ToggleSubtitleTracksDropdownCommand}"
                             Background="Transparent"
-                            BorderBrush="#3D3D3D"
-                            Foreground="#888"
+                            BorderBrush="{DynamicResource ControlLineBrush}"
+                            Foreground="{DynamicResource GreyBrush}"
                             CornerRadius="4"
                             Padding="14,5"
                             FontSize="12"
@@ -469,22 +488,21 @@
           <Grid ColumnDefinitions="130,*,Auto">
             <TextBlock Grid.Column="0"
                        Text="Save to"
-                       FontSize="13" Foreground="#888"
+                       FontSize="13" Foreground="{DynamicResource GreyBrush}"
                        VerticalAlignment="Center" />
             <TextBox Grid.Column="1"
                      IsEnabled="{Binding IsInputEnabled}"
                      Text="{Binding OutputFilePath}"
-                     Background="#1E1E1E"
-                     BorderBrush="#303030"
-                     Foreground="#DEDAD5"
+                     Classes="mono"
+                     Background="{DynamicResource SurfaceBrush}"
+                     BorderBrush="{DynamicResource ControlLineBrush}"
+                     Foreground="{DynamicResource BodyBrush}"
                      CornerRadius="5,0,0,5"
                      Padding="10,6"
                      FontSize="13" />
             <Button Grid.Column="2"
                     IsEnabled="{Binding IsInputEnabled}"
                     Command="{Binding BrowseOutputPathCommand}"
-                    Background="#2A2A2A"
-                    BorderBrush="#303030"
                     BorderThickness="1,1,1,1"
                     CornerRadius="0,5,5,0"
                     Padding="10,6"
@@ -510,7 +528,7 @@
           <!-- Enhanced progress bar with glow -->
           <Grid ColumnDefinitions="*,Auto,Auto">
             <Border Grid.Column="0"
-                    Background="#252525"
+                    Background="{DynamicResource LineBrush}"
                     CornerRadius="4"
                     Height="12"
                     BoxShadow="0 0 12 rgba(58,110,155,0.4)"
@@ -519,14 +537,14 @@
                            Maximum="100"
                            Height="12"
                            CornerRadius="4"
-                           Foreground="#3A6E9B"
+                           Foreground="{DynamicResource AccentBrush}"
                            Background="Transparent"
                            BorderThickness="0" />
             </Border>
             <!-- Live Speed update -->
             <TextBlock Grid.Column="1"
                        Text="{Binding SpeedText}"
-                       FontSize="12" Foreground="#5DA4D6"
+                       Classes="mono" FontSize="12" Foreground="{DynamicResource AccentTextBrush}"
                        VerticalAlignment="Center"
                        Margin="10,0,0,0"
                        FontWeight="SemiBold"
@@ -534,7 +552,7 @@
             <!-- Live ETA update -->
             <TextBlock Grid.Column="2"
                        Text="{Binding EtaText}"
-                       FontSize="12" Foreground="#5DA4D6"
+                       Classes="mono" FontSize="12" Foreground="{DynamicResource AccentTextBrush}"
                        VerticalAlignment="Center"
                        Margin="8,0,0,0"
                        FontWeight="SemiBold"
@@ -547,7 +565,7 @@
                         Spacing="6">
               <!-- Animated percentage counter -->
               <TextBlock FontSize="13"
-                         Foreground="#3A6E9B"
+                         Foreground="{DynamicResource AccentTextBrush}"
                          FontWeight="SemiBold"
                          VerticalAlignment="Center"
                          Name="ProgressText">
@@ -559,16 +577,13 @@
               </TextBlock>
               <!-- Pulsing activity dot -->
               <Ellipse Width="6" Height="6"
-                       Fill="#3A6E9B"
+                       Fill="{DynamicResource AccentTextBrush}"
                        VerticalAlignment="Center"
                        Name="ActivityPulse"
                        Opacity="0.7" />
             </StackPanel>
             <Button Grid.Column="1"
                     Command="{Binding CancelConversionCommand}"
-                    Background="#2A2A2A"
-                    BorderBrush="#3D3D3D"
-                    Foreground="#C8C3C2"
                     CornerRadius="4"
                     Padding="14,5"
                     FontSize="12"
@@ -578,22 +593,31 @@
 
         <!-- Complete state -->
         <Border IsVisible="{Binding IsComplete}"
-                Background="#0D171F"
-                BorderBrush="#1F303D"
+                Background="{DynamicResource AccentSoftBrush}"
+                BorderBrush="{DynamicResource AccentLineBrush}"
                 BorderThickness="1"
                 CornerRadius="6"
                 Padding="14,10">
           <Grid ColumnDefinitions="*,Auto">
-            <TextBlock Grid.Column="0"
-                       Text="✓  Conversion complete"
-                       FontSize="13"
-                       Foreground="#5DA4D6"
-                       VerticalAlignment="Center" />
+            <StackPanel Grid.Column="0"
+                        Orientation="Horizontal"
+                        Spacing="8"
+                        VerticalAlignment="Center">
+              <Viewbox Width="14" Height="14" VerticalAlignment="Center">
+                <Canvas Width="24" Height="24">
+                  <Path Classes="stroke-icon" Data="{StaticResource Icon.Check}" Stroke="{DynamicResource AccentTextBrush}" />
+                </Canvas>
+              </Viewbox>
+              <TextBlock Text="Conversion complete"
+                         FontSize="13"
+                         Foreground="{DynamicResource AccentTextBrush}"
+                         VerticalAlignment="Center" />
+            </StackPanel>
             <Button Grid.Column="1"
                     Command="{Binding OpenOutputFolderCommand}"
                     Background="Transparent"
-                    BorderBrush="#1F303D"
-                    Foreground="#5DA4D6"
+                    BorderBrush="{DynamicResource AccentLineBrush}"
+                    Foreground="{DynamicResource AccentTextBrush}"
                     CornerRadius="4"
                     Padding="10,4"
                     FontSize="12"
@@ -603,14 +627,14 @@
 
         <!-- Error state -->
         <Border IsVisible="{Binding HasError}"
-                Background="#1F0D0D"
-                BorderBrush="#3D1F1F"
+                Background="{DynamicResource DangerSoftBrush}"
+                BorderBrush="{DynamicResource DangerLineBrush}"
                 BorderThickness="1"
                 CornerRadius="6"
                 Padding="14,10">
           <TextBlock Text="{Binding ErrorMessage}"
                      FontSize="12"
-                     Foreground="#C85050"
+                     Foreground="{DynamicResource DangerBrush}"
                      TextWrapping="Wrap" />
         </Border>
 
@@ -618,14 +642,17 @@
     </ScrollViewer>
 
     <!-- ── Footer ────────────────────────────────────────────────────────── -->
-    <Border Grid.Row="2" Background="#0D0D0D">
+    <Border Grid.Row="2"
+            Background="{DynamicResource ChromeBrush}"
+            BorderBrush="{DynamicResource LineBrush}"
+            BorderThickness="0,1,0,0">
       <StackPanel Orientation="Horizontal"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   Spacing="5">
         <TextBlock Text="Powered by"
                    FontSize="11"
-                   Foreground="#333"
+                   Foreground="{DynamicResource MutedBrush}"
                    VerticalAlignment="Center" />
         <Viewbox Width="12"
                  Height="12"
@@ -639,12 +666,12 @@
             <Path Data="{StaticResource Icon.LumynBody}" Stroke="#3A9B4B" StrokeThickness="18" StrokeLineCap="Round" StrokeJoin="Round" />
             <Path Data="{StaticResource Icon.LumynStand1}" Stroke="#3A9B4B" StrokeThickness="12" StrokeLineCap="Round" />
             <Path Data="{StaticResource Icon.LumynStand2}" Stroke="#3A9B4B" StrokeThickness="12" StrokeLineCap="Round" />
-            <Path Data="{StaticResource Icon.LumynPlay}" Fill="#D8D4CF" />
+            <Path Data="{StaticResource Icon.LumynPlay}" Fill="{DynamicResource LumynPlayBrush}" />
           </Canvas>
         </Viewbox>
         <TextBlock Text="Lumyn"
                    FontSize="11"
-                   Foreground="#333"
+                   Foreground="{DynamicResource MutedBrush}"
                    VerticalAlignment="Center" />
       </StackPanel>
     </Border>

@@ -16,7 +16,6 @@
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
-    <PackageReference Include="Avalonia.Fonts.Inter" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +24,11 @@
 
   <ItemGroup>
     <!-- transmux.ico and lumyn.svg are native platform files, not Avalonia resources -->
-    <AvaloniaResource Include="Assets/**" Exclude="Assets/Icons/transmux.ico;Assets/Icons/lumyn.svg" />
+    <AvaloniaResource Include="Assets/**" Exclude="Assets/Icons/transmux.ico;Assets/Icons/lumyn.svg;Assets/Fonts/*.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Embedded fonts (DM Sans, JetBrains Mono) are under the SIL Open Font License; ship the licenses with the app -->
+    <Content Include="Assets/Fonts/*-OFL.txt" Link="licenses/fonts/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

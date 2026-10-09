@@ -7,7 +7,6 @@
     Height="450"
     MinWidth="500"
     MinHeight="400"
-    Background="#0D0D0D"
     CanResize="True">
 
   <Grid RowDefinitions="*,Auto">
@@ -23,70 +22,79 @@
           <TextBlock Text="File Operations"
                      FontSize="12"
                      FontWeight="SemiBold"
-                     Foreground="#3A6E9B" />
+                     Foreground="{DynamicResource AccentTextBrush}" />
           <Grid ColumnDefinitions="120,*">
-            <TextBlock Grid.Column="0" Text="Ctrl+O" FontSize="11" Foreground="#888" />
-            <TextBlock Grid.Column="1" Text="Open/select input file" FontSize="11" Foreground="#AAA" />
+            <TextBlock Grid.Column="0" Text="Ctrl+O" Classes="mono" FontSize="11" Foreground="{DynamicResource GreyBrush}" />
+            <TextBlock Grid.Column="1" Text="Open/select input file" FontSize="11" Foreground="{DynamicResource BodyBrush}" />
           </Grid>
         </StackPanel>
 
-        <Border Background="#1A1A1A" Height="1" />
+        <Border Background="{DynamicResource LineBrush}" Height="1" />
 
         <!-- Conversion -->
         <StackPanel Spacing="6">
           <TextBlock Text="Conversion"
                      FontSize="12"
                      FontWeight="SemiBold"
-                     Foreground="#3A6E9B" />
+                     Foreground="{DynamicResource AccentTextBrush}" />
           <Grid ColumnDefinitions="120,*">
-            <TextBlock Grid.Column="0" Text="Enter" FontSize="11" Foreground="#888" />
-            <TextBlock Grid.Column="1" Text="Convert the current file" FontSize="11" Foreground="#AAA" />
+            <TextBlock Grid.Column="0" Text="Enter" Classes="mono" FontSize="11" Foreground="{DynamicResource GreyBrush}" />
+            <TextBlock Grid.Column="1" Text="Convert the current file" FontSize="11" Foreground="{DynamicResource BodyBrush}" />
           </Grid>
           <Grid ColumnDefinitions="120,*">
-            <TextBlock Grid.Column="0" Text="Spacebar" FontSize="11" Foreground="#888" />
-            <TextBlock Grid.Column="1" Text="Toggle Fast/Full re-encode mode" FontSize="11" Foreground="#AAA" />
+            <TextBlock Grid.Column="0" Text="Spacebar" Classes="mono" FontSize="11" Foreground="{DynamicResource GreyBrush}" />
+            <TextBlock Grid.Column="1" Text="Toggle Fast/Full re-encode mode" FontSize="11" Foreground="{DynamicResource BodyBrush}" />
           </Grid>
         </StackPanel>
 
-        <Border Background="#1A1A1A" Height="1" />
+        <Border Background="{DynamicResource LineBrush}" Height="1" />
 
         <!-- Dialogs -->
         <StackPanel Spacing="6">
           <TextBlock Text="Dialogs"
                      FontSize="12"
                      FontWeight="SemiBold"
-                     Foreground="#3A6E9B" />
+                     Foreground="{DynamicResource AccentTextBrush}" />
           <Grid ColumnDefinitions="120,*">
-            <TextBlock Grid.Column="0" Text="Escape" FontSize="11" Foreground="#888" />
-            <TextBlock Grid.Column="1" Text="Close any open dialog or window" FontSize="11" Foreground="#AAA" />
+            <TextBlock Grid.Column="0" Text="Escape" Classes="mono" FontSize="11" Foreground="{DynamicResource GreyBrush}" />
+            <TextBlock Grid.Column="1" Text="Close any open dialog or window" FontSize="11" Foreground="{DynamicResource BodyBrush}" />
           </Grid>
         </StackPanel>
 
-        <Border Background="#1A1A1A" Height="1" />
+        <Border Background="{DynamicResource LineBrush}" Height="1" />
 
         <!-- Drag &amp; Drop -->
         <StackPanel Spacing="6">
           <TextBlock Text="Drag &amp; Drop"
                      FontSize="12"
                      FontWeight="SemiBold"
-                     Foreground="#3A6E9B" />
+                     Foreground="{DynamicResource AccentTextBrush}" />
           <StackPanel Spacing="4">
-            <TextBlock Text="Drag a file onto the window to load it" FontSize="11" Foreground="#AAA" />
+            <TextBlock Text="Drag a file onto the window to load it" FontSize="11" Foreground="{DynamicResource BodyBrush}" />
           </StackPanel>
         </StackPanel>
 
-        <Border Background="#1A1A1A" Height="1" />
+        <Border Background="{DynamicResource LineBrush}" Height="1" />
 
         <!-- Tips -->
         <StackPanel Spacing="6">
           <TextBlock Text="Tips"
                      FontSize="12"
                      FontWeight="SemiBold"
-                     Foreground="#3A6E9B" />
+                     Foreground="{DynamicResource AccentTextBrush}" />
           <StackPanel Spacing="4">
-            <TextBlock Text="• Hover over buttons for tooltips" FontSize="11" Foreground="#AAA" />
-            <TextBlock Text="• Right-click files in file explorer with Transmux" FontSize="11" Foreground="#AAA" />
-            <TextBlock Text="• Command-line: transmux file1.mp4 file2.mkv" FontSize="11" Foreground="#AAA" />
+            <StackPanel Orientation="Horizontal" Spacing="7">
+              <Ellipse Classes="bullet" />
+              <TextBlock Text="Hover over buttons for tooltips" FontSize="11" Foreground="{DynamicResource BodyBrush}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="7">
+              <Ellipse Classes="bullet" />
+              <TextBlock Text="Right-click files in file explorer with Transmux" FontSize="11" Foreground="{DynamicResource BodyBrush}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="7">
+              <Ellipse Classes="bullet" />
+              <TextBlock Text="Command-line: transmux file1.mp4 file2.mkv" FontSize="11" Foreground="{DynamicResource BodyBrush}" />
+            </StackPanel>
           </StackPanel>
         </StackPanel>
 
@@ -94,7 +102,7 @@
     </ScrollViewer>
 
     <!-- Footer -->
-    <Border Grid.Row="1" Background="#0D0D0D" BorderBrush="#1A1A1A" BorderThickness="0,1,0,0">
+    <Border Grid.Row="1" Background="{DynamicResource ChromeBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,1,0,0">
       <StackPanel Orientation="Horizontal"
                   Spacing="8"
                   VerticalAlignment="Center"
@@ -102,9 +110,7 @@
                   Margin="0,0,20,0">
         <Button Name="OkButton"
                 Click="CloseButton_Click"
-                Background="#2A5F8D"
-                BorderBrush="#3A7FAD"
-                Foreground="#DEDAD5"
+                Classes="accent"
                 CornerRadius="4"
                 Padding="20,8"
                 FontSize="13"

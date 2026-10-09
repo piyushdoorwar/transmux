@@ -1,12 +1,15 @@
 <Application
     x:Class="Transmux.App.App"
     xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    RequestedThemeVariant="Default">
+  <!-- "Default" follows the operating system's light or dark setting and
+       re-themes live when it changes. -->
   <Application.Styles>
     <FluentTheme>
       <FluentTheme.Palettes>
-        <ColorPaletteResources x:Key="Dark" Accent="#3A6E9B" />
         <ColorPaletteResources x:Key="Light" Accent="#3A6E9B" />
+        <ColorPaletteResources x:Key="Dark" Accent="#4B8FBE" />
       </FluentTheme.Palettes>
     </FluentTheme>
     <StyleInclude Source="avares://Transmux/Assets/Styles/Lumyn.axaml" />
@@ -14,6 +17,7 @@
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://Transmux/Assets/Styles/Theme.axaml" />
         <ResourceInclude Source="avares://Transmux/Assets/Icons/LumynLogo.axaml" />
         <ResourceInclude Source="avares://Transmux/Assets/Icons/TransmuxIcons.axaml" />
       </ResourceDictionary.MergedDictionaries>

@@ -8,12 +8,16 @@
       content="Transmux is a clean desktop media converter for Windows and Linux, powered by FFmpeg."
     />
     <meta name="author" content="Piyush Doorwar" />
+    <meta name="application-name" content="Transmux" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta name="theme-color" content="#111111" />
+    <meta name="theme-color" content="#FCFCFC" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#161719" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
     <link rel="canonical" href="https://piyushdoorwar.github.io/transmux/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Transmux" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Transmux — Desktop Media Converter" />
     <meta
       property="og:description"
@@ -34,7 +38,14 @@
 
     <title>Transmux — Free Desktop Media Converter</title>
     <link rel="icon" href="assets/transmux.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    />
     <link rel="stylesheet" href="styles.css" />
+    <script>document.documentElement.classList.add("js");</script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -61,264 +72,348 @@
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <header class="topbar">
-      <a class="brand" href="#top" aria-label="Transmux home">
-        <img src="assets/transmux.svg" alt="" />
-        <span>Transmux</span>
-      </a>
-      <nav aria-label="Primary navigation">
-        <a class="icon-link" href="#features">
-          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-features" /></svg>
-          <span>Features</span>
+      <div class="wrap">
+        <a class="brand" href="./" aria-label="Transmux home">
+          <img src="assets/transmux.svg" alt="" width="30" height="30" />
+          <span>Transmux</span>
         </a>
-        <a class="icon-link" href="#download">
-          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-download" /></svg>
-          <span>Download</span>
-        </a>
-        <a class="icon-link" href="releases/">
-          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-releases" /></svg>
-          <span>Releases</span>
-        </a>
-        <a class="icon-link" href="policy/">
-          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-policy" /></svg>
-          <span>Policy</span>
-        </a>
-        <a class="github-link icon-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-github" /></svg>
-          <span>GitHub</span>
-        </a>
-      </nav>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg class="ic i-menu" aria-hidden="true"><use href="assets/icons.svg#i-menu" /></svg>
+          <svg class="ic i-close" aria-hidden="true"><use href="assets/icons.svg#i-close" /></svg>
+        </button>
+        <nav class="nav" id="site-nav" aria-label="Primary">
+          <a href="#features">Features</a>
+          <a href="#how">How it works</a>
+          <a href="#download">Download</a>
+          <a href="releases/">Releases</a>
+          <a href="policy/">Privacy</a>
+          <a class="nav-gh" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
+            <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-github" /></svg>
+            <span>GitHub</span>
+          </a>
+        </nav>
+      </div>
     </header>
 
-    <main id="top">
+    <main id="main">
+      <!-- Hero -->
       <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">Desktop media converter</p>
-          <h1>Transmux</h1>
-          <p class="lede">
-            Convert video and audio to any format you need. Drag in a file, pick an output format,
-            and let FFmpeg do the work — with live progress tracking.
-          </p>
-          <div class="actions">
-            <a class="button primary icon-link" id="downloadLink" href="#download">
-              <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-download" /></svg>
-              <span>Download latest</span>
-            </a>
-            <a class="button secondary github-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-              <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-github" /></svg>
-              <span>View source</span>
-            </a>
+        <div class="wrap hero-grid">
+          <div class="hero-copy">
+            <span class="pill"><b>Free</b> For Ubuntu and Windows</span>
+            <h1>Convert video and audio. <em>Skip the command line.</em></h1>
+            <p class="lede">
+              Transmux is a clean desktop media converter. Drag in a file, pick an output format, and
+              let FFmpeg do the work, with live progress tracking.
+            </p>
+            <div class="actions">
+              <a class="btn btn-primary" id="downloadLink" href="#download">
+                <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-download" /></svg>
+                <span id="downloadLabel">Download latest</span>
+              </a>
+              <a class="btn btn-secondary" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
+                <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-github" /></svg>
+                <span>View source</span>
+              </a>
+            </div>
+            <ul class="checks">
+              <li><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-check" /></svg>Converts locally</li>
+              <li><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-check" /></svg>No account</li>
+              <li><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-check" /></svg>No telemetry</li>
+              <li><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-check" /></svg>Free for personal use</li>
+            </ul>
+          </div>
+
+          <!-- Product mock, drawn in HTML and CSS -->
+          <div class="mock" id="mock" role="img" aria-label="The Transmux window converting movie.mkv to MP4, with its media summary, output format, mode and live progress">
+            <div class="mock-chrome" aria-hidden="true">
+              <div class="mock-title"><img src="assets/transmux.svg" alt="" width="20" height="20" />Transmux</div>
+              <div class="mock-tools">
+                <span><svg class="ic"><use href="assets/icons.svg#i-keyboard" /></svg></span>
+                <span><svg class="ic"><use href="assets/icons.svg#i-history" /></svg></span>
+                <span><svg class="ic"><use href="assets/icons.svg#i-info" /></svg></span>
+              </div>
+              <div class="mock-dots"><i></i><i></i><i></i></div>
+            </div>
+
+            <div class="mock-body" aria-hidden="true">
+              <div class="cv-file">
+                <div class="cv-file-icon"><svg class="ic"><use href="assets/icons.svg#i-film" /></svg></div>
+                <div>
+                  <b>movie.mkv</b>
+                  <small>Click to change file</small>
+                </div>
+              </div>
+
+              <div class="cv-summary">
+                <div><small>Format</small><span>Matroska</span></div>
+                <div><small>Video</small><span>H.264 1920x1080</span></div>
+                <div><small>Audio</small><span>AAC 5.1</span></div>
+                <div><small>Subtitles</small><span>2 tracks</span></div>
+              </div>
+
+              <div class="cv-fields">
+                <div class="cv-row">
+                  <small>Output format</small>
+                  <div class="cv-select"><span>MP4 (H.264 / AAC)</span><span class="tag">Suggested</span><svg class="ic"><use href="assets/icons.svg#i-chevron" /></svg></div>
+                </div>
+                <div class="cv-row">
+                  <small>Mode</small>
+                  <div class="cv-seg" id="mockMode">
+                    <button type="button" tabindex="-1" aria-pressed="true">Fast</button>
+                    <button type="button" tabindex="-1" aria-pressed="false">Full re-encode</button>
+                  </div>
+                </div>
+                <div class="cv-row">
+                  <small>Subtitles</small>
+                  <div class="cv-select"><span>Include in output</span><svg class="ic"><use href="assets/icons.svg#i-chevron" /></svg></div>
+                </div>
+                <div class="cv-row">
+                  <small>Save to</small>
+                  <div class="cv-select"><span class="cv-path">~/Videos/movie.mp4</span></div>
+                </div>
+              </div>
+
+              <div class="cv-progress" id="mockProgress">
+                <div class="cv-progress-top">
+                  <b id="progLabel">Converting</b>
+                  <span class="pct" id="progPercent">38%</span>
+                </div>
+                <div class="cv-bar"><i id="progBar"></i></div>
+                <div class="cv-progress-meta">
+                  <span id="progSpeed">3.4x</span>
+                  <span id="progEta">ETA 1:52</span>
+                </div>
+              </div>
+
+              <div class="cv-actions">
+                <span class="cv-btn"><svg class="ic"><use href="assets/icons.svg#i-folder" /></svg>Open folder</span>
+                <span class="cv-btn">Cancel</span>
+                <span class="cv-btn primary">Convert</span>
+              </div>
+            </div>
+            <div class="mock-foot" aria-hidden="true">Powered by <b>Lumyn</b></div>
           </div>
         </div>
+      </section>
 
-        <div class="converter-preview" aria-label="Transmux converter preview">
-          <div class="window-bar">
-            <div class="mark">
-              <img src="assets/transmux.svg" alt="" />
-            </div>
-            <span>Transmux</span>
-            <div class="window-buttons" aria-hidden="true">
-              <i></i><i></i><i class="cvt-close"></i>
-            </div>
+      <!-- How it works -->
+      <section class="section tint" id="how">
+        <div class="wrap">
+          <div class="section-head" data-reveal>
+            <span class="eyebrow">How it works</span>
+            <h2>Drop in a file. Pick a format. Convert.</h2>
+            <p>Inspect a file's format and streams, choose what comes out, and convert without touching a command line.</p>
           </div>
-          <div class="cvt-body">
-            <div class="cvt-dropzone">
-              <div class="cvt-file-icon" aria-hidden="true"></div>
-              <p class="cvt-filename">movie.mkv</p>
-              <p class="cvt-filemeta">1920 × 1080 · H.264 · AAC · 1:28:04</p>
+          <div class="steps">
+            <div class="step" data-reveal>
+              <h3>Open a file</h3>
+              <p>Use the file picker or drag a file onto the window. Transmux inspects its format and its video, audio and subtitle streams.</p>
             </div>
-            <div class="cvt-fields">
-              <div class="cvt-field-row">
-                <span class="cvt-field-label">Output format</span>
-                <div class="cvt-select-mock">MP4 (H.264 / AAC)<span class="cvt-chevron" aria-hidden="true"></span></div>
-              </div>
-              <div class="cvt-field-row">
-                <span class="cvt-field-label">Subtitles &emsp;&emsp;&nbsp;</span>
-                <div class="cvt-select-mock">Include in output<span class="cvt-chevron" aria-hidden="true"></span></div>
-              </div>
+            <div class="step" data-reveal style="--d: 0.06s">
+              <h3>Pick an output format</h3>
+              <p>Transmux suggests the best output for your input codec, such as H.264 and AAC to MP4, or VP9 and Opus to WebM.</p>
             </div>
-            <div class="cvt-progress-section">
-              <div class="cvt-progress-bar"><span id="progBar" style="width:1%"></span></div>
-              <div class="cvt-progress-meta">
-                <span id="progPercent">Converting… 1%</span>
-                <span id="progEta">3.4× · ETA 3:00</span>
-              </div>
+            <div class="step" data-reveal style="--d: 0.12s">
+              <h3>Convert</h3>
+              <p>Follow live speed and ETA, cancel at any point, and open the output folder when the conversion completes.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="band" id="features">
-        <div class="section-heading" data-reveal>
-          <p class="eyebrow">What it does</p>
-          <h2>Convert once, play anywhere.</h2>
-        </div>
-        <div class="feature-grid">
-          <article data-reveal>
-            <h3>FFmpeg powered</h3>
-            <p>Solid conversion through FFmpeg, bundled with release builds so it works out of the box.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.1s">
-            <h3>Wide format support</h3>
-            <p>MP4, WebM, MKV, AVI, MOV, MP3, AAC, FLAC, OGG, WAV, Opus — video and audio in one tool.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.2s">
-            <h3>Smart format detection</h3>
-            <p>Automatically suggests the best output format based on your input codec — H.264+AAC → MP4, VP9+Opus → WebM.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.3s">
-            <h3>Flexible subtitles &amp; audio</h3>
-            <p>Choose which audio and subtitle tracks to include, extract to separate files, or skip entirely.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.4s">
-            <h3>Smart conversion modes</h3>
-            <p>Stream copy for instant conversions or full re-encode for quality. Auto-detects when source matches target and skips needless re-encoding.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.5s">
-            <h3>Conversion history</h3>
-            <p>Track all conversions with timestamps. Quickly access output folders and review past operations.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.6s">
-            <h3>Keyboard shortcuts</h3>
-            <p>Power-user shortcuts: Ctrl+O (open), Enter (convert), Spacebar (toggle mode), ? (help) — or use your mouse.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.7s">
-            <h3>Live progress</h3>
-            <p>Real-time speed and ETA feedback while converting, with cancel support at any point.</p>
-          </article>
+      <!-- Features -->
+      <section class="section" id="features">
+        <div class="wrap">
+          <div class="section-head" data-reveal>
+            <span class="eyebrow">What it does</span>
+            <h2>Convert once, play anywhere.</h2>
+            <p>Video and audio in one tool, with the decisions FFmpeg needs made for you and the controls you want left in reach.</p>
+          </div>
+
+          <div class="features">
+            <article class="card" data-reveal>
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-cpu" /></svg></div>
+              <h3>FFmpeg powered</h3>
+              <p>Solid conversion through FFmpeg, bundled with Windows release builds so it works out of the box.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.04s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-film" /></svg></div>
+              <h3>Wide format support</h3>
+              <p>MP4, WebM, MKV, AVI, MOV, MP3, AAC, FLAC, OGG, WAV and Opus: video and audio in one tool.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.08s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-wand" /></svg></div>
+              <h3>Smart format detection</h3>
+              <p>Suggests the best output format for your input codec: H.264 and AAC to MP4, VP9 and Opus to WebM.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.12s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-subtitles" /></svg></div>
+              <h3>Subtitles and audio tracks</h3>
+              <p>Choose which audio and subtitle tracks to include, extract subtitles to separate files, or skip them entirely.</p>
+            </article>
+            <article class="card" data-reveal>
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-zap" /></svg></div>
+              <h3>Smart conversion modes</h3>
+              <p>Stream copy for instant conversions or a full re-encode for quality. Transmux spots when the source already matches the target and skips needless re-encoding.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.04s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-activity" /></svg></div>
+              <h3>Live progress</h3>
+              <p>Real-time speed and ETA while converting, with cancel support at any point.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.08s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-history" /></svg></div>
+              <h3>Conversion history</h3>
+              <p>Every conversion is kept with a timestamp. Review past operations and open their output folders quickly.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.12s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-keyboard" /></svg></div>
+              <h3>Keyboard shortcuts</h3>
+              <p>Open, convert and switch modes from the keyboard, or use your mouse. Press <kbd>?</kbd> for the full list.</p>
+            </article>
+          </div>
         </div>
       </section>
 
-      <section class="download" id="download">
-        <div data-reveal>
-          <p class="eyebrow">Latest release</p>
-          <h2>Get Transmux for Ubuntu and Windows</h2>
-          <p>
-            Release builds are distributed as a Debian package for Linux and a single-file installer for Windows.
-          </p>
-        </div>
-
-        <!-- Download buttons -->
-        <div class="download-container" data-reveal style="--reveal-delay: 0.1s">
-          <p class="download-desc">Download the latest release for your platform:</p>
-          <div class="download-actions" aria-label="Download Transmux">
-            <a class="button primary large platform-download disabled" id="linuxDownloadLink" aria-disabled="true" aria-label="Download Transmux for Linux">
-              <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-ubuntu" /></svg>
-              <span>Download for Linux</span>
-            </a>
-            <a class="button primary large platform-download disabled" id="windowsDownloadLink" aria-disabled="true" aria-label="Download Transmux for Windows">
-              <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-windows" /></svg>
-              <span>Download for Windows</span>
-            </a>
+      <!-- Tracks and shortcuts -->
+      <section class="section tint" id="tracks">
+        <div class="wrap split">
+          <div class="section-head" data-reveal>
+            <span class="eyebrow">Your streams, your call</span>
+            <h2>Keep the tracks you want. Drop the rest.</h2>
+            <p>
+              A movie rarely has just one audio track and one subtitle. Transmux shows every stream it
+              finds and lets you decide what ends up in the output.
+            </p>
+            <ul class="bullets">
+              <li><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-check" /></svg><span>Pick which audio tracks to include in the conversion.</span></li>
+              <li><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-check" /></svg><span>Include subtitles in the output, extract them to <code>.srt</code> or <code>.ass</code>, or strip them, across several tracks at once.</span></li>
+              <li><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-check" /></svg><span>Fast mode stream-copies without re-encoding; full re-encode converts to the format's target codec and quality.</span></li>
+            </ul>
           </div>
-          <p class="download-note">FFmpeg is bundled with Windows releases. Linux requires <code>ffmpeg</code> installed via <code>sudo apt install ffmpeg</code></p>
+
+          <div class="panel" data-reveal style="--d: 0.08s">
+            <div class="panel-head">
+              <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-keyboard" /></svg>
+              <b>Keyboard shortcuts</b>
+            </div>
+            <ul class="keys">
+              <li><span>Open a file</span><span class="combo"><kbd>Ctrl</kbd><kbd>O</kbd></span></li>
+              <li><span>Convert the current file</span><span class="combo"><kbd>Enter</kbd></span></li>
+              <li><span>Toggle Fast and Full re-encode</span><span class="combo"><kbd>Space</kbd></span></li>
+              <li><span>Show keyboard shortcuts</span><span class="combo"><kbd>?</kbd></span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Download -->
+      <section class="section" id="download">
+        <div class="wrap">
+          <div class="section-head" data-reveal>
+            <span class="eyebrow">Latest release</span>
+            <h2>Get Transmux for Ubuntu and Windows</h2>
+            <p>Release builds are distributed as a Debian package for Linux and a single-file installer for Windows.</p>
+          </div>
+
+          <div class="platforms">
+            <article class="platform" id="platform-linux" data-reveal>
+              <div class="platform-head">
+                <div class="os"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-ubuntu" /></svg></div>
+                <div>
+                  <h3>Linux</h3>
+                  <small>Ubuntu and Debian, amd64 <code>.deb</code></small>
+                </div>
+                <span class="badge badge-soft hidden" data-detected>Your system</span>
+              </div>
+              <p>Requires <code>ffmpeg</code>, installed with <code>sudo apt install ffmpeg</code>. For automatic updates, add the PPA instead:</p>
+              <div class="cmd">
+                <pre><code><span class="prompt">$ </span>sudo add-apt-repository ppa:piyushdoorwar/transmux
+<span class="prompt">$ </span>sudo apt update
+<span class="prompt">$ </span>sudo apt install transmux</code></pre>
+                <button class="copy-btn" type="button" data-copy="sudo add-apt-repository ppa:piyushdoorwar/transmux&#10;sudo apt update&#10;sudo apt install transmux" aria-label="Copy PPA install commands">
+                  <svg class="ic i-copy" aria-hidden="true"><use href="assets/icons.svg#i-copy" /></svg>
+                  <svg class="ic i-check" aria-hidden="true"><use href="assets/icons.svg#i-check" /></svg>
+                  <span>Copy</span>
+                </button>
+              </div>
+              <a class="btn btn-primary" id="linuxDownloadLink" aria-disabled="true" aria-label="Download Transmux for Linux">
+                <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-download" /></svg>
+                <span>Download for Linux</span>
+              </a>
+            </article>
+
+            <article class="platform" id="platform-windows" data-reveal style="--d: 0.06s">
+              <div class="platform-head">
+                <div class="os"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-windows" /></svg></div>
+                <div>
+                  <h3>Windows</h3>
+                  <small>x64 <code>.exe</code> installer</small>
+                </div>
+                <span class="badge badge-soft hidden" data-detected>Your system</span>
+              </div>
+              <p>Download the installer and run it. FFmpeg is bundled with Windows releases, so there is no additional setup.</p>
+              <a class="btn btn-primary" id="windowsDownloadLink" aria-disabled="true" aria-label="Download Transmux for Windows">
+                <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-download" /></svg>
+                <span>Download for Windows</span>
+              </a>
+            </article>
+          </div>
+
+          <div class="download-foot">
+            <span>Looking for an older build or a pre-release?</span>
+            <a href="releases/"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-tag" /></svg>All releases</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Support -->
+      <section class="section tint" id="support">
+        <div class="wrap">
+          <div class="cta" data-reveal>
+            <div>
+              <h2>Need help with Transmux?</h2>
+              <p>Found a bug, hit a conversion issue, or want to share feedback? Send an email and include your OS, Transmux version, and a short note about what happened.</p>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="mailto:piyushdoorwar+transmux@gmail.com">
+                <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-mail" /></svg>
+                <span>Email support</span>
+              </a>
+              <a class="btn btn-secondary" href="https://github.com/piyushdoorwar/transmux/issues" rel="noreferrer">
+                <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-github" /></svg>
+                <span>Open an issue</span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
     </main>
 
-    <footer>
-      <span>Transmux</span>
-      <div class="footer-links">
-        <a class="icon-link" href="releases/">
-          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-releases" /></svg>
-          <span>All releases</span>
-        </a>
-        <a class="icon-link" href="policy/">
-          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-policy" /></svg>
-          <span>Policy</span>
-        </a>
-        <a class="github-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-github" /></svg>
-          <span>GitHub</span>
-        </a>
-        <button class="footer-support-link icon-link" id="footerSupportBtn">
-          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-support" /></svg>
-          <span>Support</span>
-        </button>
+    <footer class="footer">
+      <div class="wrap">
+        <div>
+          <a class="brand" href="./">
+            <img src="assets/transmux.svg" alt="" width="26" height="26" />
+            <span>Transmux</span>
+          </a>
+          <p>A clean desktop media converter for Ubuntu and Windows, powered by FFmpeg and Lumyn.</p>
+        </div>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="releases/"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-tag" /></svg>Releases</a>
+          <a href="policy/"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-shield" /></svg>Privacy</a>
+          <a href="https://github.com/piyushdoorwar/transmux" rel="noreferrer"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-github" /></svg>GitHub</a>
+          <a href="mailto:piyushdoorwar+transmux@gmail.com"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-mail" /></svg>Support</a>
+        </nav>
       </div>
     </footer>
 
-    <!-- Support modal -->
-    <div class="modal-backdrop hidden" id="supportModal" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle">
-      <div class="modal-box">
-        <div class="modal-header">
-          <p class="eyebrow" style="margin:0">Support and issues</p>
-          <button class="modal-close" aria-label="Close support dialog" id="closeSupportModal">✕</button>
-        </div>
-        <h2 id="supportModalTitle" class="modal-title">Need help with Transmux?</h2>
-        <p class="modal-body">
-          Found a bug, hit a conversion issue, or want to share feedback? Send an email and include your OS,
-          Transmux version, and a short note about what happened.
-        </p>
-        <a class="button secondary large email-link" href="mailto:piyushdoorwar+transmux@gmail.com">
-          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-mail" /></svg>
-          <span>piyushdoorwar+transmux@gmail.com</span>
-        </a>
-      </div>
-    </div>
-
     <script src="image-guard.js"></script>
     <script src="app.js"></script>
-    <script>
-      // Progress bar animation with enhanced visual effects
-      function animateProgress() {
-        const progBar = document.getElementById("progBar");
-        const progPercent = document.getElementById("progPercent");
-        const progEta = document.getElementById("progEta");
-        const progSection = document.querySelector(".cvt-progress-section");
-        const duration = 22000; // 22 seconds per cycle
-        const startTime = Date.now();
-
-        function updateProgress() {
-          const elapsed = Date.now() - startTime;
-          const progress = Math.min(elapsed / duration, 1); // 0 to 1
-
-          // Smooth easing (cubic easeInOut)
-          const easeProgress = progress < 0.5
-            ? 4 * progress ** 3
-            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-          const percent = Math.round(1 + easeProgress * 98); // 1% to 99%
-          const eta = Math.max(0, 180 - Math.floor(easeProgress * 176)); // 3:00 down to 0:04
-
-          progBar.style.width = percent + "%";
-
-          // Update progress percent with animated text
-          const progPercentText = progPercent.querySelector ? progPercent : document.getElementById("progPercent");
-          progPercentText.textContent = `Converting… ${percent}%`;
-
-          // Animate glow intensity based on progress
-          const glowIntensity = 0.3 + (easeProgress * 0.5); // 0.3 to 0.8
-          const glowColor = `rgba(58, 110, 155, ${glowIntensity})`;
-          progBar.parentElement.style.boxShadow = `0 0 ${8 + easeProgress * 8}px ${glowColor}`;
-
-          const mins = Math.floor(eta / 60);
-          const secs = eta % 60;
-          progEta.textContent = `3.4× · ETA ${mins}:${String(secs).padStart(2, "0")}`;
-
-          if (progress < 1) {
-            requestAnimationFrame(updateProgress);
-          } else {
-            // Loop: restart animation
-            setTimeout(animateProgress, 500);
-          }
-        }
-
-        updateProgress();
-      }
-
-      // Start animation when page loads
-      animateProgress();
-
-      // Support modal
-      const supportBtn   = document.getElementById("footerSupportBtn");
-      const supportModal = document.getElementById("supportModal");
-      const closeModal   = document.getElementById("closeSupportModal");
-      supportBtn.addEventListener("click", () => { supportModal.classList.remove("hidden"); document.body.style.overflow = "hidden"; });
-      closeModal.addEventListener("click",  () => { supportModal.classList.add("hidden");    document.body.style.overflow = ""; });
-      supportModal.addEventListener("click", e => { if (e.target === supportModal) { supportModal.classList.add("hidden"); document.body.style.overflow = ""; } });
-      document.addEventListener("keydown", e => { if (e.key === "Escape" && !supportModal.classList.contains("hidden")) { supportModal.classList.add("hidden"); document.body.style.overflow = ""; } });
-    </script>
     <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7bf02e12b7eb4bcfb147fbf33e347cd9"}'></script><!-- End Cloudflare Web Analytics -->
   </body>
 </html>

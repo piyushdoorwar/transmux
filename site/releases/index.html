@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Download current and previous Transmux releases for Linux and Windows, with installation instructions." />
     <meta name="author" content="Piyush Doorwar" />
+    <meta name="application-name" content="Transmux" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta name="theme-color" content="#111111" />
+    <meta name="theme-color" content="#FCFCFC" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#161719" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
     <link rel="canonical" href="https://piyushdoorwar.github.io/transmux/releases/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Transmux" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Download Transmux — Releases" />
     <meta property="og:description" content="Download current and previous Transmux releases for Linux and Windows." />
     <meta property="og:url" content="https://piyushdoorwar.github.io/transmux/releases/" />
@@ -25,6 +29,12 @@
 
     <title>Download Transmux — Linux and Windows Releases</title>
     <link rel="icon" href="../assets/transmux.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    />
     <link rel="stylesheet" href="../styles.css" />
     <script type="application/ld+json">
       {
@@ -42,176 +52,151 @@
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <header class="topbar">
-      <a class="brand" href="../" aria-label="Transmux home">
-        <img src="../assets/transmux.svg" alt="" />
-        <span>Transmux</span>
-      </a>
-      <nav aria-label="Primary navigation">
-        <a class="icon-link" href="../#features">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-features" /></svg>
-          <span>Features</span>
+      <div class="wrap">
+        <a class="brand" href="../" aria-label="Transmux home">
+          <img src="../assets/transmux.svg" alt="" width="30" height="30" />
+          <span>Transmux</span>
         </a>
-        <a class="icon-link" href="../#download">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-download" /></svg>
-          <span>Download</span>
-        </a>
-        <a class="icon-link" href="./" aria-current="page">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-releases" /></svg>
-          <span>Releases</span>
-        </a>
-        <a class="icon-link" href="../policy/">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-policy" /></svg>
-          <span>Policy</span>
-        </a>
-        <a class="github-link icon-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
-          <span>GitHub</span>
-        </a>
-      </nav>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg class="ic i-menu" aria-hidden="true"><use href="../assets/icons.svg#i-menu" /></svg>
+          <svg class="ic i-close" aria-hidden="true"><use href="../assets/icons.svg#i-close" /></svg>
+        </button>
+        <nav class="nav" id="site-nav" aria-label="Primary">
+          <a href="../#features">Features</a>
+          <a href="../#how">How it works</a>
+          <a href="../#download">Download</a>
+          <a href="./" aria-current="page">Releases</a>
+          <a href="../policy/">Privacy</a>
+          <a class="nav-gh" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
+            <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
+            <span>GitHub</span>
+          </a>
+        </nav>
+      </div>
     </header>
 
-    <main class="releases-main">
-      <div class="releases-header">
-        <div>
-          <p class="eyebrow">All versions</p>
-          <h1 class="releases-title">Releases</h1>
-          <p class="releases-subtitle">Download any previous release. Stable builds are listed by default.</p>
+    <main id="main">
+      <section class="page-hero">
+        <div class="wrap">
+          <span class="eyebrow">Releases</span>
+          <h1>Downloads and installation</h1>
+          <p>
+            Download any release of Transmux: a Debian package for Ubuntu and Debian, and an installer
+            for Windows. Stable builds are listed by default.
+          </p>
         </div>
+      </section>
 
-        <!-- OS filter tabs + stable toggle -->
-        <div class="releases-filters">
-          <div class="os-tabs" role="tablist" aria-label="Filter by operating system">
-            <button class="os-tab active" role="tab" aria-selected="true"  data-os="all"     aria-controls="release-list">All</button>
-            <button class="os-tab"        role="tab" aria-selected="false" data-os="linux"   aria-controls="release-list">
-              <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-ubuntu" /></svg> Linux
-            </button>
-            <button class="os-tab"        role="tab" aria-selected="false" data-os="windows" aria-controls="release-list">
-              <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-windows" /></svg> Windows
-            </button>
+      <div class="page-body">
+        <div class="wrap">
+          <div class="rel-top">
+            <div class="note">
+              <h3><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-ubuntu" /></svg>Ubuntu PPA</h3>
+              <p>Add the PPA for automatic updates.</p>
+              <div class="cmd">
+                <pre><code><span class="prompt">$ </span>sudo add-apt-repository ppa:piyushdoorwar/transmux
+<span class="prompt">$ </span>sudo apt update
+<span class="prompt">$ </span>sudo apt install transmux</code></pre>
+                <button class="copy-btn" type="button" data-copy="sudo add-apt-repository ppa:piyushdoorwar/transmux&#10;sudo apt update&#10;sudo apt install transmux" aria-label="Copy PPA install commands">
+                  <svg class="ic i-copy" aria-hidden="true"><use href="../assets/icons.svg#i-copy" /></svg>
+                  <svg class="ic i-check" aria-hidden="true"><use href="../assets/icons.svg#i-check" /></svg>
+                  <span>Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="note">
+              <h3><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-download" /></svg>Direct .deb install</h3>
+              <p>Download the <code>.deb</code> below, then install it. Requires <code>ffmpeg</code>, installed with <code>sudo apt install ffmpeg</code>.</p>
+              <div class="cmd">
+                <pre><code><span class="prompt">$ </span>sudo apt install ~/Downloads/transmux_*.deb</code></pre>
+                <button class="copy-btn" type="button" data-copy="sudo apt install ~/Downloads/transmux_*.deb" aria-label="Copy .deb install command">
+                  <svg class="ic i-copy" aria-hidden="true"><use href="../assets/icons.svg#i-copy" /></svg>
+                  <svg class="ic i-check" aria-hidden="true"><use href="../assets/icons.svg#i-check" /></svg>
+                  <span>Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="note">
+              <h3><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-windows" /></svg>Windows installer</h3>
+              <p>Download the <code>.exe</code> installer below and run it. FFmpeg is bundled, so no additional setup is needed.</p>
+            </div>
           </div>
-          <span class="releases-filters-sep" aria-hidden="true"></span>
-          <label class="stable-toggle" for="stableOnlyToggle">
-            <input type="checkbox" id="stableOnlyToggle" checked />
-            <span class="toggle-track"><span class="toggle-thumb"></span></span>
-            <span class="toggle-label">Stable only</span>
-          </label>
-        </div>
-      </div>
 
-      <!-- Main tabs: Versions vs Installation -->
-      <div class="releases-tabs">
-        <div class="tab-buttons">
-          <button class="tab-button active" data-tab="versions">Versions</button>
-          <button class="tab-button" data-tab="installation">Installation</button>
-        </div>
-
-        <!-- Versions tab -->
-        <div class="tab-content active" data-tab="versions">
-          <div id="releases-loading" class="releases-state">
-            <span class="spinner" aria-hidden="true"></span>
-            <span>Fetching releases…</span>
+          <div class="rel-toolbar">
+            <h2>All versions</h2>
+            <div class="rel-filters">
+              <div class="seg" role="group" aria-label="Filter by operating system">
+                <button type="button" data-os="all" aria-pressed="true">All</button>
+                <button type="button" data-os="linux" aria-pressed="false">
+                  <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-ubuntu" /></svg>Linux
+                </button>
+                <button type="button" data-os="windows" aria-pressed="false">
+                  <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-windows" /></svg>Windows
+                </button>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="stableOnly" checked />
+                <span class="track" aria-hidden="true"></span>
+                <span>Stable releases only</span>
+              </label>
+            </div>
           </div>
-          <div id="releases-error" class="releases-state hidden">
-            Could not load releases.
-            <a class="github-link" href="https://github.com/piyushdoorwar/transmux/releases" rel="noreferrer">
+
+          <div class="state" id="rel-loading">
+            <p>Loading releases...</p>
+          </div>
+          <div class="state hidden" id="rel-error">
+            <h3>Could not load the release list</h3>
+            <p>The full history is always available on GitHub.</p>
+            <a class="btn btn-secondary" href="https://github.com/piyushdoorwar/transmux/releases" rel="noreferrer">
               <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
-              <span>View on GitHub</span>
+              <span>Open GitHub releases</span>
             </a>
           </div>
-          <div id="releases-empty" class="releases-state hidden">
-            No releases found for this platform yet.
+          <div class="state hidden" id="rel-empty">
+            <h3>No releases found</h3>
+            <p>Nothing matches these filters yet. Try another platform, include pre-releases, or check GitHub.</p>
+            <a class="btn btn-secondary" href="https://github.com/piyushdoorwar/transmux/releases" rel="noreferrer">
+              <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
+              <span>Open GitHub releases</span>
+            </a>
           </div>
-          <div id="releases-items"></div>
 
-          <!-- Pagination -->
-          <nav class="pagination" id="pagination" aria-label="Releases pagination" hidden>
-            <button id="page-prev" class="page-btn" aria-label="Previous page" disabled>← Prev</button>
-            <span id="page-label" class="page-label"></span>
-            <button id="page-next" class="page-btn" aria-label="Next page">Next →</button>
-          </nav>
-        </div>
+          <div class="rel-list" id="rel-list" aria-live="polite"></div>
 
-        <!-- Installation tab -->
-        <div class="tab-content" data-tab="installation">
-          <div class="installation-guide">
-            <div class="install-method">
-              <h3>Linux (Ubuntu/Debian) – Ubuntu PPA</h3>
-              <p>Add the PPA for automatic updates:</p>
-              <pre><code>sudo add-apt-repository ppa:piyushdoorwar/transmux
-sudo apt update
-sudo apt install transmux</code></pre>
-            </div>
-
-            <div class="install-method">
-              <h3>Linux (Ubuntu/Debian) – Direct .deb Install</h3>
-              <p>Download the <code>.deb</code> file from the Versions tab, then install directly:</p>
-              <pre><code>sudo apt install ~/Downloads/transmux_*.deb</code></pre>
-              <p class="install-note">Requires <code>ffmpeg</code> installed via <code>sudo apt install ffmpeg</code></p>
-            </div>
-
-            <div class="install-method">
-              <h3>Windows – .exe Installer</h3>
-              <p>Download the <code>.exe</code> installer from the Versions tab and run it. FFmpeg is bundled, no additional setup needed.</p>
-            </div>
+          <div class="pager" id="pager" hidden>
+            <button class="btn btn-secondary" id="page-prev" type="button">Newer</button>
+            <span id="page-label"></span>
+            <button class="btn btn-secondary" id="page-next" type="button">Older</button>
           </div>
         </div>
       </div>
     </main>
 
-    <footer>
-      <span>Transmux</span>
-      <div class="footer-links">
-        <a class="icon-link" href="./" aria-current="page">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-releases" /></svg>
-          <span>Releases</span>
-        </a>
-        <a class="icon-link" href="../policy/">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-policy" /></svg>
-          <span>Policy</span>
-        </a>
-        <a class="github-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
-          <span>GitHub</span>
-        </a>
-        <button class="footer-support-link icon-link" id="footerSupportBtnReleases">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-support" /></svg>
-          <span>Support</span>
-        </button>
+    <footer class="footer">
+      <div class="wrap">
+        <div>
+          <a class="brand" href="../">
+            <img src="../assets/transmux.svg" alt="" width="26" height="26" />
+            <span>Transmux</span>
+          </a>
+          <p>A clean desktop media converter for Ubuntu and Windows, powered by FFmpeg and Lumyn.</p>
+        </div>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="./"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-tag" /></svg>Releases</a>
+          <a href="../policy/"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-shield" /></svg>Privacy</a>
+          <a href="https://github.com/piyushdoorwar/transmux" rel="noreferrer"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>GitHub</a>
+          <a href="mailto:piyushdoorwar+transmux@gmail.com"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-mail" /></svg>Support</a>
+        </nav>
       </div>
     </footer>
 
-    <!-- Support modal (shared) -->
-    <div class="modal-backdrop hidden" id="supportModalReleases" role="dialog" aria-modal="true" aria-labelledby="supportModalTitleReleases">
-      <div class="modal-box">
-        <div class="modal-header">
-          <p class="eyebrow" style="margin:0">Support and issues</p>
-          <button class="modal-close" aria-label="Close support dialog" id="closeSupportReleases">✕</button>
-        </div>
-        <h2 id="supportModalTitleReleases" class="modal-title">Need help with Transmux?</h2>
-        <p class="modal-body">
-          Found a bug, hit a conversion issue, or want to share feedback? Send an email and include your OS,
-          Transmux version, and a short note about what happened.
-        </p>
-        <a class="button secondary large email-link" href="mailto:piyushdoorwar+transmux@gmail.com">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-mail" /></svg>
-          <span>piyushdoorwar+transmux@gmail.com</span>
-        </a>
-      </div>
-    </div>
-
     <script src="../image-guard.js"></script>
+    <script src="../app.js"></script>
     <script src="releases.js"></script>
-    <script>
-      // Support modal wiring for releases page
-      const btn = document.getElementById("footerSupportBtnReleases");
-      const modal = document.getElementById("supportModalReleases");
-      const closeBtn = document.getElementById("closeSupportReleases");
-      btn.addEventListener("click", () => { modal.classList.remove("hidden"); document.body.style.overflow = "hidden"; });
-      closeBtn.addEventListener("click", () => { modal.classList.add("hidden"); document.body.style.overflow = ""; });
-      modal.addEventListener("click", e => { if (e.target === modal) { modal.classList.add("hidden"); document.body.style.overflow = ""; } });
-      document.addEventListener("keydown", e => { if (e.key === "Escape" && !modal.classList.contains("hidden")) { modal.classList.add("hidden"); document.body.style.overflow = ""; } });
-    </script>
     <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7bf02e12b7eb4bcfb147fbf33e347cd9"}'></script><!-- End Cloudflare Web Analytics -->
   </body>
 </html>

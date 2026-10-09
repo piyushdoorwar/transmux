@@ -7,8 +7,7 @@
     Width="750"
     Height="550"
     MinWidth="550"
-    MinHeight="350"
-    Background="#0D0D0D">
+    MinHeight="350">
 
   <Grid RowDefinitions="*,Auto">
 
@@ -19,8 +18,8 @@
       <ItemsControl ItemsSource="{Binding DisplayItems}">
         <ItemsControl.ItemTemplate>
           <DataTemplate>
-            <Border Background="#1A1A1A"
-                    BorderBrush="#2D2D2D"
+            <Border Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource LineBrush}"
                     BorderThickness="1"
                     CornerRadius="6"
                     Padding="12,10"
@@ -29,20 +28,23 @@
                 <!-- File names and format -->
                 <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
                   <TextBlock Text="{Binding InputFileName, StringFormat='Input: {0}'}"
+                             Classes="mono"
                              FontSize="11"
-                             Foreground="#888" />
+                             Foreground="{DynamicResource BodyBrush}" />
                   <TextBlock Text="{Binding OutputFileName, StringFormat='Output: {0}'}"
+                             Classes="mono"
                              FontSize="11"
-                             Foreground="#888" />
+                             Foreground="{DynamicResource BodyBrush}" />
                   <Grid ColumnDefinitions="*,Auto">
                     <TextBlock Grid.Column="0"
                                Text="{Binding Format, StringFormat='Format: {0}'}"
                                FontSize="11"
-                               Foreground="#666" />
+                               Foreground="{DynamicResource GreyBrush}" />
                     <TextBlock Grid.Column="1"
                                Text="{Binding Timestamp, StringFormat='d'}"
+                               Classes="mono"
                                FontSize="10"
-                               Foreground="#555" />
+                               Foreground="{DynamicResource MutedBrush}" />
                   </Grid>
                 </StackPanel>
 
@@ -51,10 +53,10 @@
                         CornerRadius="4"
                         Padding="6,3"
                         VerticalAlignment="Top"
-                        Background="#2D5D3D">
+                        Classes="status-badge"
+                        Classes.failed="{Binding Status, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=Failed}">
                   <TextBlock Text="{Binding Status}"
                              FontSize="10"
-                             Foreground="White"
                              FontWeight="SemiBold" />
                 </Border>
 
@@ -63,8 +65,8 @@
                         Command="{Binding DataContext.OpenFolderCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                         CommandParameter="{Binding}"
                         Background="Transparent"
-                        BorderBrush="#2D2D2D"
-                        Foreground="#666"
+                        BorderBrush="{DynamicResource ControlLineBrush}"
+                        Foreground="{DynamicResource GreyBrush}"
                         CornerRadius="4"
                         Padding="8,4"
                         FontSize="11"
@@ -83,24 +85,24 @@
                IsVisible="{Binding !DisplayItems.Count}"
                Text="No conversion history"
                FontSize="13"
-               Foreground="#555"
+               Foreground="{DynamicResource MutedBrush}"
                HorizontalAlignment="Center"
                VerticalAlignment="Center" />
 
     <!-- Footer -->
-    <Border Grid.Row="1" Background="#0D0D0D" BorderBrush="#1A1A1A" BorderThickness="0,1,0,0">
+    <Border Grid.Row="1" Background="{DynamicResource ChromeBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,1,0,0">
       <Grid ColumnDefinitions="*,Auto,Auto" VerticalAlignment="Center">
         <TextBlock Grid.Column="0"
                    Text="{Binding DisplayItems.Count, StringFormat='Total: {0} conversions'}"
                    FontSize="11"
-                   Foreground="#666"
+                   Foreground="{DynamicResource MutedBrush}"
                    VerticalAlignment="Center"
                    Margin="20,0,0,0" />
         <Button Grid.Column="1"
                 Command="{Binding ClearHistoryCommand}"
                 Background="Transparent"
-                BorderBrush="#3D3D3D"
-                Foreground="#C85050"
+                BorderBrush="{DynamicResource ControlLineBrush}"
+                Foreground="{DynamicResource DangerBrush}"
                 CornerRadius="4"
                 Padding="12,8"
                 Margin="0,0,8,0"
@@ -108,9 +110,7 @@
                 Content="Clear" />
         <Button Grid.Column="2"
                 Click="CloseButton_Click"
-                Background="#2A5F8D"
-                BorderBrush="#3A7FAD"
-                Foreground="#DEDAD5"
+                Classes="accent"
                 CornerRadius="4"
                 Padding="20,8"
                 Margin="0,0,20,0"

@@ -1,199 +1,168 @@
-/* releases.js - powers the /releases/ page */
-
+/*
+ * Releases page: reads ../releases.json (written by CI from the GitHub
+ * releases API) and renders each version with its platform downloads.
+ */
 (function () {
+  "use strict";
+
+  const ICONS = "../assets/icons.svg";
   const PER_PAGE = 10;
 
-  // ── State ──────────────────────────────────────────────────────────────────
-  let allReleases = [];   // all non-draft releases fetched so far
-  let currentOS  = "all";
-  let currentPage = 1;
-  let stableOnly  = true;
+  let all = [];
+  let page = 1;
+  let os = "all";
+  let stableOnly = true;
 
-  // ── DOM refs ───────────────────────────────────────────────────────────────
-  const loadingEl = document.getElementById("releases-loading");
-  const errorEl   = document.getElementById("releases-error");
-  const emptyEl   = document.getElementById("releases-empty");
-  const itemsEl   = document.getElementById("releases-items");
-  const pagination = document.getElementById("pagination");
-  const prevBtn   = document.getElementById("page-prev");
-  const nextBtn   = document.getElementById("page-next");
-  const pageLabel = document.getElementById("page-label");
-  const osTabs          = document.querySelectorAll(".os-tab");
-  const stableToggle    = document.getElementById("stableOnlyToggle");
+  const $ = (id) => document.getElementById(id);
+  const loadingEl = $("rel-loading");
+  const errorEl = $("rel-error");
+  const emptyEl = $("rel-empty");
+  const listEl = $("rel-list");
+  const pager = $("pager");
+  const prevBtn = $("page-prev");
+  const nextBtn = $("page-next");
+  const pageLabel = $("page-label");
+  const stableToggle = $("stableOnly");
+  const osButtons = document.querySelectorAll("[data-os]");
 
-  // ── Fetch static release manifest generated during the Pages deploy ───────
-  async function fetchAllReleases() {
-    const res = await fetch("../releases.json");
-    if (!res.ok) throw new Error(`Release manifest ${res.status}`);
-    const results = await res.json();
+  const esc = (s) =>
+    String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
 
-    // Newest first (GitHub returns newest first, but be explicit)
-    results.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
-    return results;
-  }
+  const icon = (name) => `<svg class="ic" aria-hidden="true"><use href="${ICONS}#i-${name}" /></svg>`;
 
-  // ── Asset helpers ──────────────────────────────────────────────────────────
-  function linuxAsset(release) {
-    return release.assets.find(a => /_amd64\.deb$/i.test(a.name));
-  }
-  function windowsAsset(release) {
-    return (
-      release.assets.find(a => /win-x64.*_setup\.exe$/i.test(a.name)) ??
-      release.assets.find(a => /win-x64\.exe$/i.test(a.name)) ??
-      release.assets.find(a => /win-x64\.zip$/i.test(a.name))
-    );
-  }
-  function macosAsset(_release) { return null; }
+  // ---- Asset matching -----------------------------------------------------
+  const assets = (r) => (Array.isArray(r.assets) ? r.assets : []);
+  const linuxAsset = (r) => assets(r).find((a) => /_amd64\.deb$/i.test(a.name));
+  const windowsAsset = (r) =>
+    assets(r).find((a) => /win-x64.*_setup\.exe$/i.test(a.name)) ??
+    assets(r).find((a) => /win-x64\.exe$/i.test(a.name)) ??
+    assets(r).find((a) => /win-x64\.zip$/i.test(a.name));
+  const macosAsset = () => null;
 
-  function hasOsAsset(release, os) {
-    if (os === "all") return true;
-    if (os === "linux")   return !!linuxAsset(release);
-    if (os === "windows") return !!windowsAsset(release);
-    if (os === "macos")   return !!macosAsset(release);
-    return true;
-  }
+  const PLATFORMS = [
+    { os: "linux", label: "Linux", icon: "ubuntu", find: linuxAsset },
+    { os: "windows", label: "Windows", icon: "windows", find: windowsAsset },
+    { os: "macos", label: "macOS", icon: "apple", find: macosAsset },
+  ];
 
-  // ── Date formatting ────────────────────────────────────────────────────────
+  const hasOs = (r) => os === "all" || !!PLATFORMS.find((p) => p.os === os)?.find(r);
+
   function formatDate(iso) {
     const d = new Date(iso);
-    return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    return isNaN(d) ? "" : d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
   }
 
   function timeAgo(iso) {
     const seconds = Math.floor((Date.now() - new Date(iso)) / 1000);
-    if (seconds < 60)   return "just now";
+    if (!Number.isFinite(seconds)) return "";
+    if (seconds < 60) return "just now";
     const minutes = Math.floor(seconds / 60);
-    if (minutes < 60)   return `${minutes}m ago`;
+    if (minutes < 60) return `${minutes}m ago`;
     const hours = Math.floor(minutes / 60);
-    if (hours < 24)     return `${hours}h ago`;
+    if (hours < 24) return `${hours}h ago`;
     const days = Math.floor(hours / 24);
-    if (days < 30)      return `${days}d ago`;
+    if (days < 30) return `${days}d ago`;
     const months = Math.floor(days / 30);
-    if (months < 12)    return `${months}mo ago`;
+    if (months < 12) return `${months}mo ago`;
     return `${Math.floor(months / 12)}y ago`;
   }
 
-  // ── Render ─────────────────────────────────────────────────────────────────
-  function renderPage() {
-    const filtered = allReleases.filter(r => hasOsAsset(r, currentOS) && (!stableOnly || !r.prerelease));
-    const latestStable = filtered.find(r => !r.prerelease);
+  function downloadButton(platform, asset) {
+    const ext = "." + asset.name.split(".").pop().toLowerCase();
+    return `<a class="btn btn-secondary" href="${esc(asset.browser_download_url)}" download title="Download ${esc(asset.name)}">
+      ${icon(platform.icon)}<span>${platform.label}</span><small>${esc(ext)}</small>
+    </a>`;
+  }
 
-    if (filtered.length === 0) {
-      itemsEl.innerHTML = "";
+  function renderRelease(r, latestId) {
+    const isLatest = r.id === latestId;
+    const downloads = PLATFORMS.filter((p) => os === "all" || p.os === os)
+      .map((p) => {
+        const asset = p.find(r);
+        return asset ? downloadButton(p, asset) : "";
+      })
+      .join("");
+
+    return `<article class="release${isLatest ? " latest" : ""}">
+      <div class="release-head">
+        <h3>${esc(r.tag_name)}</h3>
+        ${isLatest ? '<span class="badge badge-latest">Latest</span>' : ""}
+        ${r.prerelease ? '<span class="badge badge-pre">Pre-release</span>' : ""}
+        <time class="release-date" datetime="${esc(r.published_at)}">${esc(timeAgo(r.published_at))} · ${esc(formatDate(r.published_at))}</time>
+      </div>
+      <div class="release-body">
+        ${downloads ? `<div class="release-downloads">${downloads}</div>` : ""}
+        <div class="release-links">
+          <a href="${esc(r.html_url)}" rel="noreferrer">${icon("github")}Release on GitHub</a>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  function render() {
+    const filtered = all.filter((r) => hasOs(r) && (!stableOnly || !r.prerelease));
+    const latestStable = filtered.find((r) => !r.prerelease);
+
+    if (!filtered.length) {
+      listEl.innerHTML = "";
       emptyEl.classList.remove("hidden");
-      pagination.hidden = true;
+      pager.hidden = true;
       return;
     }
     emptyEl.classList.add("hidden");
 
-    const totalPages = Math.ceil(filtered.length / PER_PAGE);
-    currentPage = Math.min(currentPage, totalPages);
-    const start = (currentPage - 1) * PER_PAGE;
-    const page  = filtered.slice(start, start + PER_PAGE);
+    const pages = Math.ceil(filtered.length / PER_PAGE);
+    page = Math.min(Math.max(page, 1), pages);
+    const slice = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    listEl.innerHTML = slice.map((r) => renderRelease(r, latestStable?.id)).join("");
 
-    itemsEl.innerHTML = page.map((release, idx) => {
-      const isLatest  = latestStable?.id === release.id;
-      const linux   = linuxAsset(release);
-      const windows = windowsAsset(release);
-      const macos   = macosAsset(release);
-
-      const tagName   = release.tag_name;
-      const published = release.published_at;
-
-      const showLinux   = currentOS === "all" || currentOS === "linux";
-      const showWindows = currentOS === "all" || currentOS === "windows";
-      const showMacos   = currentOS === "all" || currentOS === "macos";
-
-      function dlBtn(asset, icon) {
-        if (!asset) return "";
-        const ext = asset.name.split(".").pop().toLowerCase();
-        const label = ext === "exe" ? ".exe" : ext === "dmg" ? ".dmg" : ext === "deb" ? ".deb" : "." + ext;
-        return `<a class="button secondary release-dl-btn" href="${escHtml(asset.browser_download_url)}" download title="Download ${escHtml(asset.name)}">
-          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-${icon}" /></svg><span>${label}</span>
-        </a>`;
-      }
-
-      const downloads = [
-        showLinux   ? dlBtn(linux,   "ubuntu")  : "",
-        showWindows ? dlBtn(windows, "windows") : "",
-        showMacos   ? dlBtn(macos,   "apple")   : "",
-      ].join("");
-
-      return `<article class="release-item">
-        <div class="release-meta">
-          <div class="release-tag-row">
-            <span class="release-version">${escHtml(tagName)}</span>
-            ${isLatest ? '<span class="badge-latest">Latest</span>' : ""}
-            ${release.prerelease ? '<span class="badge-pre">Pre-release</span>' : ""}
-          </div>
-          <time class="release-date" datetime="${escHtml(published)}" title="${formatDate(published)}">${timeAgo(published)} · ${formatDate(published)}</time>
-        </div>
-        <div class="release-downloads">
-          ${downloads || `<a class="release-gh-link github-link" href="${escHtml(release.html_url)}" rel="noreferrer"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg><span>View on GitHub</span></a>`}
-        </div>
-      </article>`;
-    }).join("");
-
-    // Pagination controls
-    pagination.hidden = totalPages <= 1;
-    pageLabel.textContent = `Page ${currentPage} of ${totalPages}`;
-    prevBtn.disabled = currentPage <= 1;
-    nextBtn.disabled = currentPage >= totalPages;
+    pager.hidden = pages <= 1;
+    pageLabel.textContent = `Page ${page} of ${pages}`;
+    prevBtn.disabled = page <= 1;
+    nextBtn.disabled = page >= pages;
   }
 
-  function escHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
+  const jumpToList = () => window.scrollTo(0, listEl.offsetTop - 120);
 
-  // ── Event listeners ────────────────────────────────────────────────────────
-  osTabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      osTabs.forEach(t => { t.classList.remove("active"); t.setAttribute("aria-selected", "false"); });
-      tab.classList.add("active");
-      tab.setAttribute("aria-selected", "true");
-      currentOS = tab.dataset.os;
-      currentPage = 1;
-      renderPage();
+  osButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      os = btn.dataset.os;
+      osButtons.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+      page = 1;
+      render();
     });
   });
-
-  prevBtn.addEventListener("click", () => { if (currentPage > 1) { currentPage--; renderPage(); window.scrollTo(0, 0); } });
-  nextBtn.addEventListener("click", () => { currentPage++; renderPage(); window.scrollTo(0, 0); });
-
   stableToggle.addEventListener("change", () => {
     stableOnly = stableToggle.checked;
-    currentPage = 1;
-    renderPage();
+    page = 1;
+    render();
+  });
+  prevBtn.addEventListener("click", () => {
+    page -= 1;
+    render();
+    jumpToList();
+  });
+  nextBtn.addEventListener("click", () => {
+    page += 1;
+    render();
+    jumpToList();
   });
 
-  // ── Tab switching ──────────────────────────────────────────────────────────
-  const tabButtons = document.querySelectorAll(".releases-tabs .tab-button");
-  const tabContents = document.querySelectorAll(".releases-tabs .tab-content");
-
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const tabName = button.dataset.tab;
-
-      // Deactivate all tabs and contents
-      tabButtons.forEach((btn) => btn.classList.remove("active"));
-      tabContents.forEach((content) => content.classList.remove("active"));
-
-      // Activate selected tab
-      button.classList.add("active");
-      document.querySelector(`.releases-tabs [data-tab="${tabName}"].tab-content`)?.classList.add("active");
-    });
-  });
-
-  // ── Init ───────────────────────────────────────────────────────────────────
   (async function init() {
     try {
-      allReleases = await fetchAllReleases();
+      const res = await fetch("../releases.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error(`Release manifest returned ${res.status}`);
+      const data = await res.json();
+      all = (Array.isArray(data) ? data : [])
+        .filter((r) => !r.draft)
+        .sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
       loadingEl.classList.add("hidden");
-      renderPage();
+      render();
     } catch {
       loadingEl.classList.add("hidden");
       errorEl.classList.remove("hidden");

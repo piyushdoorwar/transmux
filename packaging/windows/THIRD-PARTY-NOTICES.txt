@@ -10,3 +10,16 @@ copying, copyright, or notice files distributed with the mpv build.
 
 mpv project: https://mpv.io/
 Windows mpv builds used by the packaging script: https://github.com/shinchiro/mpv-winbuild-cmake
+
+Transmux embeds the DM Sans and JetBrains Mono fonts. Both are licensed under the
+SIL Open Font License, Version 1.1. The full license texts ship with the app in
+licenses/fonts/DMSans-OFL.txt and licenses/fonts/JetBrainsMono-OFL.txt.
+
+DM Sans
+Copyright 2014 The DM Sans Project Authors (https://github.com/googlefonts/dm-fonts)
+Source: https://github.com/google/fonts/tree/main/ofl/dmsans (static weights
+instanced from the variable font)
+
+JetBrains Mono
+Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)
+Source: https://github.com/JetBrains/JetBrainsMono (v2.304, NL variant)

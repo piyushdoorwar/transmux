@@ -8,7 +8,6 @@
     MinWidth="400"
     MinHeight="200"
     SystemDecorations="BorderOnly"
-    Background="#111111"
     CanResize="False"
     WindowStartupLocation="CenterOwner">
 
@@ -19,20 +18,26 @@
       <TextBlock Text="Your file is already compatible with the selected format!"
                  FontSize="13"
                  FontWeight="SemiBold"
-                 Foreground="#5DA4D6"
+                 Foreground="{DynamicResource AccentTextBrush}"
                  TextWrapping="Wrap" />
 
       <TextBlock Text="The input file's codec(s) already match the target format. Converting would not improve quality and would just waste time and disk space."
                  FontSize="11"
-                 Foreground="#AAA"
+                 Foreground="{DynamicResource BodyBrush}"
                  TextWrapping="Wrap"
-                 LineHeight="1.5" />
+                 LineHeight="17" />
 
-      <TextBlock Text="You can:" FontSize="11" Foreground="#888" FontWeight="SemiBold" />
+      <TextBlock Text="You can:" FontSize="11" Foreground="{DynamicResource GreyBrush}" FontWeight="SemiBold" />
 
       <StackPanel Spacing="4" Margin="0,0,0,8">
-        <TextBlock Text="• Skip conversion - copy the file as-is (recommended)" FontSize="11" Foreground="#AAA" />
-        <TextBlock Text="• Convert anyway - re-encode with quality settings" FontSize="11" Foreground="#AAA" />
+        <StackPanel Orientation="Horizontal" Spacing="7">
+          <Ellipse Classes="bullet" />
+          <TextBlock Text="Skip conversion - copy the file as-is (recommended)" FontSize="11" Foreground="{DynamicResource BodyBrush}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="7">
+          <Ellipse Classes="bullet" />
+          <TextBlock Text="Convert anyway - re-encode with quality settings" FontSize="11" Foreground="{DynamicResource BodyBrush}" />
+        </StackPanel>
       </StackPanel>
     </StackPanel>
 
@@ -42,8 +47,8 @@
               Name="SkipButton"
               Click="SkipButton_Click"
               Background="Transparent"
-              BorderBrush="#3D3D3D"
-              Foreground="#5DA4D6"
+              BorderBrush="{DynamicResource ControlLineBrush}"
+              Foreground="{DynamicResource AccentTextBrush}"
               CornerRadius="4"
               Padding="16,8"
               Margin="0,0,8,0"

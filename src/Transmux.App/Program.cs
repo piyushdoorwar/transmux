@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Media;
 using Avalonia.X11;
 
 namespace Transmux.App;
@@ -19,7 +20,11 @@ internal static class Program
     {
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .WithInterFont()
+            // DM Sans (embedded) is the default UI font for every window, popup and tooltip.
+            .With(new FontManagerOptions
+            {
+                DefaultFamilyName = "avares://Transmux/Assets/Fonts#DM Sans",
+            })
             .LogToTrace()
             // Disable IBus IME — Ubuntu 26.04 IBus dropped several methods that
             // Avalonia still calls, causing cascading DBus errors in every dialog.

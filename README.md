@@ -90,6 +90,10 @@ commercial use, resale, hosting as a service, and use in commercial products
 or services are not permitted without explicit written permission from the
 copyright holder.
 
+The bundled DM Sans and JetBrains Mono fonts are licensed separately under the
+SIL Open Font License 1.1; their license texts ship in
+`src/Transmux.App/Assets/Fonts/` and in the app's `licenses/fonts/` folder.
+
 ## Build Packages
 
 Build the Ubuntu `.deb`:
