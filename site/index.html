@@ -68,23 +68,23 @@
       </a>
       <nav aria-label="Primary navigation">
         <a class="icon-link" href="#features">
-          <img src="assets/features.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-features" /></svg>
           <span>Features</span>
         </a>
         <a class="icon-link" href="#download">
-          <img src="assets/download.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-download" /></svg>
           <span>Download</span>
         </a>
         <a class="icon-link" href="releases/">
-          <img src="assets/releases.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-releases" /></svg>
           <span>Releases</span>
         </a>
         <a class="icon-link" href="policy/">
-          <img src="assets/policy.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-policy" /></svg>
           <span>Policy</span>
         </a>
         <a class="github-link icon-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <img src="assets/github.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-github" /></svg>
           <span>GitHub</span>
         </a>
       </nav>
@@ -101,11 +101,11 @@
           </p>
           <div class="actions">
             <a class="button primary icon-link" id="downloadLink" href="#download">
-              <img src="assets/download.svg" alt="" />
+              <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-download" /></svg>
               <span>Download latest</span>
             </a>
             <a class="button secondary github-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-              <img src="assets/github.svg" alt="" />
+              <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-github" /></svg>
               <span>View source</span>
             </a>
           </div>
@@ -203,11 +203,11 @@
           <p class="download-desc">Download the latest release for your platform:</p>
           <div class="download-actions" aria-label="Download Transmux">
             <a class="button primary large platform-download disabled" id="linuxDownloadLink" aria-disabled="true" aria-label="Download Transmux for Linux">
-              <img src="assets/ubuntu.svg" alt="" />
+              <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-ubuntu" /></svg>
               <span>Download for Linux</span>
             </a>
             <a class="button primary large platform-download disabled" id="windowsDownloadLink" aria-disabled="true" aria-label="Download Transmux for Windows">
-              <img src="assets/windows.svg" alt="" />
+              <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-windows" /></svg>
               <span>Download for Windows</span>
             </a>
           </div>
@@ -220,19 +220,19 @@
       <span>Transmux</span>
       <div class="footer-links">
         <a class="icon-link" href="releases/">
-          <img src="assets/releases.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-releases" /></svg>
           <span>All releases</span>
         </a>
         <a class="icon-link" href="policy/">
-          <img src="assets/policy.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-policy" /></svg>
           <span>Policy</span>
         </a>
         <a class="github-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <img src="assets/github.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-github" /></svg>
           <span>GitHub</span>
         </a>
         <button class="footer-support-link icon-link" id="footerSupportBtn">
-          <img src="assets/support.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-support" /></svg>
           <span>Support</span>
         </button>
       </div>
@@ -251,7 +251,7 @@
           Transmux version, and a short note about what happened.
         </p>
         <a class="button secondary large email-link" href="mailto:piyushdoorwar+transmux@gmail.com">
-          <img src="assets/mail.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-mail" /></svg>
           <span>piyushdoorwar+transmux@gmail.com</span>
         </a>
       </div>
@@ -319,8 +319,6 @@
       supportModal.addEventListener("click", e => { if (e.target === supportModal) { supportModal.classList.add("hidden"); document.body.style.overflow = ""; } });
       document.addEventListener("keydown", e => { if (e.key === "Escape" && !supportModal.classList.contains("hidden")) { supportModal.classList.add("hidden"); document.body.style.overflow = ""; } });
     </script>
-    <!-- Cloudflare Web Analytics -->
-    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e9cd556fb46f4880a8842d37e2dfe3fb"}'></script>
-    <!-- End Cloudflare Web Analytics -->
+    <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7bf02e12b7eb4bcfb147fbf33e347cd9"}'></script><!-- End Cloudflare Web Analytics -->
   </body>
 </html>

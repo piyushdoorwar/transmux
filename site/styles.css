@@ -97,6 +97,20 @@ nav a:hover {
   opacity: 0.9;
 }
 
+/* Sprite icons (assets/icons.svg) are drawn with currentColor. */
+.ic {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.icon-link .ic,
+.github-link .ic {
+  color: #fff;
+  opacity: 0.9;
+}
+
 main {
   overflow: hidden;
 }
@@ -613,6 +627,14 @@ h3 {
   filter: brightness(0) invert(1);
 }
 
+.platform-download .ic,
+.email-link .ic {
+  width: 22px;
+  height: 22px;
+  color: #fff;
+  opacity: 1;
+}
+
 .email-link {
   gap: 10px;
 }
@@ -801,6 +823,37 @@ footer a:hover,
   color: var(--text);
 }
 
+/* ── Not found (404) ────────────────────────────────────────────────────── */
+
+.notfound {
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 64px - 74px);
+  padding: 64px clamp(18px, 5vw, 64px);
+  text-align: center;
+}
+
+.notfound .code404 {
+  color: var(--blue-bright);
+  font: 800 clamp(72px, 14vw, 128px) / 1 "Ubuntu Mono", "Cascadia Code", monospace;
+}
+
+.notfound h1 {
+  margin: 12px 0 0;
+  font-size: clamp(26px, 4vw, 36px);
+  line-height: 1.15;
+}
+
+.notfound p {
+  margin: 12px auto 0;
+  max-width: 520px;
+  color: var(--soft);
+}
+
+.notfound .actions {
+  justify-content: center;
+}
+
 /* ── Support modal ──────────────────────────────────────────────────────── */
 
 .modal-backdrop {
@@ -930,6 +983,10 @@ footer a:hover,
   filter: brightness(0) invert(0.6);
 }
 
+.os-tab .ic {
+  color: #999;
+}
+
 .os-tab:hover {
   color: var(--text);
   border-color: var(--button-border);
@@ -943,6 +1000,10 @@ footer a:hover,
 
 .os-tab.active img {
   filter: brightness(0) invert(1);
+}
+
+.os-tab.active .ic {
+  color: #fff;
 }
 
 .releases-filters {
@@ -1166,6 +1227,11 @@ footer a:hover,
   width: 16px;
   height: 16px;
   filter: brightness(0) invert(1);
+}
+
+.release-dl-btn .ic {
+  color: #fff;
+  opacity: 1;
 }
 
 .release-gh-link {

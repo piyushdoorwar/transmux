@@ -104,19 +104,19 @@
       const showWindows = currentOS === "all" || currentOS === "windows";
       const showMacos   = currentOS === "all" || currentOS === "macos";
 
-      function dlBtn(asset, imgSrc) {
+      function dlBtn(asset, icon) {
         if (!asset) return "";
         const ext = asset.name.split(".").pop().toLowerCase();
         const label = ext === "exe" ? ".exe" : ext === "dmg" ? ".dmg" : ext === "deb" ? ".deb" : "." + ext;
         return `<a class="button secondary release-dl-btn" href="${escHtml(asset.browser_download_url)}" download title="Download ${escHtml(asset.name)}">
-          <img src="${imgSrc}" alt="" /><span>${label}</span>
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-${icon}" /></svg><span>${label}</span>
         </a>`;
       }
 
       const downloads = [
-        showLinux   ? dlBtn(linux,   "../assets/ubuntu.svg")  : "",
-        showWindows ? dlBtn(windows, "../assets/windows.svg") : "",
-        showMacos   ? dlBtn(macos,   "../assets/apple.svg")   : "",
+        showLinux   ? dlBtn(linux,   "ubuntu")  : "",
+        showWindows ? dlBtn(windows, "windows") : "",
+        showMacos   ? dlBtn(macos,   "apple")   : "",
       ].join("");
 
       return `<article class="release-item">
@@ -129,7 +129,7 @@
           <time class="release-date" datetime="${escHtml(published)}" title="${formatDate(published)}">${timeAgo(published)} · ${formatDate(published)}</time>
         </div>
         <div class="release-downloads">
-          ${downloads || `<a class="release-gh-link github-link" href="${escHtml(release.html_url)}" rel="noreferrer"><img src="../assets/github.svg" alt="" /><span>View on GitHub</span></a>`}
+          ${downloads || `<a class="release-gh-link github-link" href="${escHtml(release.html_url)}" rel="noreferrer"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg><span>View on GitHub</span></a>`}
         </div>
       </article>`;
     }).join("");

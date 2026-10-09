@@ -140,6 +140,15 @@
         opacity: 0.9;
       }
 
+      .icon-link .ic {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        flex: 0 0 auto;
+        color: #fff;
+        opacity: 0.9;
+      }
+
       .page-inner {
         max-width: 900px;
         margin: 0 auto;
@@ -353,23 +362,23 @@
       </a>
       <nav aria-label="Primary navigation">
         <a class="topbar-link icon-link" href="../#features">
-          <img src="../assets/features.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-features" /></svg>
           <span>Features</span>
         </a>
         <a class="topbar-link icon-link" href="../#download">
-          <img src="../assets/download.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-download" /></svg>
           <span>Download</span>
         </a>
         <a class="topbar-link icon-link" href="../releases/">
-          <img src="../assets/releases.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-releases" /></svg>
           <span>Releases</span>
         </a>
         <a class="topbar-link icon-link" href="./" aria-current="page">
-          <img src="../assets/policy.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-policy" /></svg>
           <span>Policy</span>
         </a>
         <a class="topbar-link icon-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <img src="../assets/github.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
           <span>GitHub</span>
         </a>
       </nav>
@@ -575,19 +584,19 @@
           <span>Home</span>
         </a>
         <a class="icon-link" href="../releases/">
-          <img src="../assets/releases.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-releases" /></svg>
           <span>Releases</span>
         </a>
         <a class="icon-link" href="./" aria-current="page">
-          <img src="../assets/policy.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-policy" /></svg>
           <span>Policy</span>
         </a>
         <a class="icon-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <img src="../assets/github.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
           <span>GitHub</span>
         </a>
         <a class="icon-link" href="mailto:piyushdoorwar+transmux@gmail.com">
-          <img src="../assets/mail.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-mail" /></svg>
           <span>Contact</span>
         </a>
       </div>
@@ -597,5 +606,6 @@
     <script>
       document.getElementById("yr").textContent = new Date().getFullYear();
     </script>
+    <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7bf02e12b7eb4bcfb147fbf33e347cd9"}'></script><!-- End Cloudflare Web Analytics -->
   </body>
 </html>

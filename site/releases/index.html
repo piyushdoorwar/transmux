@@ -49,23 +49,23 @@
       </a>
       <nav aria-label="Primary navigation">
         <a class="icon-link" href="../#features">
-          <img src="../assets/features.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-features" /></svg>
           <span>Features</span>
         </a>
         <a class="icon-link" href="../#download">
-          <img src="../assets/download.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-download" /></svg>
           <span>Download</span>
         </a>
         <a class="icon-link" href="./" aria-current="page">
-          <img src="../assets/releases.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-releases" /></svg>
           <span>Releases</span>
         </a>
         <a class="icon-link" href="../policy/">
-          <img src="../assets/policy.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-policy" /></svg>
           <span>Policy</span>
         </a>
         <a class="github-link icon-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <img src="../assets/github.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
           <span>GitHub</span>
         </a>
       </nav>
@@ -84,10 +84,10 @@
           <div class="os-tabs" role="tablist" aria-label="Filter by operating system">
             <button class="os-tab active" role="tab" aria-selected="true"  data-os="all"     aria-controls="release-list">All</button>
             <button class="os-tab"        role="tab" aria-selected="false" data-os="linux"   aria-controls="release-list">
-              <img src="../assets/ubuntu.svg" alt="" /> Linux
+              <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-ubuntu" /></svg> Linux
             </button>
             <button class="os-tab"        role="tab" aria-selected="false" data-os="windows" aria-controls="release-list">
-              <img src="../assets/windows.svg" alt="" /> Windows
+              <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-windows" /></svg> Windows
             </button>
           </div>
           <span class="releases-filters-sep" aria-hidden="true"></span>
@@ -115,7 +115,7 @@
           <div id="releases-error" class="releases-state hidden">
             Could not load releases.
             <a class="github-link" href="https://github.com/piyushdoorwar/transmux/releases" rel="noreferrer">
-              <img src="../assets/github.svg" alt="" />
+              <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
               <span>View on GitHub</span>
             </a>
           </div>
@@ -163,19 +163,19 @@ sudo apt install transmux</code></pre>
       <span>Transmux</span>
       <div class="footer-links">
         <a class="icon-link" href="./" aria-current="page">
-          <img src="../assets/releases.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-releases" /></svg>
           <span>Releases</span>
         </a>
         <a class="icon-link" href="../policy/">
-          <img src="../assets/policy.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-policy" /></svg>
           <span>Policy</span>
         </a>
         <a class="github-link" href="https://github.com/piyushdoorwar/transmux" rel="noreferrer">
-          <img src="../assets/github.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-github" /></svg>
           <span>GitHub</span>
         </a>
         <button class="footer-support-link icon-link" id="footerSupportBtnReleases">
-          <img src="../assets/support.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-support" /></svg>
           <span>Support</span>
         </button>
       </div>
@@ -194,7 +194,7 @@ sudo apt install transmux</code></pre>
           Transmux version, and a short note about what happened.
         </p>
         <a class="button secondary large email-link" href="mailto:piyushdoorwar+transmux@gmail.com">
-          <img src="../assets/mail.svg" alt="" />
+          <svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-mail" /></svg>
           <span>piyushdoorwar+transmux@gmail.com</span>
         </a>
       </div>
@@ -212,8 +212,6 @@ sudo apt install transmux</code></pre>
       modal.addEventListener("click", e => { if (e.target === modal) { modal.classList.add("hidden"); document.body.style.overflow = ""; } });
       document.addEventListener("keydown", e => { if (e.key === "Escape" && !modal.classList.contains("hidden")) { modal.classList.add("hidden"); document.body.style.overflow = ""; } });
     </script>
-    <!-- Cloudflare Web Analytics -->
-    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e9cd556fb46f4880a8842d37e2dfe3fb"}'></script>
-    <!-- End Cloudflare Web Analytics -->
+    <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7bf02e12b7eb4bcfb147fbf33e347cd9"}'></script><!-- End Cloudflare Web Analytics -->
   </body>
 </html>
